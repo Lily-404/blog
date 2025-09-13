@@ -9,7 +9,7 @@ type Props = {
 }
 
 export function CalendarHeatmapFloating({ posts, notes }: Props) {
-  const [showCalendar, setShowCalendar] = useState(true)
+  const [showCalendar, setShowCalendar] = useState(false)
   return (
     <div className="fixed left-10 z-40 hidden md:block select-none" style={{ top: '115px' }}>
       <button
