@@ -56,7 +56,7 @@
     "input-otp": "1.4.1",
     "katex": "^0.16.22",
     "lucide-react": "^0.454.0",
-    "next": "15.2.4",
+    "next": "15.2.8",
     "next-themes": "latest",
     "path": "latest",
     "react": "^19",
