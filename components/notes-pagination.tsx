@@ -91,12 +91,15 @@ export function NotesPagination({
           />
         ))}
 
-        {loading && (
-          <>
+      {loading && (
+        <>
+          <div>
             <NoteSkeleton />
             <NoteSkeleton />
-          </>
-        )}
+            <NoteSkeleton />
+          </div>
+        </>
+      )}
 
         {error && (
           <div className="text-center py-8">
@@ -132,7 +135,7 @@ export function NotesPagination({
         )}
 
         {!hasMore && notes.length > 0 && (
-          <p className="text-center text-zinc-400 dark:text-zinc-600 py-8 text-sm">
+          <p className="text-center text-zinc-400 dark:text-zinc-600 py-4 text-sm">
             已经到底啦～
           </p>
         )}
