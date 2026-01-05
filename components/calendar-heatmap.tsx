@@ -158,7 +158,7 @@ export function CalendarHeatmap({ posts, notes = [] }: CalendarHeatmapProps) {
         {/* 自定义悬浮提示 */}
         {hovered && hovered.date && (
           <div
-            className="pointer-events-none absolute z-50 px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md backdrop-saturate-150 text-xs text-zinc-800 dark:text-zinc-100 whitespace-nowrap flex flex-col items-center"
+            className="pointer-events-none absolute z-50 px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md backdrop-saturate-150 text-xs text-zinc-800 dark:text-zinc-100 whitespace-nowrap flex flex-col items-center"
             style={{
               left: `calc(${((hovered.x - 24) / (7 * 24)) * 100}% + 20px)`,
               top: -56,
@@ -175,7 +175,7 @@ export function CalendarHeatmap({ posts, notes = [] }: CalendarHeatmapProps) {
         )}
       </div>
       {/* 统计卡片 */}
-      <div className="mt-4 w-full rounded-xl bg-white/60 dark:bg-zinc-900/60 shadow-lg border border-zinc-200 dark:border-zinc-700 p-4 backdrop-blur-md backdrop-saturate-150 flex flex-col items-center">
+      <div className="mt-4 w-full rounded-xl bg-white/60 dark:bg-zinc-900/60 shadow-sm border border-zinc-200 dark:border-zinc-700 p-4 backdrop-blur-md backdrop-saturate-150 flex flex-col items-center">
         <div className="flex gap-6 justify-center">
           <div className="flex flex-col items-center">
             <span className="text-lg font-bold text-zinc-800 dark:text-zinc-100">{posts.length}</span>
