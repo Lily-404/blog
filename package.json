@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build && tsx scripts/generate-rss.ts",
     "start": "next start",
-    "lint": "next lint",
-    "postbuild": "tsx scripts/preload.ts"
+    "lint": "next lint"
   },
   "dependencies": {
     "@giscus/react": "^3.1.0",

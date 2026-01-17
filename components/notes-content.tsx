@@ -4,7 +4,7 @@ import { Tag } from '@/components/tag';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { delay } from '@/app/lib/utils';
+import { delay } from '@/lib/utils';
 
 import type { PostMeta as Post } from '@/app/lib/content';
 

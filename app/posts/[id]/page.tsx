@@ -1,5 +1,5 @@
 import { getAllPostIds, getPostById } from "@/app/lib/content"
-import { formatDate } from "@/app/lib/utils"
+import { formatDate } from "@/lib/utils"
 import { notFound } from "next/navigation"
 import { Footer } from "@/components/footer"
 import { Layout } from "@/components/layout"
@@ -19,9 +19,9 @@ export async function generateStaticParams() {
   return getAllPostIds()
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params)
-  const post = await getPostById(resolvedParams.id)
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const post = await getPostById(id)
   
   if (!post) {
     return {
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   }
 
   const description = post.contentHtml.replace(/<[^>]*>/g, '').slice(0, 200)
-  const url = `https://www.jimmy-blog.top/posts/${resolvedParams.id}`
+  const url = `https://www.jimmy-blog.top/posts/${id}`
 
   return {
     title: post.title,
@@ -64,15 +64,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   }
 }
 
-export default async function Post({ params }: { params: { id: string } }) {
-  // 确保 params 是一个对象并且包含 id 属性
-  if (!params || typeof params !== 'object' || !('id' in params)) {
-    notFound()
-  }
-  
-  // 使用 Promise.resolve 来确保 params 被正确处理
-  const resolvedParams = await Promise.resolve(params)
-  const id = resolvedParams.id
+export default async function Post({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   
   if (!id) {
     notFound()

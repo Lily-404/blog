@@ -7,7 +7,7 @@ import { Tag } from "@/components/tag"
 import { PaginationButtons } from "@/components/pagination-buttons"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { formatDate } from "@/app/lib/utils"
+import { formatDate } from "@/lib/utils"
 import { articleStyles } from "@/styles/article"
 
 type HomeContentProps = {
@@ -77,8 +77,11 @@ export function HomeContent({ posts, allPosts, tags, currentPage, totalPages }: 
         {/* 文章列表 */}
         <div className="space-y-4 min-h-[100px]">
           {paginatedPosts.length > 0 ? (
-            paginatedPosts.map((post) => (
-              <article key={post.id} className={articleStyles.baseClass}>
+            paginatedPosts.map((post, index) => (
+              <article 
+                key={post.id} 
+                className={`border-b border-zinc-100 dark:border-zinc-800 pb-4 ${index === paginatedPosts.length - 1 ? 'border-b-0 pb-0' : ''}`}
+              >
                 <Link href={`/posts/${post.id}`} className="group block">
                   <h2 className="text-base font-normal text-zinc-800 dark:text-zinc-200 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors duration-300">
                     {post.title}

@@ -15,8 +15,9 @@ export async function generateStaticParams() {
   }))
 }
 
-export default function Page({ params }: { params: { page: string } }) {
-  const page = parseInt(params.page, 10)
+export default async function Page({ params }: { params: Promise<{ page: string }> }) {
+  const { page: pageParam } = await params
+  const page = parseInt(pageParam, 10)
   const posts = getAllPostsMeta()
   const notes = getAllNotesMeta()
   const tags = getTagsFromPosts(posts).map(t => ({ tag: t.tag, count: Number(t.count) }))
