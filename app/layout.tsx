@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google'
 import type { Metadata, Viewport } from 'next'
 import GoogleAnalytics from "@/components/GoogleAnalytics"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
 
 const inter = Inter({
@@ -94,6 +95,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 antialiased`}>
         <ThemeProvider>
           {children}
+          <Toaster />
           {process.env.NEXT_PUBLIC_GA_ID && (
             <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_ID} />
           )}

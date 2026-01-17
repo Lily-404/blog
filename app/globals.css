@@ -216,3 +216,53 @@
   font-family: "SF Mono", "SF Mono SC", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+/* 随笔预览样式 - 移除多余的 margin */
+.note-preview-content .prose {
+  @apply my-0;
+}
+
+.note-preview-content .prose p {
+  @apply my-0 mb-0 mt-0;
+  line-height: 1.75;
+  text-align: left;
+  text-justify: auto;
+}
+
+.note-preview-content .prose p:first-child {
+  @apply mt-0;
+}
+
+.note-preview-content .prose p:last-child {
+  @apply mb-0;
+}
+
+.note-preview-content .prose h1,
+.note-preview-content .prose h2,
+.note-preview-content .prose h3,
+.note-preview-content .prose h4,
+.note-preview-content .prose h5,
+.note-preview-content .prose h6 {
+  @apply mt-2 mb-1;
+}
+
+.note-preview-content .prose ul,
+.note-preview-content .prose ol {
+  @apply my-2;
+}
+
+.note-preview-content .prose blockquote {
+  @apply my-2;
+}
+
+.note-preview-content .prose pre {
+  @apply my-2;
+}
+
+.note-preview-content .prose hr {
+  @apply my-2;
+}
+
+.note-preview-content .prose table {
+  @apply my-2;
+}
+
