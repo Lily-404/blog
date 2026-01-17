@@ -14,10 +14,13 @@ export async function POST(request: Request) {
       )
     }
 
+    // 去掉内容开头的换行符，实现所见即所得
+    const trimmedContent = content.trimStart()
+
     const processed = await remark()
       .use(remarkGfm)
       .use(html)
-      .process(content)
+      .process(trimmedContent)
 
     let htmlContent = processed.toString()
 

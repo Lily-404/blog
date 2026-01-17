@@ -82,16 +82,20 @@ export function getAllPostsMeta(): PostMeta[] {
 }
 
 export function getAllPosts(): Post[] {
-  return readMarkdownFiles<Post>(postsDirectory, (id, matterResult) => ({
-    id,
-    title: matterResult.data.title || "无标题",
-    date: matterResult.data.date 
-      ? new Date(matterResult.data.date).toISOString() 
-      : new Date().toISOString(),
-    tags: matterResult.data.tags || [],
-    content: matterResult.content,
-    excerpt: matterResult.data.excerpt || matterResult.content.slice(0, 200) + "...",
-  }))
+  return readMarkdownFiles<Post>(postsDirectory, (id, matterResult) => {
+    // 去掉内容开头的换行符，实现所见即所得
+    const trimmedContent = matterResult.content.trimStart()
+    return {
+      id,
+      title: matterResult.data.title || "无标题",
+      date: matterResult.data.date 
+        ? new Date(matterResult.data.date).toISOString() 
+        : new Date().toISOString(),
+      tags: matterResult.data.tags || [],
+      content: trimmedContent,
+      excerpt: matterResult.data.excerpt || trimmedContent.slice(0, 200) + "...",
+    }
+  })
 }
 
 export async function getPostById(id: string): Promise<{
@@ -109,8 +113,11 @@ export async function getPostById(id: string): Promise<{
     const fileContents = fs.readFileSync(fullPath, "utf8")
     const matterResult = matter(fileContents)
     
+    // 去掉内容开头的换行符，实现所见即所得
+    const trimmedContent = matterResult.content.trimStart()
+    
     // 使用remark将Markdown转换为HTML
-    const processedContent = await remark().use(remarkGfm).use(html).process(matterResult.content)
+    const processedContent = await remark().use(remarkGfm).use(html).process(trimmedContent)
     const contentHtml = processedContent.toString()
     
     return {
@@ -193,7 +200,7 @@ export interface Note extends NoteMeta {}
 export function getAllNotesMeta(): NoteMeta[] {
   return readMarkdownFiles<NoteMeta>(notesDirectory, (id, matterResult) => ({
     id,
-    content: matterResult.content,
+    content: matterResult.content.trimStart(), // 去掉内容开头的换行符
     date: matterResult.data.date 
       ? new Date(matterResult.data.date).toISOString() 
       : new Date().toISOString(),

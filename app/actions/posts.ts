@@ -161,20 +161,23 @@ async function createContent(
     // 构建 Markdown 内容
     let frontmatter: string
     if (type === "post") {
+      // 博客文章，去掉内容开头的换行符，实现所见即所得
+      const trimmedContent = formData.content.trimStart()
       frontmatter = `---
 title: "${escapeYamlString(formData.title)}"
 date: "${formData.date}"
 tags: ${JSON.stringify(formData.tags || [])}
 ---
 
-${formData.content}`
+${trimmedContent}`
     } else {
-      // 随笔只有 date
+      // 随笔只有 date，去掉内容开头的换行符
+      const trimmedContent = formData.content.trimStart()
       frontmatter = `---
 date: "${formData.date}"
 ---
 
-${formData.content}`
+${trimmedContent}`
     }
 
     // 将内容编码为 base64

@@ -21,12 +21,15 @@ export function PostPreview({ content }: PostPreviewProps) {
 
       setLoading(true)
       try {
+        // 去掉内容开头的换行符，实现所见即所得
+        const trimmedContent = content.trimStart()
+        
         const response = await fetch("/api/markdown", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ content }),
+          body: JSON.stringify({ content: trimmedContent }),
         })
 
         if (!response.ok) {
