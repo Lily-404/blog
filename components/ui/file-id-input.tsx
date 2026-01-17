@@ -10,6 +10,7 @@ interface FileIdInputProps {
   contentType: "post" | "note"
   placeholder?: string
   className?: string
+  defaultValue?: string
 }
 
 export function FileIdInput({
@@ -18,6 +19,7 @@ export function FileIdInput({
   contentType,
   placeholder,
   className,
+  defaultValue,
 }: FileIdInputProps) {
   const [isChecking, setIsChecking] = useState(false)
   const [checkResult, setCheckResult] = useState<{
@@ -25,6 +27,12 @@ export function FileIdInput({
     message?: string
   } | null>(null)
   const debounceTimerRef = useRef<NodeJS.Timeout>()
+  const [isFocused, setIsFocused] = useState(false)
+  const [hasUserInput, setHasUserInput] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+  
+  // 显示值：如果有用户输入的值则显示，否则显示默认值（仅在未开始输入时）
+  const displayValue = value || (defaultValue && !hasUserInput ? defaultValue : "")
 
   // 格式化文件 ID
   const formatFileId = (input: string): string => {
@@ -36,9 +44,45 @@ export function FileIdInput({
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatFileId(e.target.value)
+    const inputValue = e.target.value
+    // 如果用户开始输入（输入框有内容且不等于defaultValue，或者之前显示的是defaultValue但现在有变化）
+    if (!hasUserInput && defaultValue && inputValue !== defaultValue) {
+      setHasUserInput(true)
+    }
+    const formatted = formatFileId(inputValue)
     onChange(formatted)
   }
+  
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(true)
+    // 如果当前显示的是defaultValue，选中所有文本，方便用户直接输入替换
+    if (!value && defaultValue && !hasUserInput) {
+      setTimeout(() => {
+        e.target.select()
+      }, 0)
+    }
+  }
+  
+  const handleBlur = () => {
+    setIsFocused(false)
+  }
+  
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // 如果用户开始输入，且当前显示的是defaultValue，标记为已开始输入并清空
+    if (!hasUserInput && !value && defaultValue && displayValue === defaultValue) {
+      if (e.key.length === 1 || e.key === "Backspace" || e.key === "Delete") {
+        setHasUserInput(true)
+        onChange("")
+      }
+    }
+  }
+  
+  // 当value从外部被清空时，重置hasUserInput状态
+  useEffect(() => {
+    if (!value) {
+      setHasUserInput(false)
+    }
+  }, [value])
 
   // 检查文件是否存在
   useEffect(() => {
@@ -93,14 +137,19 @@ export function FileIdInput({
     <div>
       <div className="relative">
         <input
+          ref={inputRef}
           type="text"
-          value={value}
+          value={displayValue}
           onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className={cn(
             "w-full h-9 px-3 text-sm border border-zinc-300 dark:border-zinc-700 rounded-md dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 pr-9 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all",
             !isValidFormat && value && "border-red-300 dark:border-red-700",
             checkResult?.exists && "border-yellow-300 dark:border-yellow-700",
+            !value && defaultValue && !isFocused && "text-zinc-400 dark:text-zinc-500",
             className
           )}
         />

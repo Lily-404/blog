@@ -9,7 +9,6 @@ import { PostPreview } from "@/components/post-preview"
 import { NotePreview } from "@/components/note-preview"
 import { DatePicker } from "@/components/ui/date-picker"
 import { TagInput } from "@/components/ui/tag-input"
-import { FileIdInput } from "@/components/ui/file-id-input"
 import { Alert } from "@/components/ui/alert"
 import { toast } from "sonner"
 
@@ -208,16 +207,6 @@ export default function AdminPage() {
       return
     }
 
-    // 验证文件 ID（如果提供了）
-    if (formData.id && formData.id.trim()) {
-      const idPattern = /^[a-z0-9_-]+$/
-      if (!idPattern.test(formData.id.trim().toLowerCase())) {
-        setError("文件 ID 格式无效，只能包含小写字母、数字、连字符和下划线")
-        toast.error("文件 ID 格式无效")
-        return
-      }
-    }
-
     setLoading(true)
     setError("")
     setSuccess("")
@@ -230,13 +219,13 @@ export default function AdminPage() {
           content: formData.content,
           date: formData.date,
           tags: formData.tags,
-          id: formData.id || undefined,
+          id: undefined, // 始终使用自动生成的ID
         })
       } else {
         result = await createNote({
           content: formData.content,
           date: formData.date,
-          id: formData.id || undefined,
+          id: undefined, // 始终使用自动生成的ID
         })
       }
 
@@ -254,7 +243,7 @@ export default function AdminPage() {
           content: "",
           date: new Date().toISOString().split("T")[0],
           tags: [],
-          id: "",
+          id: "", // 保持为空，始终使用自动生成
         })
       } else {
         setError(result.message)
@@ -359,57 +348,6 @@ export default function AdminPage() {
           </Button>
         </div>
 
-        {/* 类型选择 */}
-        <div className="mb-6 flex flex-wrap gap-4 items-center bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-4 shadow-sm">
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              variant={contentType === "post" ? "default" : "outline"}
-              onClick={() => setContentType("post")}
-              className="shadow-sm"
-            >
-              文章
-            </Button>
-            <Button
-              type="button"
-              variant={contentType === "note" ? "default" : "outline"}
-              onClick={() => setContentType("note")}
-              className="shadow-sm"
-            >
-              随笔
-            </Button>
-          </div>
-          <div className="flex gap-2 ml-auto">
-            <Button
-              type="button"
-              variant={viewMode === "edit" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setViewMode("edit")}
-              className="shadow-sm"
-            >
-              编辑
-            </Button>
-            <Button
-              type="button"
-              variant={viewMode === "split" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setViewMode("split")}
-              className="shadow-sm"
-            >
-              分栏
-            </Button>
-            <Button
-              type="button"
-              variant={viewMode === "preview" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setViewMode("preview")}
-              className="shadow-sm"
-            >
-              预览
-            </Button>
-          </div>
-        </div>
-
         {/* 消息提示 */}
         {error && (
           <Alert
@@ -436,8 +374,59 @@ export default function AdminPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 基础信息 */}
-          <div className="bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-4 shadow-sm">
+          {/* 类型选择和基础信息 */}
+          <div className="bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-4 shadow-sm space-y-4">
+            {/* 类型选择和视图模式 */}
+            <div className="flex flex-wrap gap-4 items-center">
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant={contentType === "post" ? "default" : "outline"}
+                  onClick={() => setContentType("post")}
+                  className="shadow-sm"
+                >
+                  文章
+                </Button>
+                <Button
+                  type="button"
+                  variant={contentType === "note" ? "default" : "outline"}
+                  onClick={() => setContentType("note")}
+                  className="shadow-sm"
+                >
+                  随笔
+                </Button>
+              </div>
+              <div className="flex gap-2 ml-auto">
+                <Button
+                  type="button"
+                  variant={viewMode === "edit" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setViewMode("edit")}
+                  className="shadow-sm"
+                >
+                  编辑
+                </Button>
+                <Button
+                  type="button"
+                  variant={viewMode === "split" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setViewMode("split")}
+                  className="shadow-sm"
+                >
+                  分栏
+                </Button>
+                <Button
+                  type="button"
+                  variant={viewMode === "preview" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setViewMode("preview")}
+                  className="shadow-sm"
+                >
+                  预览
+                </Button>
+              </div>
+            </div>
+            {/* 基础信息表单 */}
             {contentType === "post" ? (
               <div className="flex flex-col lg:flex-row gap-4">
                 <div className="flex-1 min-w-0 space-y-1">
@@ -477,25 +466,8 @@ export default function AdminPage() {
                   <TagInput
                     value={formData.tags}
                     onChange={(tags) => setFormData({ ...formData, tags })}
-                    placeholder="输入标签"
+                    placeholder="输入标签，回车或逗号确定"
                   />
-                </div>
-
-                <div className="flex-1 min-w-0 space-y-1">
-                  <label htmlFor="id" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                    文件 ID
-                  </label>
-                  <FileIdInput
-                    value={formData.id}
-                    onChange={(id) => setFormData({ ...formData, id })}
-                    contentType="post"
-                    placeholder="可选，自动生成"
-                  />
-                  {!formData.id && (
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 truncate">
-                      ID: <span className="font-mono text-zinc-700 dark:text-zinc-300">{autoGeneratedId}</span>
-                    </p>
-                  )}
                 </div>
               </div>
             ) : (
@@ -526,16 +498,10 @@ export default function AdminPage() {
           </div>
 
           {/* 内容编辑和预览 */}
-          <div
-            className={`grid gap-6 ${
-              viewMode === "split"
-                ? "grid-cols-1 lg:grid-cols-2"
-                : "grid-cols-1"
-            }`}
-          >
-            {/* 编辑区域 */}
-            {(viewMode === "edit" || viewMode === "split") && (
-              <div className="flex flex-col bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+          {viewMode === "split" ? (
+            <div className="flex flex-col lg:flex-row bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+              {/* 编辑区域 */}
+              <div className="flex-1 flex flex-col p-6 lg:pr-3">
                 <label
                   htmlFor="content"
                   className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300"
@@ -557,15 +523,9 @@ export default function AdminPage() {
                     contentType === "post" ? "font-mono" : ""
                   }`}
                   style={{ 
-                    height: viewMode === "split" 
-                      ? (contentType === "post" ? "600px" : "300px")
-                      : "auto",
-                    minHeight: viewMode === "split"
-                      ? (contentType === "post" ? "600px" : "300px")
-                      : (contentType === "post" ? "600px" : "200px"),
-                    maxHeight: viewMode === "split"
-                      ? (contentType === "post" ? "600px" : "300px")
-                      : "none"
+                    height: contentType === "post" ? "600px" : "300px",
+                    minHeight: contentType === "post" ? "600px" : "300px",
+                    maxHeight: contentType === "post" ? "600px" : "300px"
                   }}
                   required
                   placeholder={
@@ -575,11 +535,9 @@ export default function AdminPage() {
                   }
                 />
               </div>
-            )}
 
-            {/* 预览区域 */}
-            {(viewMode === "preview" || viewMode === "split") && (
-              <div className="flex flex-col bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+              {/* 预览区域 */}
+              <div className="flex-1 flex flex-col p-6 lg:pl-3">
                 <label className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300">
                   预览
                 </label>
@@ -587,15 +545,9 @@ export default function AdminPage() {
                   ref={previewRef}
                   className="border border-zinc-300 dark:border-zinc-700 rounded-md p-4 bg-white dark:bg-zinc-950 overflow-y-auto flex-1"
                   style={{ 
-                    height: viewMode === "split"
-                      ? (contentType === "post" ? "600px" : "300px")
-                      : "auto",
-                    minHeight: viewMode === "split"
-                      ? (contentType === "post" ? "600px" : "300px")
-                      : (contentType === "post" ? "600px" : "200px"),
-                    maxHeight: viewMode === "split"
-                      ? (contentType === "post" ? "600px" : "300px")
-                      : "none"
+                    height: contentType === "post" ? "600px" : "300px",
+                    minHeight: contentType === "post" ? "600px" : "300px",
+                    maxHeight: contentType === "post" ? "600px" : "300px"
                   }}
                 >
                   {contentType === "note" ? (
@@ -605,8 +557,68 @@ export default function AdminPage() {
                   )}
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* 编辑区域 */}
+              {viewMode === "edit" && (
+                <div className="flex flex-col bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+                  <label
+                    htmlFor="content"
+                    className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300"
+                  >
+                    {contentType === "post" ? (
+                      <>内容（Markdown） <span className="text-red-500">*</span></>
+                    ) : (
+                      <>内容 <span className="text-red-500">*</span> <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400 ml-2">（支持简单文本，Markdown 可选）</span></>
+                    )}
+                  </label>
+                  <textarea
+                    ref={textareaRef}
+                    id="content"
+                    value={formData.content}
+                    onChange={(e) =>
+                      setFormData({ ...formData, content: e.target.value })
+                    }
+                    className={`w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all ${
+                      contentType === "post" ? "font-mono" : ""
+                    }`}
+                    style={{ 
+                      minHeight: contentType === "post" ? "600px" : "200px"
+                    }}
+                    required
+                    placeholder={
+                      contentType === "post"
+                        ? "在这里输入 Markdown 内容..."
+                        : "写下你的想法、感受或日常..."
+                    }
+                  />
+                </div>
+              )}
+
+              {/* 预览区域 */}
+              {viewMode === "preview" && (
+                <div className="flex flex-col bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+                  <label className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300">
+                    预览
+                  </label>
+                  <div 
+                    ref={previewRef}
+                    className="border border-zinc-300 dark:border-zinc-700 rounded-md p-4 bg-white dark:bg-zinc-950 overflow-y-auto flex-1"
+                    style={{ 
+                      minHeight: contentType === "post" ? "600px" : "200px"
+                    }}
+                  >
+                    {contentType === "note" ? (
+                      <NotePreview content={formData.content} date={formData.date} />
+                    ) : (
+                      <PostPreview content={formData.content} />
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* 提交按钮 */}
           <div className="flex justify-end">
