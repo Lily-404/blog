@@ -13,7 +13,7 @@ import { Alert } from "@/components/ui/alert"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
-import { HelpCircle } from "lucide-react"
+import { HelpCircle, Loader2 } from "lucide-react"
 
 type ContentType = "post" | "note"
 
@@ -267,7 +267,20 @@ export default function AdminPage() {
       <Layout>
         <div className="max-w-2xl mx-auto px-4 py-6">
           <Header showBackButton={true} />
-          <div className="text-center py-12">检查认证状态...</div>
+          <div className="flex flex-col items-center justify-center min-h-[60vh]">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800 rounded-full blur-xl opacity-50 animate-pulse"></div>
+              <div className="relative bg-white dark:bg-zinc-900 rounded-full p-6 shadow-lg border border-zinc-200 dark:border-zinc-800">
+                <Loader2 className="w-8 h-8 text-zinc-600 dark:text-zinc-400 animate-spin" />
+              </div>
+            </div>
+            <p className="mt-6 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+              正在验证身份...
+            </p>
+            <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-500 italic">
+              稍等片刻
+            </p>
+          </div>
         </div>
       </Layout>
     )
@@ -280,9 +293,12 @@ export default function AdminPage() {
         <div className="max-w-2xl mx-auto px-4 py-6">
           <Header showBackButton={true} />
           <div className="max-w-md mx-auto mt-12">
-            <h1 className="text-2xl font-bold mb-6">管理员登录</h1>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6">
-              使用 GitHub 账号登录以验证您的身份
+            <h1 className="text-2xl font-bold mb-4">你居然发现这里了！🎉</h1>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
+              这里是我的秘密基地，只有我知道怎么进来 😎
+            </p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-500 mb-6 italic">
+              不过既然你找到了，那就用 GitHub 登录试试看吧～
             </p>
             {error && (
               <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-red-700 dark:text-red-400 text-sm">
@@ -299,11 +315,37 @@ export default function AdminPage() {
               disabled={loading}
               className="w-full"
             >
-              {loading ? "登录中..." : "使用 GitHub 登录"}
+              {loading ? "登录中..." : "用 GitHub 登录试试"}
             </Button>
-            <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-400 text-center">
-              只有仓库所有者或协作者才能访问
+            <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-400 text-center italic">
+              提示：只有仓库所有者或协作者才能进来哦
             </p>
+            
+            {/* 有趣的内容 */}
+            <div className="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+              <div className="text-center space-y-4">
+                <div className="text-4xl mb-4">🔐</div>
+                <p className="text-sm text-zinc-500 dark:text-zinc-500 italic">
+                  "好奇心是发现秘密的第一步"
+                </p>
+                <div className="flex justify-center gap-2 text-2xl mt-6">
+                  <span>🎨</span>
+                  <span>💻</span>
+                  <span>📝</span>
+                  <span>✨</span>
+                </div>
+                <p className="text-xs text-zinc-400 dark:text-zinc-600 mt-4">
+                  如果你真的进来了，记得帮我写点好东西 😊
+                </p>
+                <div className="mt-6 p-4 bg-zinc-50 dark:bg-zinc-900/30 rounded-lg border border-zinc-200 dark:border-zinc-800">
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                    <span className="font-semibold">小贴士：</span>
+                    <br />
+                    这个页面是我用来管理博客内容的，如果你也想搭建类似的博客，可以看看我的 GitHub 仓库源码哦～
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </Layout>

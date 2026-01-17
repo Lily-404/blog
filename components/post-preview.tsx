@@ -69,7 +69,7 @@ export function PostPreview({ content }: PostPreviewProps) {
         let html = data.html
 
         // 处理数学公式 - 块级公式 $$...$$
-        html = html.replace(/\$\$\$([\s\S]+?)\$\$\$/g, (_, tex) => {
+        html = html.replace(/\$\$\$([\s\S]+?)\$\$\$/g, (_: any, tex: string) => {
           try {
             return `<div class="katex-block">${katex.renderToString(tex.trim(), {
               displayMode: true,
@@ -81,7 +81,7 @@ export function PostPreview({ content }: PostPreviewProps) {
         })
 
         // 处理数学公式 - 行内公式 $...$
-        html = html.replace(/\$\$([^\$]+?)\$\$/g, (_, tex) => {
+        html = html.replace(/\$\$([^\$]+?)\$\$/g, (_: any, tex: string) => {
           try {
             return `<span class="katex-inline">${katex.renderToString(tex.trim(), {
               displayMode: false,
