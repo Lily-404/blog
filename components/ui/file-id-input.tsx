@@ -98,7 +98,7 @@ export function FileIdInput({
           onChange={handleChange}
           placeholder={placeholder}
           className={cn(
-            "w-full px-4 py-2 border rounded-md dark:bg-zinc-900 dark:border-zinc-800 pr-10",
+            "w-full h-10 px-4 border border-zinc-300 dark:border-zinc-700 rounded-md dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 pr-10 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all",
             !isValidFormat && value && "border-red-300 dark:border-red-700",
             checkResult?.exists && "border-yellow-300 dark:border-yellow-700",
             className

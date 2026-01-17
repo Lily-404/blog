@@ -1,21 +1,43 @@
 "use client"
 
-import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useRef } from "react"
 import { HeaderNav } from "@/components/header-nav"
 
 export function HeaderHome() {
+  const router = useRouter()
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const clickCountRef = useRef(0)
+
+  const handleAvatarClick = () => {
+    clickCountRef.current += 1
+
+    if (clickCountRef.current === 1) {
+      clickTimeoutRef.current = setTimeout(() => {
+        clickCountRef.current = 0
+      }, 300) 
+    } else if (clickCountRef.current === 2) {
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current)
+      }
+      clickCountRef.current = 0
+      router.push("/admin")
+    }
+  }
+
   return (
     <header className="mb-6 flex justify-between items-center">
       <div className="flex items-center gap-3">
-        <Link href="/admin">
+        <div onClick={handleAvatarClick}>
           <img
             src="/cat.jpg"
             alt="Jimmy's avatar"
             width={40}
             height={40}
             className="w-10 h-10 rounded-full object-cover hover:opacity-80 transition-opacity cursor-pointer"
+            draggable={false}
           />
-        </Link>
+        </div>
         <h1 
           className="text-xl font-medium tracking-tight transition-colors cursor-pointer"
           onClick={() => {

@@ -205,8 +205,8 @@ ${formData.content}`
         },
         body: JSON.stringify({
           message: existingFile.exists
-            ? `更新${type === "post" ? "博客文章" : "随笔"}: ${type === "post" ? formData.title : fileId}`
-            : `添加${type === "post" ? "博客文章" : "随笔"}: ${type === "post" ? formData.title : fileId}`,
+            ? `Update ${type === "post" ? "post" : "note"}: ${type === "post" ? formData.title : fileId}`
+            : `Add ${type === "post" ? "post" : "note"}: ${type === "post" ? formData.title : fileId}`,
           content: contentBase64,
           sha: sha,
         }),

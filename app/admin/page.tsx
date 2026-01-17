@@ -325,27 +325,28 @@ export default function AdminPage() {
         <Header showBackButton={true} />
         
         {/* 头部 */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-2xl font-bold">内容管理</h1>
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">内容管理</h1>
             {username && (
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
-                已登录为: <span className="font-medium">{username}</span>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2">
+                已登录为: <span className="font-medium text-zinc-800 dark:text-zinc-200">{username}</span>
               </p>
             )}
           </div>
-          <Button onClick={handleLogout} variant="outline">
+          <Button onClick={handleLogout} variant="outline" className="shadow-sm">
             登出
           </Button>
         </div>
 
         {/* 类型选择 */}
-        <div className="mb-6 flex gap-4 items-center">
+        <div className="mb-6 flex flex-wrap gap-4 items-center bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-4 shadow-sm">
           <div className="flex gap-2">
             <Button
               type="button"
               variant={contentType === "post" ? "default" : "outline"}
               onClick={() => setContentType("post")}
+              className="shadow-sm"
             >
               博客文章
             </Button>
@@ -353,6 +354,7 @@ export default function AdminPage() {
               type="button"
               variant={contentType === "note" ? "default" : "outline"}
               onClick={() => setContentType("note")}
+              className="shadow-sm"
             >
               随笔
             </Button>
@@ -363,6 +365,7 @@ export default function AdminPage() {
               variant={viewMode === "edit" ? "default" : "outline"}
               size="sm"
               onClick={() => setViewMode("edit")}
+              className="shadow-sm"
             >
               编辑
             </Button>
@@ -371,6 +374,7 @@ export default function AdminPage() {
               variant={viewMode === "split" ? "default" : "outline"}
               size="sm"
               onClick={() => setViewMode("split")}
+              className="shadow-sm"
             >
               分栏
             </Button>
@@ -379,6 +383,7 @@ export default function AdminPage() {
               variant={viewMode === "preview" ? "default" : "outline"}
               size="sm"
               onClick={() => setViewMode("preview")}
+              className="shadow-sm"
             >
               预览
             </Button>
@@ -412,96 +417,100 @@ export default function AdminPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* 基础信息 */}
-          {contentType === "post" ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="title" className="block text-sm font-medium mb-2">
-                  标题 <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="title"
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border rounded-md dark:bg-zinc-900 dark:border-zinc-800"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="date" className="block text-sm font-medium mb-2">
-                  日期 <span className="text-red-500">*</span>
-                </label>
-                <DatePicker
-                  value={formData.date}
-                  onChange={(date) =>
-                    setFormData({ ...formData, date })
-                  }
-                  placeholder="选择日期"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="tags" className="block text-sm font-medium mb-2">
-                  标签
-                </label>
-                <TagInput
-                  value={formData.tags}
-                  onChange={(tags) => setFormData({ ...formData, tags })}
-                  placeholder="输入标签后按回车或逗号"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="id" className="block text-sm font-medium mb-2">
-                  文件 ID（可选，留空将自动生成）
-                </label>
-                <FileIdInput
-                  value={formData.id}
-                  onChange={(id) => setFormData({ ...formData, id })}
-                  contentType="post"
-                  placeholder="例如: my-new-post"
-                />
-                {!formData.id && (
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
-                    将自动生成 ID: <span className="font-mono text-zinc-700 dark:text-zinc-300">{autoGeneratedId}</span>
-                  </p>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="date" className="block text-sm font-medium mb-2">
-                  日期 <span className="text-red-500">*</span>
-                </label>
-                <DatePicker
-                  value={formData.date}
-                  onChange={(date) =>
-                    setFormData({ ...formData, date })
-                  }
-                  placeholder="选择日期"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  文件 ID（自动生成）
-                </label>
-                <div className="px-4 py-2 border rounded-md dark:bg-zinc-900 dark:border-zinc-800 bg-zinc-50">
-                  <span className="font-mono text-sm text-zinc-700 dark:text-zinc-300">{autoGeneratedId}</span>
+          <div className="bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+            {contentType === "post" ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label htmlFor="title" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    标题 <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="title"
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                    className="w-full h-10 px-4 border border-zinc-300 dark:border-zinc-700 rounded-md dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all"
+                    required
+                  />
                 </div>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
-                  随笔将使用此 ID 创建文件
-                </p>
+
+                <div className="space-y-2">
+                  <label htmlFor="date" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    日期 <span className="text-red-500">*</span>
+                  </label>
+                  <DatePicker
+                    value={formData.date}
+                    onChange={(date) =>
+                      setFormData({ ...formData, date })
+                    }
+                    placeholder="选择日期"
+                    className="h-10"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="tags" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    标签
+                  </label>
+                  <TagInput
+                    value={formData.tags}
+                    onChange={(tags) => setFormData({ ...formData, tags })}
+                    placeholder="输入标签后按回车或逗号"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="id" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    文件 ID（可选，留空将自动生成）
+                  </label>
+                  <FileIdInput
+                    value={formData.id}
+                    onChange={(id) => setFormData({ ...formData, id })}
+                    contentType="post"
+                    placeholder="例如: my-new-post"
+                  />
+                  {!formData.id && (
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
+                      将自动生成 ID: <span className="font-mono text-zinc-700 dark:text-zinc-300">{autoGeneratedId}</span>
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label htmlFor="date" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    日期 <span className="text-red-500">*</span>
+                  </label>
+                  <DatePicker
+                    value={formData.date}
+                    onChange={(date) =>
+                      setFormData({ ...formData, date })
+                    }
+                    placeholder="选择日期"
+                    className="h-10"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    文件 ID（自动生成）
+                  </label>
+                  <div className="h-10 px-4 border border-zinc-300 dark:border-zinc-700 rounded-md dark:bg-zinc-950 dark:text-zinc-100 bg-zinc-50 flex items-center">
+                    <span className="font-mono text-sm text-zinc-700 dark:text-zinc-300">{autoGeneratedId}</span>
+                  </div>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
+                    随笔将使用此 ID 创建文件
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* 内容编辑和预览 */}
           <div
-            className={`grid gap-4 ${
+            className={`grid gap-6 ${
               viewMode === "split"
                 ? "grid-cols-1 lg:grid-cols-2"
                 : "grid-cols-1"
@@ -509,15 +518,15 @@ export default function AdminPage() {
           >
             {/* 编辑区域 */}
             {(viewMode === "edit" || viewMode === "split") && (
-              <div className="flex flex-col">
+              <div className="flex flex-col bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
                 <label
                   htmlFor="content"
-                  className="block text-sm font-medium mb-2"
+                  className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300"
                 >
                   {contentType === "post" ? (
                     <>内容（Markdown） <span className="text-red-500">*</span></>
                   ) : (
-                    <>内容 <span className="text-red-500">*</span> <span className="text-xs font-normal text-zinc-500 ml-2">（支持简单文本，Markdown 可选）</span></>
+                    <>内容 <span className="text-red-500">*</span> <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400 ml-2">（支持简单文本，Markdown 可选）</span></>
                   )}
                 </label>
                 <textarea
@@ -527,7 +536,7 @@ export default function AdminPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, content: e.target.value })
                   }
-                  className={`w-full px-4 py-2 border rounded-md text-sm dark:bg-zinc-900 dark:border-zinc-800 resize-none flex-1 overflow-y-auto ${
+                  className={`w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all ${
                     contentType === "post" ? "font-mono" : ""
                   }`}
                   style={{ 
@@ -553,13 +562,13 @@ export default function AdminPage() {
 
             {/* 预览区域 */}
             {(viewMode === "preview" || viewMode === "split") && (
-              <div className="flex flex-col">
-                <label className="block text-sm font-medium mb-2">
+              <div className="flex flex-col bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+                <label className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300">
                   预览
                 </label>
                 <div 
                   ref={previewRef}
-                  className="border rounded-md dark:border-zinc-800 p-4 bg-white dark:bg-zinc-950 overflow-y-auto flex-1"
+                  className="border border-zinc-300 dark:border-zinc-700 rounded-md p-4 bg-white dark:bg-zinc-950 overflow-y-auto flex-1"
                   style={{ 
                     height: viewMode === "split"
                       ? (contentType === "post" ? "600px" : "300px")
@@ -583,17 +592,23 @@ export default function AdminPage() {
           </div>
 
           {/* 提交按钮 */}
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading
-              ? "提交中..."
-              : `创建${contentType === "post" ? "文章" : "随笔"}`}
-          </Button>
+          <div className="flex justify-end">
+            <Button 
+              type="submit" 
+              disabled={loading} 
+              className="min-w-[200px] h-11 text-base font-medium shadow-sm hover:shadow-md transition-shadow"
+            >
+              {loading
+                ? "提交中..."
+                : `创建${contentType === "post" ? "文章" : "随笔"}`}
+            </Button>
+          </div>
         </form>
 
         {/* 使用说明 */}
-        <div className="mt-8 p-4 bg-zinc-50 dark:bg-zinc-900 rounded-md text-sm text-zinc-600 dark:text-zinc-400">
-          <h3 className="font-medium mb-2">使用说明：</h3>
-          <ul className="list-disc list-inside space-y-1">
+        <div className="mt-8 p-6 bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-950 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm">
+          <h3 className="font-semibold mb-3 text-zinc-800 dark:text-zinc-200">使用说明</h3>
+          <ul className="list-disc list-inside space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
             {contentType === "post" ? (
               <>
                 <li>博客文章需要标题、日期和内容，可选标签</li>
@@ -601,7 +616,7 @@ export default function AdminPage() {
                 <li>内容提交后会通过 GitHub API 创建文件</li>
                 <li>Vercel 会自动检测 GitHub 变更并重新部署</li>
                 <li>通常需要 1-2 分钟才能在网站上看到新文章</li>
-                <li>如果文件 ID 已存在，将更新现有文章</li>
+                <li>如果文件 ID 已存在，会自动生成新的 ID</li>
               </>
             ) : (
               <>

@@ -55,8 +55,8 @@ export function DatePicker({
         <Button
           variant="outline"
           className={cn(
-            "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground",
+            "w-full justify-start text-left font-normal h-10 border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900 focus-visible:ring-zinc-500 dark:focus-visible:ring-zinc-400",
+            !date && "text-zinc-500 dark:text-zinc-400",
             className
           )}
           disabled={disabled}
