@@ -31,11 +31,20 @@ export default function AdminPage() {
   const previewRef = useRef<HTMLDivElement>(null)
   const isScrollingRef = useRef(false)
 
+  // 获取当天日期（本地时间）
+  const getTodayDate = (): string => {
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
   // 表单状态
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    date: new Date().toISOString().split("T")[0],
+    date: getTodayDate(),
     tags: [] as string[],
     id: "",
   })
@@ -79,6 +88,15 @@ export default function AdminPage() {
         const data = await response.json()
         setIsAuthenticated(data.authenticated)
         setUsername(data.username || null)
+        
+        // 认证成功后，确保日期是当天
+        if (data.authenticated) {
+          const today = getTodayDate()
+          setFormData(prev => ({
+            ...prev,
+            date: today
+          }))
+        }
       } catch (error) {
         setIsAuthenticated(false)
       }
@@ -123,10 +141,11 @@ export default function AdminPage() {
   // 切换内容类型时重置表单
   useEffect(() => {
     if (contentType === "note") {
+      const today = getTodayDate()
       setFormData({
         title: "",
         content: formData.content,
-        date: formData.date,
+        date: today, // 切换类型时也重置为当天
         tags: [],
         id: "",
       })
@@ -244,7 +263,7 @@ export default function AdminPage() {
         setFormData({
           title: "",
           content: "",
-          date: new Date().toISOString().split("T")[0],
+          date: getTodayDate(),
           tags: [],
           id: "", // 保持为空，始终使用自动生成
         })
