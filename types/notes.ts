@@ -1,9 +1,7 @@
+import type { NoteMeta } from "@/app/lib/content"
+
 export type NotesPaginationProps = {
-  initialNotes: Array<{
-    id: string;
-    content: string;
-    date: string;
-  }>;
+  initialNotes: NoteMeta[];
   initialTotal: number;
   initialPage: number;
   totalPages: number;

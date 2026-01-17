@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { Suspense } from "react"
 import { ArchiveContent } from "@/components/archive-content"
-import { getAllPostsMeta, getTagsFromPosts } from "@/app/lib/cache"
+import { getAllPostsMeta, getTagsFromPosts } from "@/app/lib/content"
 import type { Post, PostsByYear } from '@/types/post'
 
 export const metadata: Metadata = {

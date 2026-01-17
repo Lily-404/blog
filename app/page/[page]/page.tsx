@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { HomeContent } from "@/components/home-content"
-import { getAllPostsMeta, getTagsFromPosts, getAllNotesMeta } from "@/app/lib/cache"
+import { getAllPostsMeta, getTagsFromPosts, getAllNotesMeta } from "@/app/lib/content"
 import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
 
 const PAGE_SIZE = 10

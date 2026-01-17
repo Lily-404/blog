@@ -1,9 +1,9 @@
 import { Feed } from 'feed';
 import fs from 'fs';
-import { getAllPosts, Post } from './posts';
+import { getAllPosts, type Post } from '@/app/lib/content';
 
 export async function generateRssFeed() {
-  const posts = await getAllPosts();
+  const posts = getAllPosts();
   const siteURL = 'https://jimmy-blog.vercel.app';
   const date = new Date();
 

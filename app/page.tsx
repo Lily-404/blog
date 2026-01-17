@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { HomeContent } from "@/components/home-content"
-import { getAllPostsMeta, getTagsFromPosts, getAllNotesMeta } from "@/app/lib/cache"
+import { getAllPostsMeta, getTagsFromPosts, getAllNotesMeta } from "@/app/lib/content"
 import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
 
 const PAGE_SIZE = 10
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 }
 
 export const dynamic = 'force-static'
-export const revalidate = 3600 // 1小时重新验证
+export const revalidate = false // 完全静态生成，禁用重新验证
 
 export default function Home() {
   const posts = getAllPostsMeta()

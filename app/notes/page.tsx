@@ -3,7 +3,7 @@ import { NotesPagination } from "@/components/notes-pagination"
 import { getPaginatedNotesAction } from "@/app/actions/notes"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
-import { getAllPosts } from "@/app/lib/posts"
+// 移除未使用的导入
 
 // 设置为完全静态生成
 export const dynamic = 'force-static'
@@ -24,7 +24,6 @@ export default async function NotesPage({
 }) {
   const currentPage = Number(searchParams?.page) || 1
   const { notes, total, totalPages } = await getPaginatedNotesAction(currentPage, 7)
-  const posts = await getAllPosts()
 
   return (
     <Layout>

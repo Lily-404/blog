@@ -1,5 +1,5 @@
 import { format } from "date-fns"
-import type { Note } from "@/types/note"
+import type { NoteMeta as Note } from "@/app/lib/content"
 
 export function NoteCard({ note, isLast }: { note: Note; isLast?: boolean }) {
   return (

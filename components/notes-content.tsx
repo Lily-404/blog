@@ -6,7 +6,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { delay } from '@/app/lib/utils';
 
-import type { Post } from '@/lib/posts';
+import type { PostMeta as Post } from '@/app/lib/content';
 
 interface NotesContentProps {
   initialData: {

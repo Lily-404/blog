@@ -1,4 +1,4 @@
-import { getAllPostIds, getPostById } from "@/app/lib/posts"
+import { getAllPostIds, getPostById } from "@/app/lib/content"
 import { formatDate } from "@/app/lib/utils"
 import { notFound } from "next/navigation"
 import { Footer } from "@/components/footer"
@@ -16,10 +16,7 @@ export const revalidate = false // 禁用重新验证，因为数据只在部署
 
 // 生成所有可能的文章路径
 export async function generateStaticParams() {
-  const posts = await getAllPostIds()
-  return posts.map((post) => ({
-    id: post.params.id,
-  }))
+  return getAllPostIds()
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {

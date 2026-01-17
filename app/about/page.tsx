@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 import { AboutContent } from "@/components/about-content"
-import { getAllPosts } from "@/app/lib/posts"
-import { getAllNotesMeta } from "@/app/lib/cache"
+import { getAllPosts, getAllNotesMeta } from "@/app/lib/content"
 
 export const dynamic = 'force-static'
 export const revalidate = false // 禁用重新验证，因为内容是静态的

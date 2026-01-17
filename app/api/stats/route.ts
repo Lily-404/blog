@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getAllPosts } from '@/app/lib/posts'
+import { getAllPosts } from '@/app/lib/content'
 import { getPaginatedNotesAction } from '@/app/actions/notes'
 
 export async function GET() {
