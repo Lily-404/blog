@@ -10,7 +10,10 @@ import { NotePreview } from "@/components/note-preview"
 import { DatePicker } from "@/components/ui/date-picker"
 import { TagInput } from "@/components/ui/tag-input"
 import { Alert } from "@/components/ui/alert"
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { toast } from "sonner"
+import { cn } from "@/lib/utils"
+import { HelpCircle } from "lucide-react"
 
 type ContentType = "post" | "note"
 
@@ -319,22 +322,27 @@ export default function AdminPage() {
             {username && (() => {
               const hour = new Date().getHours()
               let greeting = "你好"
+              let emoji = "👋"
               if (hour >= 5 && hour < 12) {
                 greeting = "早上好"
+                emoji = "☀️"
               } else if (hour >= 12 && hour < 18) {
                 greeting = "下午好"
+                emoji = "🌤️"
               } else if (hour >= 18 && hour < 22) {
                 greeting = "晚上好"
+                emoji = "🌃"
               } else {
                 greeting = "夜深了"
+                emoji = "🌙"
               }
               return (
                 <>
                   <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-                    {greeting}，{username}！
+                    {greeting}，{username}！{emoji}
                   </h1>
                   <p className="text-base text-zinc-600 dark:text-zinc-400 mt-2">
-                    今天想写点什么？✨
+                    今天想写点什么？
                   </p>
                 </>
               )
@@ -343,7 +351,19 @@ export default function AdminPage() {
               <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">内容管理</h1>
             )}
           </div>
-          <Button onClick={handleLogout} variant="outline" className="shadow-sm">
+          <Button 
+            onClick={handleLogout} 
+            variant="outline" 
+            className={cn(
+              "h-9 px-4 rounded-lg font-medium",
+              "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
+              "border border-zinc-200/60 dark:border-zinc-700/60",
+              "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
+              "text-zinc-700 dark:text-zinc-300",
+              "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
+              "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]"
+            )}
+          >
             登出
           </Button>
         </div>
@@ -377,50 +397,135 @@ export default function AdminPage() {
           {/* 类型选择和基础信息 */}
           <div className="bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-4 shadow-sm space-y-4">
             {/* 类型选择和视图模式 */}
-            <div className="flex flex-wrap gap-4 items-center">
+            <div className="flex flex-wrap gap-3 items-center">
               <div className="flex gap-2">
                 <Button
                   type="button"
-                  variant={contentType === "post" ? "default" : "outline"}
+                  variant="outline"
                   onClick={() => setContentType("post")}
-                  className="shadow-sm"
+                  className={cn(
+                    "h-9 px-4 rounded-lg font-medium",
+                    "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
+                    "border border-zinc-200/60 dark:border-zinc-700/60",
+                    "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
+                    "text-zinc-700 dark:text-zinc-300",
+                    "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
+                    "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
+                    contentType === "post" && 
+                    "!bg-zinc-900 !text-white !border-zinc-900 dark:!bg-zinc-50 dark:!text-zinc-900 dark:!border-zinc-50 !shadow-sm"
+                  )}
                 >
                   文章
                 </Button>
                 <Button
                   type="button"
-                  variant={contentType === "note" ? "default" : "outline"}
+                  variant="outline"
                   onClick={() => setContentType("note")}
-                  className="shadow-sm"
+                  className={cn(
+                    "h-9 px-4 rounded-lg font-medium",
+                    "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
+                    "border border-zinc-200/60 dark:border-zinc-700/60",
+                    "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
+                    "text-zinc-700 dark:text-zinc-300",
+                    "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
+                    "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
+                    contentType === "note" && 
+                    "!bg-zinc-900 !text-white !border-zinc-900 dark:!bg-zinc-50 dark:!text-zinc-900 dark:!border-zinc-50 !shadow-sm"
+                  )}
                 >
                   随笔
                 </Button>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 w-9 p-0 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    >
+                      <HelpCircle className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent 
+                    className="w-80 p-4 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 shadow-lg"
+                    align="start"
+                  >
+                    <h3 className="font-semibold mb-3 text-zinc-800 dark:text-zinc-200 text-sm">使用说明</h3>
+                    <ul className="list-disc list-inside space-y-2 text-xs text-zinc-700 dark:text-zinc-300">
+                      {contentType === "post" ? (
+                        <>
+                          <li>博客文章需要标题、日期和内容，可选标签</li>
+                          <li>支持完整的 Markdown 语法，包括代码块、数学公式、表格等</li>
+                          <li>内容提交后会通过 GitHub API 创建文件</li>
+                          <li>Vercel 会自动检测 GitHub 变更并重新部署</li>
+                          <li>通常需要 1-2 分钟才能在网站上看到新文章</li>
+                          <li>文件 ID 会自动生成</li>
+                        </>
+                      ) : (
+                        <>
+                          <li>随笔只需要日期和内容，更简洁随意</li>
+                          <li>建议使用简单文本，Markdown 语法可选但不推荐复杂结构</li>
+                          <li>内容提交后会通过 GitHub API 创建文件</li>
+                          <li>Vercel 会自动检测 GitHub 变更并重新部署</li>
+                          <li>通常需要 1-2 分钟才能在网站上看到新随笔</li>
+                        </>
+                      )}
+                    </ul>
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="flex gap-2 ml-auto">
                 <Button
                   type="button"
-                  variant={viewMode === "edit" ? "default" : "outline"}
-                  size="sm"
+                  variant="outline"
                   onClick={() => setViewMode("edit")}
-                  className="shadow-sm"
+                  className={cn(
+                    "h-9 px-4 rounded-lg font-medium",
+                    "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
+                    "border border-zinc-200/60 dark:border-zinc-700/60",
+                    "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
+                    "text-zinc-700 dark:text-zinc-300",
+                    "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
+                    "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
+                    viewMode === "edit" && 
+                    "!bg-zinc-900 !text-white !border-zinc-900 dark:!bg-zinc-50 dark:!text-zinc-900 dark:!border-zinc-50 !shadow-sm"
+                  )}
                 >
                   编辑
                 </Button>
                 <Button
                   type="button"
-                  variant={viewMode === "split" ? "default" : "outline"}
-                  size="sm"
+                  variant="outline"
                   onClick={() => setViewMode("split")}
-                  className="shadow-sm"
+                  className={cn(
+                    "h-9 px-4 rounded-lg font-medium",
+                    "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
+                    "border border-zinc-200/60 dark:border-zinc-700/60",
+                    "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
+                    "text-zinc-700 dark:text-zinc-300",
+                    "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
+                    "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
+                    viewMode === "split" && 
+                    "!bg-zinc-900 !text-white !border-zinc-900 dark:!bg-zinc-50 dark:!text-zinc-900 dark:!border-zinc-50 !shadow-sm"
+                  )}
                 >
                   分栏
                 </Button>
                 <Button
                   type="button"
-                  variant={viewMode === "preview" ? "default" : "outline"}
-                  size="sm"
+                  variant="outline"
                   onClick={() => setViewMode("preview")}
-                  className="shadow-sm"
+                  className={cn(
+                    "h-9 px-4 rounded-lg font-medium",
+                    "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
+                    "border border-zinc-200/60 dark:border-zinc-700/60",
+                    "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
+                    "text-zinc-700 dark:text-zinc-300",
+                    "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
+                    "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
+                    viewMode === "preview" && 
+                    "!bg-zinc-900 !text-white !border-zinc-900 dark:!bg-zinc-50 dark:!text-zinc-900 dark:!border-zinc-50 !shadow-sm"
+                  )}
                 >
                   预览
                 </Button>
@@ -499,15 +604,15 @@ export default function AdminPage() {
 
           {/* 内容编辑和预览 */}
           {viewMode === "split" ? (
-            <div className="flex flex-col lg:flex-row bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+            <div className="flex flex-col lg:flex-row gap-6">
               {/* 编辑区域 */}
-              <div className="flex-1 flex flex-col p-6 lg:pr-3">
+              <div className="flex-1 flex flex-col">
                 <label
                   htmlFor="content"
                   className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300"
                 >
                   {contentType === "post" ? (
-                    <>内容（Markdown） <span className="text-red-500">*</span></>
+                    <>内容 <span className="text-red-500">*</span></>
                   ) : (
                     <>内容 <span className="text-red-500">*</span> <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400 ml-2">（支持简单文本，Markdown 可选）</span></>
                   )}
@@ -519,7 +624,7 @@ export default function AdminPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, content: e.target.value })
                   }
-                  className={`w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all ${
+                  className={`w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-lg text-sm dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all ${
                     contentType === "post" ? "font-mono" : ""
                   }`}
                   style={{ 
@@ -537,13 +642,13 @@ export default function AdminPage() {
               </div>
 
               {/* 预览区域 */}
-              <div className="flex-1 flex flex-col p-6 lg:pl-3">
+              <div className="flex-1 flex flex-col">
                 <label className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300">
                   预览
                 </label>
                 <div 
                   ref={previewRef}
-                  className="border border-zinc-300 dark:border-zinc-700 rounded-md p-4 bg-white dark:bg-zinc-950 overflow-y-auto flex-1"
+                  className="rounded-lg p-4 bg-zinc-50 dark:bg-zinc-800/50 overflow-y-auto flex-1"
                   style={{ 
                     height: contentType === "post" ? "600px" : "300px",
                     minHeight: contentType === "post" ? "600px" : "300px",
@@ -562,13 +667,13 @@ export default function AdminPage() {
             <div className="space-y-6">
               {/* 编辑区域 */}
               {viewMode === "edit" && (
-                <div className="flex flex-col bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+                <div className="flex flex-col">
                   <label
                     htmlFor="content"
                     className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300"
                   >
                     {contentType === "post" ? (
-                      <>内容（Markdown） <span className="text-red-500">*</span></>
+                      <>内容 <span className="text-red-500">*</span></>
                     ) : (
                       <>内容 <span className="text-red-500">*</span> <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400 ml-2">（支持简单文本，Markdown 可选）</span></>
                     )}
@@ -580,7 +685,7 @@ export default function AdminPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, content: e.target.value })
                     }
-                    className={`w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all ${
+                    className={`w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-lg text-sm dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all ${
                       contentType === "post" ? "font-mono" : ""
                     }`}
                     style={{ 
@@ -598,13 +703,13 @@ export default function AdminPage() {
 
               {/* 预览区域 */}
               {viewMode === "preview" && (
-                <div className="flex flex-col bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+                <div className="flex flex-col">
                   <label className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300">
                     预览
                   </label>
                   <div 
                     ref={previewRef}
-                    className="border border-zinc-300 dark:border-zinc-700 rounded-md p-4 bg-white dark:bg-zinc-950 overflow-y-auto flex-1"
+                    className="rounded-lg p-4 bg-zinc-50 dark:bg-zinc-800/50 overflow-y-auto flex-1"
                     style={{ 
                       minHeight: contentType === "post" ? "600px" : "200px"
                     }}
@@ -625,7 +730,17 @@ export default function AdminPage() {
             <Button 
               type="submit" 
               disabled={loading} 
-              className="min-w-[200px] h-11 text-base font-medium shadow-sm hover:shadow-md transition-shadow"
+              className={cn(
+                "min-w-[200px] h-11 px-6 rounded-lg text-base font-medium",
+                "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900",
+                "border border-zinc-900 dark:border-zinc-50",
+                "shadow-[0_2px_4px_0_rgb(0,0,0,0.1)] dark:shadow-[0_2px_4px_0_rgb(0,0,0,0.3)]",
+                "hover:bg-zinc-800 dark:hover:bg-zinc-100",
+                "hover:shadow-[0_4px_8px_0_rgb(0,0,0,0.15)] dark:hover:shadow-[0_4px_8px_0_rgb(0,0,0,0.4)]",
+                "disabled:opacity-50 disabled:cursor-not-allowed",
+                "disabled:hover:bg-zinc-900 dark:disabled:hover:bg-zinc-50",
+                "disabled:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.1)] dark:disabled:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.3)]"
+              )}
             >
               {loading
                 ? "提交中..."
@@ -633,31 +748,6 @@ export default function AdminPage() {
             </Button>
           </div>
         </form>
-
-        {/* 使用说明 */}
-        <div className="mt-8 p-6 bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-950 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <h3 className="font-semibold mb-3 text-zinc-800 dark:text-zinc-200">使用说明</h3>
-          <ul className="list-disc list-inside space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
-            {contentType === "post" ? (
-              <>
-                <li>博客文章需要标题、日期和内容，可选标签</li>
-                <li>支持完整的 Markdown 语法，包括代码块、数学公式、表格等</li>
-                <li>内容提交后会通过 GitHub API 创建文件</li>
-                <li>Vercel 会自动检测 GitHub 变更并重新部署</li>
-                <li>通常需要 1-2 分钟才能在网站上看到新文章</li>
-                <li>如果文件 ID 已存在，会自动生成新的 ID</li>
-              </>
-            ) : (
-              <>
-                <li>随笔只需要日期和内容，更简洁随意</li>
-                <li>建议使用简单文本，Markdown 语法可选但不推荐复杂结构</li>
-                <li>内容提交后会通过 GitHub API 创建文件</li>
-                <li>Vercel 会自动检测 GitHub 变更并重新部署</li>
-                <li>通常需要 1-2 分钟才能在网站上看到新随笔</li>
-              </>
-            )}
-          </ul>
-        </div>
       </div>
     </Layout>
   )

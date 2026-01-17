@@ -1,6 +1,7 @@
 "use client"
 
 import { format } from "date-fns"
+import { useMemo } from "react"
 import { MarkdownPreview } from "./markdown-preview"
 
 interface NotePreviewProps {
@@ -8,11 +9,29 @@ interface NotePreviewProps {
   date: string
 }
 
+const emptyMessages = [
+  "等待你的第一行文字，让想法在这里落地生根",
+  "让思绪化作文字，在这片空白中自由生长",
+  "每一个字都是种子，等待在纸上开出花来",
+  "静待你的笔触，为这空白注入生命",
+  "文字是时间的容器，等待被你的故事填满",
+  "让灵感在这里栖息，让文字在这里起舞",
+  "空白是最大的可能，等待你的第一笔",
+  "让这一刻的想法，成为永恒的文字",
+  "思绪如风，等待被文字捕捉",
+  "在这片空白中，书写你的世界",
+]
+
 export function NotePreview({ content, date }: NotePreviewProps) {
+  // 随机选择空内容的文案
+  const emptyMessage = useMemo(() => {
+    return emptyMessages[Math.floor(Math.random() * emptyMessages.length)]
+  }, [])
+  
   if (!content.trim()) {
     return (
-      <div className="text-center text-zinc-400 dark:text-zinc-600 py-12">
-        输入内容后，预览将显示在这里
+      <div className="text-center text-zinc-400 dark:text-zinc-600 py-12 italic">
+        {emptyMessage}
       </div>
     )
   }

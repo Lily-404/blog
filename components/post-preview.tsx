@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import katex from "katex"
 import "katex/dist/katex.min.css"
 
@@ -8,9 +8,38 @@ interface PostPreviewProps {
   content: string
 }
 
+const emptyMessages = [
+  "空白页等待被填满，让文字在指尖流淌",
+  "等待你的第一行文字，让想法在这里落地生根",
+  "让思绪化作文字，在这片空白中自由生长",
+  "每一个字都是种子，等待在纸上开出花来",
+  "静待你的笔触，为这空白注入生命",
+  "文字是时间的容器，等待被你的故事填满",
+  "让灵感在这里栖息，让文字在这里起舞",
+  "空白是最大的可能，等待你的第一笔",
+]
+
+const loadingMessages = [
+  "文字正在成形，思绪正在沉淀...",
+  "墨迹未干，文字正在流淌...",
+  "思绪正在编织成文...",
+  "文字在纸上慢慢浮现...",
+  "让文字慢慢沉淀，让想法渐渐清晰...",
+  "思绪如云，正在凝结成字...",
+]
+
 export function PostPreview({ content }: PostPreviewProps) {
   const [htmlContent, setHtmlContent] = useState("")
   const [loading, setLoading] = useState(false)
+  
+  // 随机选择空内容和加载时的文案
+  const emptyMessage = useMemo(() => {
+    return emptyMessages[Math.floor(Math.random() * emptyMessages.length)]
+  }, [])
+  
+  const loadingMessage = useMemo(() => {
+    return loadingMessages[Math.floor(Math.random() * loadingMessages.length)]
+  }, [])
 
   useEffect(() => {
     async function processMarkdown() {
@@ -160,16 +189,16 @@ export function PostPreview({ content }: PostPreviewProps) {
 
   if (!content.trim()) {
     return (
-      <div className="text-center text-zinc-400 dark:text-zinc-600 py-12">
-        输入内容后，预览将显示在这里
+      <div className="text-center text-zinc-400 dark:text-zinc-600 py-12 italic">
+        {emptyMessage}
       </div>
     )
   }
 
   if (loading) {
     return (
-      <div className="text-center text-zinc-400 dark:text-zinc-600 py-12">
-        渲染中...
+      <div className="text-center text-zinc-400 dark:text-zinc-600 py-12 italic">
+        {loadingMessage}
       </div>
     )
   }

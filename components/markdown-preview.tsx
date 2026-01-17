@@ -81,7 +81,7 @@ export function MarkdownPreview({ content, className = "" }: MarkdownPreviewProp
   if (!content.trim()) {
     return (
       <div className={`text-center text-zinc-400 dark:text-zinc-600 py-12 ${className}`}>
-        输入内容后，预览将显示在这里
+        开始创作，点亮灵感✨
       </div>
     )
   }
