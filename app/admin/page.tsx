@@ -327,11 +327,31 @@ export default function AdminPage() {
         {/* 头部 */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">内容管理</h1>
-            {username && (
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2">
-                已登录为: <span className="font-medium text-zinc-800 dark:text-zinc-200">{username}</span>
-              </p>
+            {username && (() => {
+              const hour = new Date().getHours()
+              let greeting = "你好"
+              if (hour >= 5 && hour < 12) {
+                greeting = "早上好"
+              } else if (hour >= 12 && hour < 18) {
+                greeting = "下午好"
+              } else if (hour >= 18 && hour < 22) {
+                greeting = "晚上好"
+              } else {
+                greeting = "夜深了"
+              }
+              return (
+                <>
+                  <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                    {greeting}，{username}！
+                  </h1>
+                  <p className="text-base text-zinc-600 dark:text-zinc-400 mt-2">
+                    今天想写点什么？✨
+                  </p>
+                </>
+              )
+            })()}
+            {!username && (
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">内容管理</h1>
             )}
           </div>
           <Button onClick={handleLogout} variant="outline" className="shadow-sm">
