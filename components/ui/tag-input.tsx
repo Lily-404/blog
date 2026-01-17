@@ -75,7 +75,7 @@ export function TagInput({
     <div>
       <div
         className={cn(
-          "flex flex-wrap gap-2 p-2 border border-zinc-300 dark:border-zinc-700 rounded-md dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 min-h-[40px] items-center focus-within:ring-2 focus-within:ring-zinc-500 dark:focus-within:ring-zinc-400 focus-within:border-transparent transition-all",
+          "flex flex-wrap gap-1.5 p-1.5 border border-zinc-300 dark:border-zinc-700 rounded-md dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 min-h-[36px] items-center focus-within:ring-2 focus-within:ring-zinc-500 dark:focus-within:ring-zinc-400 focus-within:border-transparent transition-all",
           duplicateWarning && "border-yellow-300 dark:border-yellow-700",
           value.length >= maxTags && "border-orange-300 dark:border-orange-700",
           className
@@ -85,7 +85,7 @@ export function TagInput({
         {value.map((tag, index) => (
           <div
             key={`${tag}-${index}`}
-            className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-normal bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border border-zinc-200/50 dark:border-zinc-700/50"
+            className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-normal bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border border-zinc-200/50 dark:border-zinc-700/50"
           >
             <span>{tag}</span>
             <button
@@ -112,7 +112,7 @@ export function TagInput({
             }}
             onKeyDown={handleKeyDown}
             placeholder={value.length === 0 ? placeholder : ""}
-            className="flex-1 min-w-[120px] bg-transparent border-none outline-none text-sm px-1"
+            className="flex-1 min-w-[80px] bg-transparent border-none outline-none text-xs px-1"
           />
         )}
       </div>
@@ -125,11 +125,6 @@ export function TagInput({
       {value.length >= maxTags && (
         <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
           最多只能添加 {maxTags} 个标签
-        </p>
-      )}
-      {value.length > 0 && value.length < maxTags && (
-        <p className="text-xs text-zinc-500 mt-1">
-          已添加 {value.length} 个标签（最多 {maxTags} 个）
         </p>
       )}
     </div>

@@ -98,13 +98,13 @@ export function FileIdInput({
           onChange={handleChange}
           placeholder={placeholder}
           className={cn(
-            "w-full h-10 px-4 border border-zinc-300 dark:border-zinc-700 rounded-md dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 pr-10 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all",
+            "w-full h-9 px-3 text-sm border border-zinc-300 dark:border-zinc-700 rounded-md dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 pr-9 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all",
             !isValidFormat && value && "border-red-300 dark:border-red-700",
             checkResult?.exists && "border-yellow-300 dark:border-yellow-700",
             className
           )}
         />
-        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+        <div className="absolute right-2 top-1/2 -translate-y-1/2">
           {isChecking ? (
             <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
           ) : checkResult?.exists ? (
