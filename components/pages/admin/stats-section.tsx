@@ -54,7 +54,7 @@ export function StatsSection({
                 id="title"
                 value={title}
                 onChange={(e) => onTitleChange(e.target.value)}
-                className="w-full min-h-[2rem] px-2 py-1 text-sm bg-transparent dark:text-zinc-100 text-zinc-900 focus:outline-none transition-colors placeholder:text-zinc-400 dark:placeholder:text-zinc-600 font-semibold resize-none overflow-hidden"
+                className="w-full min-h-[2rem] pl-0 pr-2 py-1 text-sm bg-transparent dark:text-zinc-100 text-zinc-900 focus:outline-none transition-colors placeholder:text-zinc-400 dark:placeholder:text-zinc-600 font-semibold resize-none overflow-hidden"
                 placeholder="输入标题"
                 required
                 rows={1}

@@ -65,7 +65,7 @@ export function DatePicker({
           {date ? (
             <div className="flex items-baseline gap-1.5 w-full">
               <div className="flex items-baseline gap-0.5 flex-1">
-                <span className="text-xs text-zinc-400 dark:text-zinc-500 font-normal tracking-wider uppercase">
+                <span className="text-base text-zinc-400 dark:text-zinc-500 font-normal tracking-tight uppercase leading-tight">
                   {format(date, "yyyy", { locale: zhCN })}
                 </span>
               </div>

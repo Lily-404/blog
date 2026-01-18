@@ -103,7 +103,7 @@ export function MiniCalendarHeatmap({ posts, notes }: MiniCalendarHeatmapProps) 
       })()}
       
       {/* 颜色图例 */}
-      <div className="flex items-center justify-center gap-2 mt-4">
+      <div className="flex items-center justify-center gap-2 mt-5">
         <span className="text-[10px] text-zinc-500 dark:text-zinc-400">较少</span>
         <div className="flex items-center gap-0.5">
           <div className="w-2.5 h-2.5 rounded-sm bg-zinc-100 dark:bg-zinc-800" />
