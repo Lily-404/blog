@@ -80,7 +80,7 @@ export function AdminHeader({
                 className={cn(
                   "h-8 px-3 rounded-md text-xs font-medium transition-all",
                   viewMode === "edit"
-                    ? "bg-stone-50 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
+                    ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700"
                     : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
                 )}
               >
@@ -93,7 +93,7 @@ export function AdminHeader({
                 className={cn(
                   "h-8 px-3 rounded-md text-xs font-medium transition-all",
                   viewMode === "split"
-                    ? "bg-stone-50 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
+                    ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700"
                     : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
                 )}
               >
@@ -106,7 +106,7 @@ export function AdminHeader({
                 className={cn(
                   "h-8 px-3 rounded-md text-xs font-medium transition-all",
                   viewMode === "preview"
-                    ? "bg-stone-50 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
+                    ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700"
                     : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
                 )}
               >
@@ -124,7 +124,7 @@ export function AdminHeader({
               className={cn(
                 "h-8 px-3 rounded-md text-xs font-medium transition-all",
                 contentType === "post"
-                  ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700"
+                  ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
                   : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
               )}
             >
@@ -137,7 +137,7 @@ export function AdminHeader({
               className={cn(
                 "h-8 px-3 rounded-md text-xs font-medium transition-all",
                 contentType === "note"
-                  ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700"
+                  ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
                   : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
               )}
             >
