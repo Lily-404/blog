@@ -30,7 +30,7 @@ export function ContentEditor({
               id="content"
               value={content}
               onChange={(e) => onContentChange(e.target.value)}
-              className="w-full px-5 py-4 bg-white dark:bg-zinc-950 text-sm dark:text-zinc-100 text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none transition-all font-mono placeholder:text-zinc-400 dark:placeholder:text-zinc-600 border-0"
+              className="w-full px-5 py-4 bg-transparent dark:bg-transparent text-sm dark:text-zinc-100 text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none transition-all font-mono placeholder:text-zinc-400 dark:placeholder:text-zinc-600 border-0"
               style={{ 
                 height: "600px",
                 minHeight: "600px",
@@ -71,7 +71,7 @@ export function ContentEditor({
           id="content"
           value={content}
           onChange={(e) => onContentChange(e.target.value)}
-          className="w-full px-5 py-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm dark:text-zinc-100 text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none focus:ring-0 focus:border-zinc-200 dark:focus:border-zinc-800 transition-all font-mono placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
+          className="w-full px-5 py-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-transparent dark:bg-transparent text-sm dark:text-zinc-100 text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none focus:ring-0 focus:border-zinc-200 dark:focus:border-zinc-800 transition-all font-mono placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
           style={{ 
             minHeight: "600px"
           }}

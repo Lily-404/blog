@@ -433,7 +433,7 @@ export default function AdminPage() {
         <form onSubmit={handleSubmit} className={cn("space-y-0", contentType === "note" && "space-y-0")}>
           {/* 文章模式 - 整合设计 */}
           {contentType === "post" && (
-            <div className="bg-white dark:bg-zinc-900/50 rounded-xl overflow-hidden">
+            <div className="bg-transparent dark:bg-transparent rounded-xl overflow-hidden">
               
               {/* 内容编辑和预览 - 无缝连接 */}
               <ContentEditor
@@ -448,7 +448,7 @@ export default function AdminPage() {
                   type="submit" 
                   disabled={loading} 
                   className={cn(
-                    "h-9 px-6 rounded-lg text-sm font-medium",
+                    "h-9 px-6 rounded-xl text-sm font-medium",
                     "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900",
                     "border border-zinc-900 dark:border-zinc-50",
                     "shadow-sm hover:shadow-md transition-all",

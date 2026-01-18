@@ -48,15 +48,15 @@ export function MiniCalendarHeatmap({ posts, notes }: MiniCalendarHeatmapProps) 
     return Math.max(...Object.values(countMap), 1)
   }, [countMap])
   
-  // 获取颜色类（更平滑的渐变）
+  // 获取颜色类（增强对比度）
   const getDotClass = (count: number) => {
-    if (!count) return "bg-zinc-100 dark:bg-zinc-800"
+    if (!count) return "bg-zinc-200 dark:bg-zinc-800"
     
     const intensity = count / maxCount
-    if (intensity <= 0.25) return "bg-zinc-300 dark:bg-zinc-700"
-    if (intensity <= 0.5) return "bg-zinc-500 dark:bg-zinc-500"
-    if (intensity <= 0.75) return "bg-zinc-700 dark:bg-zinc-300"
-    return "bg-zinc-900 dark:bg-zinc-100"
+    if (intensity <= 0.25) return "bg-zinc-400 dark:bg-zinc-600"
+    if (intensity <= 0.5) return "bg-zinc-600 dark:bg-zinc-400"
+    if (intensity <= 0.75) return "bg-zinc-800 dark:bg-zinc-200"
+    return "bg-zinc-950 dark:bg-zinc-50"
   }
   
   const todayKey = getDateKey(new Date())
@@ -106,11 +106,11 @@ export function MiniCalendarHeatmap({ posts, notes }: MiniCalendarHeatmapProps) 
       <div className="flex items-center justify-center gap-2 mt-5">
         <span className="text-[10px] text-zinc-500 dark:text-zinc-400">较少</span>
         <div className="flex items-center gap-0.5">
-          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-100 dark:bg-zinc-800" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-300 dark:bg-zinc-700" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-500 dark:bg-zinc-500" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-700 dark:bg-zinc-300" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-900 dark:bg-zinc-100" />
+          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-200 dark:bg-zinc-800" />
+          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-400 dark:bg-zinc-600" />
+          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-600 dark:bg-zinc-400" />
+          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-800 dark:bg-zinc-200" />
+          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-950 dark:bg-zinc-50" />
         </div>
         <span className="text-[10px] text-zinc-500 dark:text-zinc-400">较多</span>
       </div>

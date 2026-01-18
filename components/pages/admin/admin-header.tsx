@@ -80,7 +80,7 @@ export function AdminHeader({
                 className={cn(
                   "h-8 px-3 rounded-md text-xs font-medium transition-all",
                   viewMode === "edit"
-                    ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700"
+                    ? "bg-stone-50 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
                     : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
                 )}
               >
@@ -93,7 +93,7 @@ export function AdminHeader({
                 className={cn(
                   "h-8 px-3 rounded-md text-xs font-medium transition-all",
                   viewMode === "split"
-                    ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700"
+                    ? "bg-stone-50 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
                     : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
                 )}
               >
@@ -106,7 +106,7 @@ export function AdminHeader({
                 className={cn(
                   "h-8 px-3 rounded-md text-xs font-medium transition-all",
                   viewMode === "preview"
-                    ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700"
+                    ? "bg-stone-50 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
                     : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
                 )}
               >
@@ -166,7 +166,7 @@ export function AdminHeader({
               </Button>
             </PopoverTrigger>
             <PopoverContent 
-              className="w-80 p-4 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 shadow-lg"
+              className="w-80 p-4 bg-stone-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 shadow-lg"
               align="end"
             >
               <h3 className="font-semibold mb-3 text-zinc-800 dark:text-zinc-200 text-sm">使用说明</h3>

@@ -46,7 +46,7 @@ export function NoteForm({
   return (
     <div className="space-y-4">
       {/* 内容编辑区域 - 推特风格，简洁专业 */}
-      <div className="relative bg-white dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm transition-all">
+      <div className="relative bg-stone-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm transition-all">
         {/* 精致的装饰线 */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-200 dark:via-zinc-700 to-transparent"></div>
         
@@ -103,7 +103,7 @@ export function NoteForm({
             type="submit"
             disabled={loading || !content.trim()}
             className={cn(
-              "h-9 px-6 rounded-lg text-sm font-medium",
+              "h-9 px-6 rounded-xl text-sm font-medium",
               "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900",
               "border border-zinc-900 dark:border-zinc-50",
               "shadow-sm hover:shadow-md transition-all",
@@ -125,7 +125,7 @@ export function NoteForm({
       
       {/* 预览区域 - 可选显示 */}
       {showPreview && (
-        <div className="bg-white dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+        <div className="bg-stone-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
           <div 
             ref={previewRef}
             className="rounded-lg p-4 bg-zinc-50 dark:bg-zinc-800/50 overflow-y-auto"
