@@ -9,6 +9,16 @@
 }
 
 @layer base {
+  /* 移除 textarea focus 时的默认样式 */
+  textarea:focus,
+  textarea:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    ring: none !important;
+    --tw-ring-offset-shadow: none !important;
+    --tw-ring-shadow: none !important;
+  }
+  
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;

@@ -5,17 +5,20 @@ import { Button } from "@/components/ui/button"
 import { Layout } from "@/components/layout"
 import { Header } from "@/components/header"
 import { clearAuth, createPost, createNote } from "@/app/actions/posts"
-import { PostPreview } from "@/components/post-preview"
-import { NotePreview } from "@/components/note-preview"
-import { DatePicker } from "@/components/ui/date-picker"
-import { TagInput } from "@/components/ui/tag-input"
 import { Alert } from "@/components/ui/alert"
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
-import { HelpCircle, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
+import {
+  AdminHeader,
+  StatsSection,
+  PostForm,
+  NoteForm,
+  ContentEditor,
+} from "@/components/pages/admin"
 
 type ContentType = "post" | "note"
+type ViewMode = "edit" | "preview" | "split"
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
@@ -23,9 +26,24 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
-  const [contentType, setContentType] = useState<ContentType>("post")
-  const [viewMode, setViewMode] = useState<"edit" | "preview" | "split">("split")
+  const [contentType, setContentType] = useState<ContentType>("note")
+  const [viewMode, setViewMode] = useState<ViewMode>("split")
   
+  // 创作统计数据
+  const [stats, setStats] = useState<{
+    posts: { date: string }[]
+    notes: { date: string }[]
+    tags: { tag: string; count: number }[]
+    stats: {
+      totalPosts: number
+      totalNotes: number
+      thisMonthPosts: number
+      thisMonthNotes: number
+      thisWeekPosts: number
+      thisWeekNotes: number
+    }
+  } | null>(null)
+
   // 用于同步滚动的 ref
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const previewRef = useRef<HTMLDivElement>(null)
@@ -124,6 +142,25 @@ export default function AdminPage() {
 
     checkAuthStatus()
   }, [])
+  
+  // 获取创作统计数据
+  const fetchStats = async () => {
+    try {
+      const response = await fetch("/api/admin/stats")
+      if (response.ok) {
+        const data = await response.json()
+        setStats(data)
+      }
+    } catch (error) {
+      console.error("Failed to fetch stats:", error)
+    }
+  }
+  
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchStats()
+    }
+  }, [isAuthenticated])
 
   // 处理 GitHub OAuth 登录
   function handleGitHubLogin() {
@@ -145,66 +182,25 @@ export default function AdminPage() {
       setFormData({
         title: "",
         content: formData.content,
-        date: today, // 切换类型时也重置为当天
+        date: today,
         tags: [],
         id: "",
       })
+      // 随笔模式下自动聚焦到输入框
+      setTimeout(() => {
+        textareaRef.current?.focus()
+      }, 100)
     }
   }, [contentType])
-
-  // 同步滚动功能
+  
+  // 随笔模式下，页面加载时自动聚焦
   useEffect(() => {
-    if (viewMode !== "split" || !textareaRef.current || !previewRef.current) {
-      return
+    if (contentType === "note" && isAuthenticated) {
+      setTimeout(() => {
+        textareaRef.current?.focus()
+      }, 300)
     }
-
-    const textarea = textareaRef.current
-    const preview = previewRef.current
-
-    const handleTextareaScroll = () => {
-      if (isScrollingRef.current) return
-      isScrollingRef.current = true
-
-      const textareaScrollTop = textarea.scrollTop
-      const textareaScrollHeight = textarea.scrollHeight - textarea.clientHeight
-      const textareaScrollRatio = textareaScrollHeight > 0 ? textareaScrollTop / textareaScrollHeight : 0
-
-      const previewScrollHeight = preview.scrollHeight - preview.clientHeight
-      const previewScrollTop = previewScrollHeight * textareaScrollRatio
-
-      preview.scrollTop = previewScrollTop
-
-      requestAnimationFrame(() => {
-        isScrollingRef.current = false
-      })
-    }
-
-    const handlePreviewScroll = () => {
-      if (isScrollingRef.current) return
-      isScrollingRef.current = true
-
-      const previewScrollTop = preview.scrollTop
-      const previewScrollHeight = preview.scrollHeight - preview.clientHeight
-      const previewScrollRatio = previewScrollHeight > 0 ? previewScrollTop / previewScrollHeight : 0
-
-      const textareaScrollHeight = textarea.scrollHeight - textarea.clientHeight
-      const textareaScrollTop = textareaScrollHeight * previewScrollRatio
-
-      textarea.scrollTop = textareaScrollTop
-
-      requestAnimationFrame(() => {
-        isScrollingRef.current = false
-      })
-    }
-
-    textarea.addEventListener("scroll", handleTextareaScroll)
-    preview.addEventListener("scroll", handlePreviewScroll)
-
-    return () => {
-      textarea.removeEventListener("scroll", handleTextareaScroll)
-      preview.removeEventListener("scroll", handlePreviewScroll)
-    }
-  }, [viewMode, formData.content])
+  }, [isAuthenticated, contentType])
 
   // 处理提交
   async function handleSubmit(e: React.FormEvent) {
@@ -241,13 +237,13 @@ export default function AdminPage() {
           content: formData.content,
           date: formData.date,
           tags: formData.tags,
-          id: undefined, // 始终使用自动生成的ID
+          id: undefined,
         })
       } else {
         result = await createNote({
           content: formData.content,
           date: formData.date,
-          id: undefined, // 始终使用自动生成的ID
+          id: undefined,
         })
       }
 
@@ -265,8 +261,10 @@ export default function AdminPage() {
           content: "",
           date: getTodayDate(),
           tags: [],
-          id: "", // 保持为空，始终使用自动生成
+          id: "",
         })
+        // 刷新统计数据
+        fetchStats()
       } else {
         setError(result.message)
         toast.error(result.message)
@@ -377,57 +375,14 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto px-4 py-6">
         <Header showBackButton={true} />
         
-        {/* 头部 */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            {username && (() => {
-              const hour = new Date().getHours()
-              let greeting = "你好"
-              let emoji = "👋"
-              if (hour >= 5 && hour < 12) {
-                greeting = "早上好"
-                emoji = "☀️"
-              } else if (hour >= 12 && hour < 18) {
-                greeting = "下午好"
-                emoji = "🌤️"
-              } else if (hour >= 18 && hour < 22) {
-                greeting = "晚上好"
-                emoji = "🌃"
-              } else {
-                greeting = "夜深了"
-                emoji = "🌙"
-              }
-              return (
-                <>
-                  <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-                    {greeting}，{username}！{emoji}
-                  </h1>
-                  <p className="text-base text-zinc-600 dark:text-zinc-400 mt-2">
-                    今天想写点什么？
-                  </p>
-                </>
-              )
-            })()}
-            {!username && (
-              <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">内容管理</h1>
-            )}
-          </div>
-          <Button 
-            onClick={handleLogout} 
-            variant="outline" 
-            className={cn(
-              "h-9 px-4 rounded-lg font-medium",
-              "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
-              "border border-zinc-200/60 dark:border-zinc-700/60",
-              "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
-              "text-zinc-700 dark:text-zinc-300",
-              "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
-              "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]"
-            )}
-          >
-            登出
-          </Button>
-        </div>
+        <AdminHeader
+          username={username}
+          contentType={contentType}
+          viewMode={viewMode}
+          onContentTypeChange={setContentType}
+          onViewModeChange={setViewMode}
+          onLogout={handleLogout}
+        />
 
         {/* 消息提示 */}
         {error && (
@@ -454,360 +409,78 @@ export default function AdminPage() {
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 类型选择和基础信息 */}
-          <div className="bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-4 shadow-sm space-y-4">
-            {/* 类型选择和视图模式 */}
-            <div className="flex flex-wrap gap-3 items-center">
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setContentType("post")}
+        {/* 创作统计区域 - 仅在文章模式下显示 */}
+        {stats && contentType === "post" && (
+          <StatsSection
+            stats={stats}
+            selectedTags={formData.tags}
+            onTagToggle={(tag: string) => {
+              setFormData(prev => ({
+                ...prev,
+                tags: prev.tags.includes(tag)
+                  ? prev.tags.filter(t => t !== tag)
+                  : [...prev.tags, tag]
+              }))
+            }}
+            title={formData.title}
+            date={formData.date}
+            onTitleChange={(title: string) => setFormData(prev => ({ ...prev, title }))}
+            onDateChange={(date: string) => setFormData(prev => ({ ...prev, date }))}
+            onTagsChange={(tags: string[]) => setFormData(prev => ({ ...prev, tags }))}
+          />
+        )}
+
+        <form onSubmit={handleSubmit} className={cn("space-y-0", contentType === "note" && "space-y-0")}>
+          {/* 文章模式 - 整合设计 */}
+          {contentType === "post" && (
+            <div className="bg-white dark:bg-zinc-900/50 rounded-xl overflow-hidden">
+              
+              {/* 内容编辑和预览 - 无缝连接 */}
+              <ContentEditor
+                content={formData.content}
+                viewMode={viewMode}
+                onContentChange={(content: string) => setFormData(prev => ({ ...prev, content }))}
+              />
+              
+              {/* 提交按钮 - 整合在底部 */}
+              <div className="flex justify-end py-4">
+                <Button 
+                  type="submit" 
+                  disabled={loading} 
                   className={cn(
-                    "h-9 px-4 rounded-lg font-medium",
-                    "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
-                    "border border-zinc-200/60 dark:border-zinc-700/60",
-                    "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
-                    "text-zinc-700 dark:text-zinc-300",
-                    "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
-                    "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
-                    contentType === "post" && 
-                    "!bg-zinc-900 !text-white !border-zinc-900 dark:!bg-zinc-50 dark:!text-zinc-900 dark:!border-zinc-50 !shadow-sm"
+                    "h-9 px-6 rounded-lg text-sm font-medium",
+                    "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900",
+                    "border border-zinc-900 dark:border-zinc-50",
+                    "shadow-sm hover:shadow-md transition-all",
+                    "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-sm"
                   )}
                 >
-                  文章
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setContentType("note")}
-                  className={cn(
-                    "h-9 px-4 rounded-lg font-medium",
-                    "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
-                    "border border-zinc-200/60 dark:border-zinc-700/60",
-                    "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
-                    "text-zinc-700 dark:text-zinc-300",
-                    "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
-                    "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
-                    contentType === "note" && 
-                    "!bg-zinc-900 !text-white !border-zinc-900 dark:!bg-zinc-50 dark:!text-zinc-900 dark:!border-zinc-50 !shadow-sm"
-                  )}
-                >
-                  随笔
-                </Button>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="h-9 w-9 p-0 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                    >
-                      <HelpCircle className="h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent 
-                    className="w-80 p-4 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 shadow-lg"
-                    align="start"
-                  >
-                    <h3 className="font-semibold mb-3 text-zinc-800 dark:text-zinc-200 text-sm">使用说明</h3>
-                    <ul className="list-disc list-inside space-y-2 text-xs text-zinc-700 dark:text-zinc-300">
-                      {contentType === "post" ? (
-                        <>
-                          <li>博客文章需要标题、日期和内容，可选标签</li>
-                          <li>支持完整的 Markdown 语法，包括代码块、数学公式、表格等</li>
-                          <li>内容提交后会通过 GitHub API 创建文件</li>
-                          <li>Vercel 会自动检测 GitHub 变更并重新部署</li>
-                          <li>通常需要 1-2 分钟才能在网站上看到新文章</li>
-                          <li>文件 ID 会自动生成</li>
-                        </>
-                      ) : (
-                        <>
-                          <li>随笔只需要日期和内容，更简洁随意</li>
-                          <li>建议使用简单文本，Markdown 语法可选但不推荐复杂结构</li>
-                          <li>内容提交后会通过 GitHub API 创建文件</li>
-                          <li>Vercel 会自动检测 GitHub 变更并重新部署</li>
-                          <li>通常需要 1-2 分钟才能在网站上看到新随笔</li>
-                        </>
-                      )}
-                    </ul>
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="flex gap-2 ml-auto">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setViewMode("edit")}
-                  className={cn(
-                    "h-9 px-4 rounded-lg font-medium",
-                    "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
-                    "border border-zinc-200/60 dark:border-zinc-700/60",
-                    "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
-                    "text-zinc-700 dark:text-zinc-300",
-                    "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
-                    "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
-                    viewMode === "edit" && 
-                    "!bg-zinc-900 !text-white !border-zinc-900 dark:!bg-zinc-50 dark:!text-zinc-900 dark:!border-zinc-50 !shadow-sm"
-                  )}
-                >
-                  编辑
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setViewMode("split")}
-                  className={cn(
-                    "h-9 px-4 rounded-lg font-medium",
-                    "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
-                    "border border-zinc-200/60 dark:border-zinc-700/60",
-                    "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
-                    "text-zinc-700 dark:text-zinc-300",
-                    "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
-                    "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
-                    viewMode === "split" && 
-                    "!bg-zinc-900 !text-white !border-zinc-900 dark:!bg-zinc-50 dark:!text-zinc-900 dark:!border-zinc-50 !shadow-sm"
-                  )}
-                >
-                  分栏
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setViewMode("preview")}
-                  className={cn(
-                    "h-9 px-4 rounded-lg font-medium",
-                    "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
-                    "border border-zinc-200/60 dark:border-zinc-700/60",
-                    "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
-                    "text-zinc-700 dark:text-zinc-300",
-                    "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
-                    "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
-                    viewMode === "preview" && 
-                    "!bg-zinc-900 !text-white !border-zinc-900 dark:!bg-zinc-50 dark:!text-zinc-900 dark:!border-zinc-50 !shadow-sm"
-                  )}
-                >
-                  预览
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      提交中...
+                    </span>
+                ) : (
+                  "发布文章"
+                )}
                 </Button>
               </div>
-            </div>
-            {/* 基础信息表单 */}
-            {contentType === "post" ? (
-              <div className="flex flex-col lg:flex-row gap-4">
-                <div className="flex-1 min-w-0 space-y-1">
-                  <label htmlFor="title" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                    标题 <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="title"
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
-                    }
-                    className="w-full h-9 px-3 text-sm border border-zinc-300 dark:border-zinc-700 rounded-md dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all"
-                    required
-                  />
-                </div>
-
-                <div className="flex-1 min-w-0 space-y-1">
-                  <label htmlFor="date" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                    日期 <span className="text-red-500">*</span>
-                  </label>
-                  <DatePicker
-                    value={formData.date}
-                    onChange={(date) =>
-                      setFormData({ ...formData, date })
-                    }
-                    placeholder="选择日期"
-                    className="h-9 text-sm w-full"
-                  />
-                </div>
-
-                <div className="flex-1 min-w-0 space-y-1">
-                  <label htmlFor="tags" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                    标签
-                  </label>
-                  <TagInput
-                    value={formData.tags}
-                    onChange={(tags) => setFormData({ ...formData, tags })}
-                    placeholder="输入标签，回车或逗号确定"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col lg:flex-row gap-4">
-                <div className="flex-1 min-w-0 space-y-1">
-                  <label htmlFor="date" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                    日期 <span className="text-red-500">*</span>
-                  </label>
-                  <DatePicker
-                    value={formData.date}
-                    onChange={(date) =>
-                      setFormData({ ...formData, date })
-                    }
-                    placeholder="选择日期"
-                    className="h-9 text-sm w-full"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 space-y-1">
-                  <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                    文件 ID（自动生成）
-                  </label>
-                  <div className="h-9 px-3 border border-zinc-300 dark:border-zinc-700 rounded-md dark:bg-zinc-950 dark:text-zinc-100 bg-zinc-50 flex items-center">
-                    <span className="font-mono text-xs text-zinc-700 dark:text-zinc-300 truncate">{autoGeneratedId}</span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* 内容编辑和预览 */}
-          {viewMode === "split" ? (
-            <div className="flex flex-col lg:flex-row gap-6">
-              {/* 编辑区域 */}
-              <div className="flex-1 flex flex-col">
-                <label
-                  htmlFor="content"
-                  className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300"
-                >
-                  {contentType === "post" ? (
-                    <>内容 <span className="text-red-500">*</span></>
-                  ) : (
-                    <>内容 <span className="text-red-500">*</span> <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400 ml-2">（支持简单文本，Markdown 可选）</span></>
-                  )}
-                </label>
-                <textarea
-                  ref={textareaRef}
-                  id="content"
-                  value={formData.content}
-                  onChange={(e) =>
-                    setFormData({ ...formData, content: e.target.value })
-                  }
-                  className={`w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-lg text-sm dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all ${
-                    contentType === "post" ? "font-mono" : ""
-                  }`}
-                  style={{ 
-                    height: contentType === "post" ? "600px" : "300px",
-                    minHeight: contentType === "post" ? "600px" : "300px",
-                    maxHeight: contentType === "post" ? "600px" : "300px"
-                  }}
-                  required
-                  placeholder={
-                    contentType === "post"
-                      ? "在这里输入 Markdown 内容..."
-                      : "写下你的想法、感受或日常..."
-                  }
-                />
-              </div>
-
-              {/* 预览区域 */}
-              <div className="flex-1 flex flex-col">
-                <label className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300">
-                  预览
-                </label>
-                <div 
-                  ref={previewRef}
-                  className="rounded-lg p-4 bg-zinc-50 dark:bg-zinc-800/50 overflow-y-auto flex-1"
-                  style={{ 
-                    height: contentType === "post" ? "600px" : "300px",
-                    minHeight: contentType === "post" ? "600px" : "300px",
-                    maxHeight: contentType === "post" ? "600px" : "300px"
-                  }}
-                >
-                  {contentType === "note" ? (
-                    <NotePreview content={formData.content} date={formData.date} />
-                  ) : (
-                    <PostPreview content={formData.content} />
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {/* 编辑区域 */}
-              {viewMode === "edit" && (
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="content"
-                    className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300"
-                  >
-                    {contentType === "post" ? (
-                      <>内容 <span className="text-red-500">*</span></>
-                    ) : (
-                      <>内容 <span className="text-red-500">*</span> <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400 ml-2">（支持简单文本，Markdown 可选）</span></>
-                    )}
-                  </label>
-                  <textarea
-                    ref={textareaRef}
-                    id="content"
-                    value={formData.content}
-                    onChange={(e) =>
-                      setFormData({ ...formData, content: e.target.value })
-                    }
-                    className={`w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-lg text-sm dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 resize-none flex-1 overflow-y-auto focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent transition-all ${
-                      contentType === "post" ? "font-mono" : ""
-                    }`}
-                    style={{ 
-                      minHeight: contentType === "post" ? "600px" : "200px"
-                    }}
-                    required
-                    placeholder={
-                      contentType === "post"
-                        ? "在这里输入 Markdown 内容..."
-                        : "写下你的想法、感受或日常..."
-                    }
-                  />
-                </div>
-              )}
-
-              {/* 预览区域 */}
-              {viewMode === "preview" && (
-                <div className="flex flex-col">
-                  <label className="block text-sm font-medium mb-3 text-zinc-700 dark:text-zinc-300">
-                    预览
-                  </label>
-                  <div 
-                    ref={previewRef}
-                    className="rounded-lg p-4 bg-zinc-50 dark:bg-zinc-800/50 overflow-y-auto flex-1"
-                    style={{ 
-                      minHeight: contentType === "post" ? "600px" : "200px"
-                    }}
-                  >
-                    {contentType === "note" ? (
-                      <NotePreview content={formData.content} date={formData.date} />
-                    ) : (
-                      <PostPreview content={formData.content} />
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           )}
-
-          {/* 提交按钮 */}
-          <div className="flex justify-end">
-            <Button 
-              type="submit" 
-              disabled={loading} 
-              className={cn(
-                "min-w-[200px] h-11 px-6 rounded-lg text-base font-medium",
-                "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900",
-                "border border-zinc-900 dark:border-zinc-50",
-                "shadow-[0_2px_4px_0_rgb(0,0,0,0.1)] dark:shadow-[0_2px_4px_0_rgb(0,0,0,0.3)]",
-                "hover:bg-zinc-800 dark:hover:bg-zinc-100",
-                "hover:shadow-[0_4px_8px_0_rgb(0,0,0,0.15)] dark:hover:shadow-[0_4px_8px_0_rgb(0,0,0,0.4)]",
-                "disabled:opacity-50 disabled:cursor-not-allowed",
-                "disabled:hover:bg-zinc-900 dark:disabled:hover:bg-zinc-50",
-                "disabled:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.1)] dark:disabled:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.3)]"
-              )}
-            >
-              {loading
-                ? "提交中..."
-                : `创建${contentType === "post" ? "文章" : "随笔"}`}
-            </Button>
-          </div>
+          
+          {/* 随笔模式 */}
+          {contentType === "note" && (
+            <NoteForm
+              content={formData.content}
+              date={formData.date}
+              autoGeneratedId={autoGeneratedId}
+              viewMode={viewMode}
+              loading={loading}
+              onContentChange={(content: string) => setFormData(prev => ({ ...prev, content }))}
+              onDateChange={(date: string) => setFormData(prev => ({ ...prev, date }))}
+              onViewModeChange={setViewMode}
+            />
+          )}
         </form>
       </div>
     </Layout>

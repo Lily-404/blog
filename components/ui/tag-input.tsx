@@ -75,7 +75,7 @@ export function TagInput({
     <div>
       <div
         className={cn(
-          "flex flex-wrap gap-1.5 p-1.5 border border-zinc-300 dark:border-zinc-700 rounded-md dark:bg-zinc-950 dark:text-zinc-100 bg-white text-zinc-900 min-h-[36px] items-center focus-within:ring-2 focus-within:ring-zinc-500 dark:focus-within:ring-zinc-400 focus-within:border-transparent transition-all",
+          "flex flex-wrap gap-1.5 p-1.5 border-0 rounded-none dark:bg-transparent dark:text-zinc-100 bg-transparent text-zinc-900 min-h-[36px] items-center transition-colors",
           duplicateWarning && "border-yellow-300 dark:border-yellow-700",
           value.length >= maxTags && "border-orange-300 dark:border-orange-700",
           className
