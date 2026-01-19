@@ -24,16 +24,15 @@ const ThemeToggleButton = () => {
       onClick={toggleTheme}
       className="flex items-center text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-300 transition-colors"
       aria-label="切换主题"
+      suppressHydrationWarning
     >
-      <span>
-        {!mounted ? (
-          <span className="h-4 w-4" />
-        ) : theme === "dark" ? (
-          <Sun className="h-4 w-4" />
-        ) : (
-          <Moon className="h-4 w-4" />
-        )}
-      </span>
+      {!mounted ? (
+        <Moon className="h-4 w-4" />
+      ) : theme === "dark" ? (
+        <Sun className="h-4 w-4" />
+      ) : (
+        <Moon className="h-4 w-4" />
+      )}
     </button>
   )
 }

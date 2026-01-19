@@ -6,7 +6,7 @@ export function NoteCard({ note, isLast }: { note: Note; isLast?: boolean }) {
     <div className="group relative pb-6">
       {/* 左侧时间线 */}
       {!isLast && (
-        <div className="absolute left-5 top-0 w-px bottom-[-12px] bg-zinc-200 dark:bg-zinc-700" />
+        <div className="absolute left-5 top-0 w-0.5 bottom-[-12px] bg-zinc-200 dark:bg-zinc-700" />
       )}
       
       {/* 头像区域 */}
