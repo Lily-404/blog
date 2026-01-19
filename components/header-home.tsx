@@ -34,7 +34,7 @@ export function HeaderHome() {
             alt="Jimmy's avatar"
             width={40}
             height={40}
-            className="w-10 h-10 rounded-full object-cover hover:opacity-80 transition-opacity cursor-pointer"
+            className="w-10 h-10 rounded-full object-cover cursor-pointer transition-all duration-150 hover:opacity-90 active:scale-95"
             draggable={false}
           />
         </div>

@@ -37,6 +37,7 @@ export function ContentEditor({
                 maxHeight: "600px"
               }}
               required
+              title=""
               placeholder="粘贴或输入 Markdown 内容..."
             />
           </div>
@@ -76,6 +77,7 @@ export function ContentEditor({
             minHeight: "600px"
           }}
           required
+          title=""
           placeholder="粘贴或输入 Markdown 内容..."
         />
       </div>

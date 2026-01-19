@@ -62,6 +62,7 @@ export function NoteForm({
             outline: "none"
           }}
           required
+          title=""
           placeholder="记录这一刻的想法..."
           autoFocus
           onFocus={(e) => {
