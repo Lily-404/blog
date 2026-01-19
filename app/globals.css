@@ -82,6 +82,17 @@
   font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
 }
 
+/* OptimizedImage shimmer 动画 */
+@keyframes shimmer {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.2s infinite;
+}
+
 .prose p {
   @apply leading-relaxed my-6 text-base;
   line-height: 1.75;

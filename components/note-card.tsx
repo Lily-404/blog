@@ -1,5 +1,6 @@
 import { format } from "date-fns"
 import type { NoteMeta as Note } from "@/app/lib/content"
+import { OptimizedImage } from "@/components/ui/optimized-image"
 
 export function NoteCard({ note, isLast }: { note: Note; isLast?: boolean }) {
   return (
@@ -12,9 +13,11 @@ export function NoteCard({ note, isLast }: { note: Note; isLast?: boolean }) {
       {/* 头像区域 */}
       <div className="relative flex items-stretch gap-3">
         <div className="relative">
-          <img
+          <OptimizedImage
             src="/cat.jpg"
             alt="Jimmy's avatar"
+            width={40}
+            height={40}
             className="w-10 h-10 rounded-full object-cover border-[1px] border-zinc-100 dark:border-zinc-800 shadow-sm"
           />
         </div>

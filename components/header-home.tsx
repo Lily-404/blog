@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useRef } from "react"
 import { HeaderNav } from "@/components/header-nav"
+import { OptimizedImage } from "@/components/ui/optimized-image"
 
 export function HeaderHome() {
   const router = useRouter()
@@ -29,13 +30,13 @@ export function HeaderHome() {
     <header className="mb-6 flex justify-between items-center">
       <div className="flex items-center gap-3">
         <div onClick={handleAvatarClick}>
-          <img
+          <OptimizedImage
             src="/cat.jpg"
             alt="Jimmy's avatar"
             width={40}
             height={40}
+            priority
             className="w-10 h-10 rounded-full object-cover cursor-pointer transition-all duration-150 hover:opacity-90 active:scale-95"
-            draggable={false}
           />
         </div>
         <h1 

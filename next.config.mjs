@@ -26,13 +26,22 @@ const nextConfig = {
         hostname: '**',
       },
     ],
+    // 启用图片缓存
+    minimumCacheTTL: 60 * 60 * 24 * 30, // 30天
+    formats: ['image/avif', 'image/webp'],
   },
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['lucide-react'],
     scrollRestoration: true,
     optimizeServerReact: true,
+    // 启用部分预渲染，提升性能
+    ppr: false,
   },
+  // 压缩配置
+  compress: true,
+  // 生产环境优化
+  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },

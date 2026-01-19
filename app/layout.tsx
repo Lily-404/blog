@@ -91,6 +91,13 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        {/* 预加载关键图片 */}
+        <link
+          rel="preload"
+          href="/cat.jpg"
+          as="image"
+          type="image/jpeg"
+        />
       </head>
       <body className={`${inter.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 antialiased`}>
         <ThemeProvider>
