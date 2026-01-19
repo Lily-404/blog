@@ -51,7 +51,7 @@ export function AdminHeader({
   const greeting = getGreeting()
 
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4 md:gap-0">
       <div>
         {username && greeting && (
           <>
@@ -67,7 +67,7 @@ export function AdminHeader({
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">内容管理</h1>
         )}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         {/* 类型切换和视图模式 - 统一放在右上角 */}
         <div className="flex items-center gap-2">
           {/* 视图模式切换 - 仅在文章模式下显示，放在左边 */}
