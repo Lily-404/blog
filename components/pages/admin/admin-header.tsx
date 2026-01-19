@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { HelpCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { useEffect } from "react"
 
 type ContentType = "post" | "note"
 type ViewMode = "edit" | "preview" | "split"
@@ -25,6 +27,15 @@ export function AdminHeader({
   onViewModeChange,
   onLogout,
 }: AdminHeaderProps) {
+  const isMobile = useIsMobile()
+
+  // 移动端自动设置为分栏模式
+  useEffect(() => {
+    if (isMobile && contentType === "post" && viewMode !== "split") {
+      onViewModeChange("split")
+    }
+  }, [isMobile, contentType, viewMode, onViewModeChange])
+
   const getGreeting = () => {
     if (!username) return null
     
@@ -70,9 +81,9 @@ export function AdminHeader({
       <div className="flex items-center gap-2 flex-wrap">
         {/* 类型切换和视图模式 - 统一放在右上角 */}
         <div className="flex items-center gap-2">
-          {/* 视图模式切换 - 仅在文章模式下显示，放在左边 */}
+          {/* 视图模式切换 - 仅在文章模式下显示，放在左边，移动端隐藏 */}
           {contentType === "post" && (
-            <div className="flex gap-1.5 bg-zinc-100 dark:bg-zinc-800/50 p-1 rounded-lg border border-zinc-200/50 dark:border-zinc-700/50">
+            <div className="hidden md:flex gap-1.5 bg-zinc-100 dark:bg-zinc-800/50 p-1 rounded-lg border border-zinc-200/50 dark:border-zinc-700/50">
               <Button
                 type="button"
                 variant="ghost"
