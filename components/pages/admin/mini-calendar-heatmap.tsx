@@ -78,7 +78,7 @@ export function MiniCalendarHeatmap({ posts, notes }: MiniCalendarHeatmapProps) 
             <div
               key={index}
               className={cn(
-                "w-2.5 h-2.5 rounded-sm transition-all cursor-pointer",
+                "w-2.5 h-2.5 rounded-full transition-all cursor-pointer",
                 getDotClass(count),
                 isToday && "ring-1 ring-zinc-500 dark:ring-zinc-400 ring-offset-0.5",
                 isHovered && "scale-125 z-10 shadow-md"
@@ -106,11 +106,11 @@ export function MiniCalendarHeatmap({ posts, notes }: MiniCalendarHeatmapProps) 
       <div className="flex items-center justify-center gap-2 mt-5">
         <span className="text-[10px] text-zinc-500 dark:text-zinc-400">较少</span>
         <div className="flex items-center gap-0.5">
-          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-200 dark:bg-zinc-800" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-400 dark:bg-zinc-600" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-600 dark:bg-zinc-400" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-800 dark:bg-zinc-200" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-zinc-950 dark:bg-zinc-50" />
+          <div className="w-2.5 h-2.5 rounded-full bg-zinc-200 dark:bg-zinc-800" />
+          <div className="w-2.5 h-2.5 rounded-full bg-zinc-400 dark:bg-zinc-600" />
+          <div className="w-2.5 h-2.5 rounded-full bg-zinc-600 dark:bg-zinc-400" />
+          <div className="w-2.5 h-2.5 rounded-full bg-zinc-800 dark:bg-zinc-200" />
+          <div className="w-2.5 h-2.5 rounded-full bg-zinc-950 dark:bg-zinc-50" />
         </div>
         <span className="text-[10px] text-zinc-500 dark:text-zinc-400">较多</span>
       </div>

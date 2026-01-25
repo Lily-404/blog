@@ -308,3 +308,351 @@ function generateFallbackId(type: "post" | "note", date: string): string {
 function escapeYamlString(str: string): string {
   return str.replace(/"/g, '\\"').replace(/\n/g, "\\n")
 }
+
+// 获取所有文章列表（用于管理界面）
+export async function getAllPostsList(): Promise<{
+  success: boolean
+  posts?: Array<{ id: string; title: string; date: string; tags: string[] }>
+  message?: string
+}> {
+  const auth = await checkAuth()
+  if (!auth.authenticated) {
+    return { success: false, message: "未授权访问，请先登录" }
+  }
+
+  try {
+    const { getAllPostsMeta } = await import("@/app/lib/content")
+    const posts = getAllPostsMeta()
+    return {
+      success: true,
+      posts: posts.map((post) => ({
+        id: post.id,
+        title: post.title,
+        date: post.date,
+        tags: post.tags || [],
+      })),
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: `获取文章列表失败: ${error instanceof Error ? error.message : "未知错误"}`,
+    }
+  }
+}
+
+// 获取所有随笔列表（用于管理界面）
+export async function getAllNotesList(): Promise<{
+  success: boolean
+  notes?: Array<{ id: string; date: string; content: string }>
+  message?: string
+}> {
+  const auth = await checkAuth()
+  if (!auth.authenticated) {
+    return { success: false, message: "未授权访问，请先登录" }
+  }
+
+  try {
+    const { getAllNotesMeta } = await import("@/app/lib/content")
+    const notes = getAllNotesMeta()
+    return {
+      success: true,
+      notes: notes.map((note) => ({
+        id: note.id,
+        date: note.date,
+        content: note.content.substring(0, 100) + (note.content.length > 100 ? "..." : ""), // 只返回前100字符作为预览
+      })),
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: `获取随笔列表失败: ${error instanceof Error ? error.message : "未知错误"}`,
+    }
+  }
+}
+
+// 获取单个文章的完整内容（用于编辑）
+export async function getPostContent(id: string): Promise<{
+  success: boolean
+  post?: { id: string; title: string; content: string; date: string; tags: string[] }
+  message?: string
+}> {
+  const auth = await checkAuth()
+  if (!auth.authenticated) {
+    return { success: false, message: "未授权访问，请先登录" }
+  }
+
+  try {
+    const { getAllPosts } = await import("@/app/lib/content")
+    const posts = getAllPosts()
+    const post = posts.find((p) => p.id === id)
+
+    if (!post) {
+      return { success: false, message: "文章不存在" }
+    }
+
+    return {
+      success: true,
+      post: {
+        id: post.id,
+        title: post.title,
+        content: post.content,
+        date: post.date,
+        tags: post.tags || [],
+      },
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: `获取文章失败: ${error instanceof Error ? error.message : "未知错误"}`,
+    }
+  }
+}
+
+// 获取单个随笔的完整内容（用于编辑）
+export async function getNoteContent(id: string): Promise<{
+  success: boolean
+  note?: { id: string; content: string; date: string }
+  message?: string
+}> {
+  const auth = await checkAuth()
+  if (!auth.authenticated) {
+    return { success: false, message: "未授权访问，请先登录" }
+  }
+
+  try {
+    const { getAllNotes } = await import("@/app/lib/content")
+    const notes = getAllNotes()
+    const note = notes.find((n) => n.id === id)
+
+    if (!note) {
+      return { success: false, message: "随笔不存在" }
+    }
+
+    return {
+      success: true,
+      note: {
+        id: note.id,
+        content: note.content,
+        date: note.date,
+      },
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: `获取随笔失败: ${error instanceof Error ? error.message : "未知错误"}`,
+    }
+  }
+}
+
+// 更新文章
+export async function updatePost(
+  id: string,
+  formData: {
+    title: string
+    content: string
+    date: string
+    tags: string[]
+  }
+): Promise<{ success: boolean; message: string }> {
+  return updateContent("post", id, formData)
+}
+
+// 更新随笔
+export async function updateNote(
+  id: string,
+  formData: {
+    content: string
+    date: string
+  }
+): Promise<{ success: boolean; message: string }> {
+  return updateContent("note", id, formData)
+}
+
+// 统一的内容更新函数
+async function updateContent(
+  type: "post" | "note",
+  id: string,
+  formData: any
+): Promise<{ success: boolean; message: string }> {
+  // 检查认证
+  const auth = await checkAuth()
+  if (!auth.authenticated) {
+    return { success: false, message: "未授权访问，请先登录" }
+  }
+
+  // 获取用户的 GitHub access token
+  const githubToken = await getGitHubToken()
+  if (!githubToken) {
+    return { success: false, message: "未找到 GitHub Token，请重新登录" }
+  }
+
+  const githubOwner = process.env.GITHUB_OWNER || "Lily-404"
+  const githubRepo = process.env.GITHUB_REPO || "blog"
+
+  try {
+    // 构建文件路径
+    const filePath = type === "post" 
+      ? `content/posts/${id}.md`
+      : `content/notes/${id}.md`
+
+    // 检查文件是否存在并获取 sha
+    const existingFile = await checkFileExists(
+      githubOwner,
+      githubRepo,
+      filePath,
+      githubToken
+    )
+
+    if (!existingFile.exists || !existingFile.sha) {
+      return { success: false, message: `${type === "post" ? "文章" : "随笔"}不存在` }
+    }
+
+    // 构建 Markdown 内容
+    let frontmatter: string
+    if (type === "post") {
+      const trimmedContent = formData.content.trimStart()
+      frontmatter = `---
+title: "${escapeYamlString(formData.title)}"
+date: "${formData.date}"
+tags: ${JSON.stringify(formData.tags || [])}
+---
+
+${trimmedContent}`
+    } else {
+      const trimmedContent = formData.content.trimStart()
+      frontmatter = `---
+date: "${formData.date}"
+---
+
+${trimmedContent}`
+    }
+
+    // 将内容编码为 base64
+    const contentBase64 = Buffer.from(frontmatter, "utf-8").toString("base64")
+
+    // 调用 GitHub API 更新文件
+    const response = await fetch(
+      `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${filePath}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `token ${githubToken}`,
+          Accept: "application/vnd.github.v3+json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: `Update ${type === "post" ? "post" : "note"}: ${type === "post" ? formData.title : id}`,
+          content: contentBase64,
+          sha: existingFile.sha,
+        }),
+      }
+    )
+
+    if (!response.ok) {
+      const error = await response.json()
+      console.error("GitHub API 错误:", error)
+      return {
+        success: false,
+        message: `更新失败: ${error.message || "未知错误"}`,
+      }
+    }
+
+    return {
+      success: true,
+      message: `${type === "post" ? "文章" : "随笔"}更新成功`,
+    }
+  } catch (error) {
+    console.error("更新内容时出错:", error)
+    return {
+      success: false,
+      message: `更新失败: ${error instanceof Error ? error.message : "未知错误"}`,
+    }
+  }
+}
+
+// 删除文章
+export async function deletePost(id: string): Promise<{ success: boolean; message: string }> {
+  return deleteContent("post", id)
+}
+
+// 删除随笔
+export async function deleteNote(id: string): Promise<{ success: boolean; message: string }> {
+  return deleteContent("note", id)
+}
+
+// 统一的内容删除函数
+async function deleteContent(
+  type: "post" | "note",
+  id: string
+): Promise<{ success: boolean; message: string }> {
+  // 检查认证
+  const auth = await checkAuth()
+  if (!auth.authenticated) {
+    return { success: false, message: "未授权访问，请先登录" }
+  }
+
+  // 获取用户的 GitHub access token
+  const githubToken = await getGitHubToken()
+  if (!githubToken) {
+    return { success: false, message: "未找到 GitHub Token，请重新登录" }
+  }
+
+  const githubOwner = process.env.GITHUB_OWNER || "Lily-404"
+  const githubRepo = process.env.GITHUB_REPO || "blog"
+
+  try {
+    // 构建文件路径
+    const filePath = type === "post" 
+      ? `content/posts/${id}.md`
+      : `content/notes/${id}.md`
+
+    // 检查文件是否存在并获取 sha
+    const existingFile = await checkFileExists(
+      githubOwner,
+      githubRepo,
+      filePath,
+      githubToken
+    )
+
+    if (!existingFile.exists || !existingFile.sha) {
+      return { success: false, message: `${type === "post" ? "文章" : "随笔"}不存在` }
+    }
+
+    // 调用 GitHub API 删除文件
+    const response = await fetch(
+      `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${filePath}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `token ${githubToken}`,
+          Accept: "application/vnd.github.v3+json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: `Delete ${type === "post" ? "post" : "note"}: ${id}`,
+          sha: existingFile.sha,
+        }),
+      }
+    )
+
+    if (!response.ok) {
+      const error = await response.json()
+      console.error("GitHub API 错误:", error)
+      return {
+        success: false,
+        message: `删除失败: ${error.message || "未知错误"}`,
+      }
+    }
+
+    return {
+      success: true,
+      message: `${type === "post" ? "文章" : "随笔"}删除成功`,
+    }
+  } catch (error) {
+    console.error("删除内容时出错:", error)
+    return {
+      success: false,
+      message: `删除失败: ${error instanceof Error ? error.message : "未知错误"}`,
+    }
+  }
+}

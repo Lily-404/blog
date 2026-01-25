@@ -4,11 +4,10 @@ import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Layout } from "@/components/layout"
 import { Header } from "@/components/header"
-import { clearAuth, createPost, createNote } from "@/app/actions/posts"
-import { Alert } from "@/components/ui/alert"
+import { clearAuth, createPost, createNote, updatePost, updateNote, deletePost, deleteNote, getPostContent, getNoteContent } from "@/app/actions/posts"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
-import { Loader2 } from "lucide-react"
+import { Loader2, List, Plus } from "lucide-react"
 import {
   AdminHeader,
   StatsSection,
@@ -16,6 +15,7 @@ import {
   NoteForm,
   ContentEditor,
 } from "@/components/pages/admin"
+import { ContentList } from "@/components/pages/admin/content-list"
 
 type ContentType = "post" | "note"
 type ViewMode = "edit" | "preview" | "split"
@@ -28,6 +28,8 @@ export default function AdminPage() {
   const [success, setSuccess] = useState("")
   const [contentType, setContentType] = useState<ContentType>("note")
   const [viewMode, setViewMode] = useState<ViewMode>("split")
+  const [showList, setShowList] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
   
   // 创作统计数据
   const [stats, setStats] = useState<{
@@ -43,6 +45,11 @@ export default function AdminPage() {
       thisWeekNotes: number
     }
   } | null>(null)
+
+  // 列表数据
+  const [postsList, setPostsList] = useState<Array<{ id: string; title: string; date: string; tags: string[] }>>([])
+  const [notesList, setNotesList] = useState<Array<{ id: string; date: string; content: string }>>([])
+  const [listLoading, setListLoading] = useState(false)
 
   // 用于同步滚动的 ref
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -155,12 +162,44 @@ export default function AdminPage() {
       console.error("Failed to fetch stats:", error)
     }
   }
+
+  // 获取内容列表
+  const fetchContentList = async () => {
+    setListLoading(true)
+    try {
+      if (contentType === "post") {
+        const response = await fetch("/api/admin/posts")
+        if (response.ok) {
+          const data = await response.json()
+          setPostsList(data)
+        }
+      } else {
+        const response = await fetch("/api/admin/notes")
+        if (response.ok) {
+          const data = await response.json()
+          setNotesList(data)
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch content list:", error)
+      toast.error("获取列表失败")
+    } finally {
+      setListLoading(false)
+    }
+  }
   
   useEffect(() => {
     if (isAuthenticated) {
       fetchStats()
     }
   }, [isAuthenticated])
+
+  // 当切换内容类型或显示列表时，刷新列表
+  useEffect(() => {
+    if (isAuthenticated && showList) {
+      fetchContentList()
+    }
+  }, [isAuthenticated, contentType, showList])
 
   // 处理 GitHub OAuth 登录
   function handleGitHubLogin() {
@@ -202,6 +241,88 @@ export default function AdminPage() {
     }
   }, [isAuthenticated, contentType])
 
+  // 处理编辑
+  const handleEdit = async (id: string) => {
+    setLoading(true)
+    setError("")
+    try {
+      if (contentType === "post") {
+        const result = await getPostContent(id)
+        if (result.success && result.post) {
+          setFormData({
+            title: result.post.title,
+            content: result.post.content,
+            date: result.post.date.split("T")[0], // 从 ISO 格式提取日期部分
+            tags: result.post.tags || [],
+            id: result.post.id,
+          })
+          setEditingId(id)
+          setShowList(false)
+          toast.success("已加载文章内容")
+        } else {
+          setError(result.message || "加载文章失败")
+          toast.error(result.message || "加载文章失败")
+        }
+      } else {
+        const result = await getNoteContent(id)
+        if (result.success && result.note) {
+          setFormData({
+            title: "",
+            content: result.note.content,
+            date: result.note.date.split("T")[0], // 从 ISO 格式提取日期部分
+            tags: [],
+            id: result.note.id,
+          })
+          setEditingId(id)
+          setShowList(false)
+          toast.success("已加载随笔内容")
+        } else {
+          setError(result.message || "加载随笔失败")
+          toast.error(result.message || "加载随笔失败")
+        }
+      }
+    } catch (err) {
+      const errorMessage = "加载内容失败，请重试"
+      setError(errorMessage)
+      toast.error(errorMessage)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // 处理删除
+  const handleDelete = async (id: string) => {
+    try {
+      let result
+      if (contentType === "post") {
+        result = await deletePost(id)
+      } else {
+        result = await deleteNote(id)
+      }
+
+      if (result.success) {
+        // 刷新列表和统计数据
+        fetchContentList()
+        fetchStats()
+        // 如果删除的是正在编辑的内容，清空表单
+        if (editingId === id) {
+          setFormData({
+            title: "",
+            content: "",
+            date: getTodayDate(),
+            tags: [],
+            id: "",
+          })
+          setEditingId(null)
+        }
+      } else {
+        throw new Error(result.message)
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
   // 处理提交
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -231,24 +352,43 @@ export default function AdminPage() {
 
     try {
       let result
-      if (contentType === "post") {
-        result = await createPost({
-          title: formData.title,
-          content: formData.content,
-          date: formData.date,
-          tags: formData.tags,
-          id: undefined,
-        })
+      if (editingId) {
+        // 更新模式
+        if (contentType === "post") {
+          result = await updatePost(editingId, {
+            title: formData.title,
+            content: formData.content,
+            date: formData.date,
+            tags: formData.tags,
+          })
+        } else {
+          result = await updateNote(editingId, {
+            content: formData.content,
+            date: formData.date,
+          })
+        }
       } else {
-        result = await createNote({
-          content: formData.content,
-          date: formData.date,
-          id: undefined,
-        })
+        // 创建模式
+        if (contentType === "post") {
+          result = await createPost({
+            title: formData.title,
+            content: formData.content,
+            date: formData.date,
+            tags: formData.tags,
+            id: formData.id || undefined,
+          })
+        } else {
+          result = await createNote({
+            content: formData.content,
+            date: formData.date,
+            id: formData.id || undefined,
+          })
+        }
       }
 
       if (result.success) {
-        const actualId = result.id || autoGeneratedId
+        // 更新模式下使用 editingId，创建模式下使用 result.id（如果存在）
+        const actualId = editingId || ("id" in result ? result.id : formData.id || autoGeneratedId)
         const successMessage = `${result.message}。${contentType === "post" ? "文章" : "随笔"}已提交到 GitHub，Vercel 将自动重新部署（通常需要 1-2 分钟）`
         const detailMessage = `文件 ID: ${actualId}`
         setSuccess(successMessage)
@@ -263,8 +403,12 @@ export default function AdminPage() {
           tags: [],
           id: "",
         })
-        // 刷新统计数据
+        setEditingId(null)
+        // 刷新统计数据和列表
         fetchStats()
+        if (showList) {
+          fetchContentList()
+        }
       } else {
         setError(result.message)
         toast.error(result.message)
@@ -276,6 +420,19 @@ export default function AdminPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // 切换到新建模式
+  const handleNew = () => {
+    setFormData({
+      title: "",
+      content: "",
+      date: getTodayDate(),
+      tags: [],
+      id: "",
+    })
+    setEditingId(null)
+    setShowList(false)
   }
 
   // 如果还在检查认证状态，显示加载中
@@ -379,58 +536,61 @@ export default function AdminPage() {
           username={username}
           contentType={contentType}
           viewMode={viewMode}
-          onContentTypeChange={setContentType}
+          showList={showList}
+          onContentTypeChange={(type) => {
+            setContentType(type)
+            setShowList(false)
+            handleNew()
+          }}
           onViewModeChange={setViewMode}
           onLogout={handleLogout}
+          onToggleList={() => {
+            setShowList(!showList)
+            if (!showList) {
+              fetchContentList()
+            }
+          }}
         />
 
-        {/* 消息提示 */}
-        {error && (
-          <Alert
-            variant="destructive"
-            onClose={() => setError("")}
-            autoClose={true}
-            autoCloseDelay={8000}
-            className="mb-4"
-          >
-            {error}
-          </Alert>
-        )}
+        {/* 内容列表视图 */}
+        {showList ? (
+          <div className="bg-transparent">
+            <h2 className="text-lg font-semibold mb-4 text-zinc-900 dark:text-zinc-100">
+              {contentType === "post" ? "文章列表" : "随笔列表"}
+            </h2>
+            <ContentList
+              contentType={contentType}
+              posts={postsList}
+              notes={notesList}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              loading={listLoading}
+            />
+          </div>
+        ) : (
+          <>
+            {/* 创作统计区域 - 仅在文章模式下显示 */}
+            {stats && contentType === "post" && (
+              <StatsSection
+                stats={stats}
+                selectedTags={formData.tags}
+                onTagToggle={(tag: string) => {
+                  setFormData(prev => ({
+                    ...prev,
+                    tags: prev.tags.includes(tag)
+                      ? prev.tags.filter(t => t !== tag)
+                      : [...prev.tags, tag]
+                  }))
+                }}
+                title={formData.title}
+                date={formData.date}
+                onTitleChange={(title: string) => setFormData(prev => ({ ...prev, title }))}
+                onDateChange={(date: string) => setFormData(prev => ({ ...prev, date }))}
+                onTagsChange={(tags: string[]) => setFormData(prev => ({ ...prev, tags }))}
+              />
+            )}
 
-        {success && (
-          <Alert
-            variant="success"
-            onClose={() => setSuccess("")}
-            autoClose={true}
-            autoCloseDelay={10000}
-            className="mb-4"
-          >
-            {success}
-          </Alert>
-        )}
-
-        {/* 创作统计区域 - 仅在文章模式下显示 */}
-        {stats && contentType === "post" && (
-          <StatsSection
-            stats={stats}
-            selectedTags={formData.tags}
-            onTagToggle={(tag: string) => {
-              setFormData(prev => ({
-                ...prev,
-                tags: prev.tags.includes(tag)
-                  ? prev.tags.filter(t => t !== tag)
-                  : [...prev.tags, tag]
-              }))
-            }}
-            title={formData.title}
-            date={formData.date}
-            onTitleChange={(title: string) => setFormData(prev => ({ ...prev, title }))}
-            onDateChange={(date: string) => setFormData(prev => ({ ...prev, date }))}
-            onTagsChange={(tags: string[]) => setFormData(prev => ({ ...prev, tags }))}
-          />
-        )}
-
-        <form onSubmit={handleSubmit} className={cn("space-y-0", contentType === "note" && "space-y-0")}>
+            <form onSubmit={handleSubmit} className={cn("space-y-0", contentType === "note" && "space-y-0")}>
           {/* 文章模式 - 整合设计 */}
           {contentType === "post" && (
             <div className="bg-transparent dark:bg-transparent rounded-xl overflow-hidden">
@@ -443,7 +603,22 @@ export default function AdminPage() {
               />
               
               {/* 提交按钮 - 整合在底部 */}
-              <div className="flex justify-end py-4">
+              <div className="flex justify-end items-center gap-3 py-4">
+                {editingId && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleNew}
+                    className={cn(
+                      "h-9 px-6 rounded-xl text-sm font-medium",
+                      "bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700",
+                      "text-zinc-700 dark:text-zinc-300",
+                      "hover:bg-zinc-50 dark:hover:bg-zinc-700"
+                    )}
+                  >
+                    取消编辑
+                  </Button>
+                )}
                 <Button 
                   type="submit" 
                   disabled={loading} 
@@ -458,10 +633,10 @@ export default function AdminPage() {
                   {loading ? (
                     <span className="flex items-center gap-2">
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      提交中...
+                      {editingId ? "更新中..." : "提交中..."}
                     </span>
                 ) : (
-                  "发布文章"
+                  editingId ? "更新文章" : "发布文章"
                 )}
                 </Button>
               </div>
@@ -476,12 +651,16 @@ export default function AdminPage() {
               autoGeneratedId={autoGeneratedId}
               viewMode={viewMode}
               loading={loading}
+              editing={!!editingId}
               onContentChange={(content: string) => setFormData(prev => ({ ...prev, content }))}
               onDateChange={(date: string) => setFormData(prev => ({ ...prev, date }))}
               onViewModeChange={setViewMode}
+              onCancelEdit={handleNew}
             />
           )}
         </form>
+          </>
+        )}
       </div>
     </Layout>
   )

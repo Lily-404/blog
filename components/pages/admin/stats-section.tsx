@@ -71,7 +71,7 @@ export function StatsSection({
           {/* 日期选择 - 优化设计 */}
           <div className="relative bg-stone-50 dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 p-4 shadow-sm hover:shadow-md transition-all">
             <div className="relative">
-              <div className="text-xs text-zinc-500 dark:text-zinc-400 mb-2 font-medium">发布日期</div>
+              <div className="text-xs text-zinc-500 dark:text-zinc-400 mb-6 font-medium">发布日期</div>
               <DatePicker
                 value={date}
                 onChange={onDateChange}

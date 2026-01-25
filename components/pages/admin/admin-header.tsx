@@ -14,18 +14,22 @@ interface AdminHeaderProps {
   username: string | null
   contentType: ContentType
   viewMode: ViewMode
+  showList: boolean
   onContentTypeChange: (type: ContentType) => void
   onViewModeChange: (mode: ViewMode) => void
   onLogout: () => void
+  onToggleList: () => void
 }
 
 export function AdminHeader({
   username,
   contentType,
   viewMode,
+  showList,
   onContentTypeChange,
   onViewModeChange,
   onLogout,
+  onToggleList,
 }: AdminHeaderProps) {
   const isMobile = useIsMobile()
 
@@ -155,6 +159,24 @@ export function AdminHeader({
               随笔
             </Button>
           </div>
+
+          {/* 列表/新建切换按钮 - 放在类型切换右侧 */}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onToggleList}
+            className={cn(
+              "h-10 px-3 rounded-md text-xs font-medium",
+              "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
+              "border border-zinc-200/60 dark:border-zinc-700/60",
+              "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
+              "text-zinc-700 dark:text-zinc-300",
+              "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
+              "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]"
+            )}
+          >
+            {showList ? "写作" : "列表"}
+          </Button>
           
           {/* 帮助按钮 */}
           <Popover>
