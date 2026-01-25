@@ -1,8 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
-import { HelpCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useEffect, useMemo, useCallback } from "react"
@@ -163,50 +161,6 @@ export function AdminHeader({
           >
             {showList ? "写作" : "列表"}
           </Button>
-          
-          {/* 帮助按钮 */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                type="button"
-                variant="outline"
-                className={cn(
-                  "h-10 w-10 p-0 rounded-md",
-                  OUTLINE_BUTTON_BASE_STYLES,
-                  "text-zinc-500 dark:text-zinc-300",
-                  "hover:text-zinc-700 dark:hover:text-zinc-200"
-                )}
-              >
-                <HelpCircle className="h-4 w-4" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent 
-              className="w-80 p-4 bg-stone-50 dark:bg-zinc-900"
-              align="end"
-            >
-              <h3 className="font-semibold mb-3 text-zinc-800 dark:text-zinc-200 text-sm">使用说明</h3>
-              <ul className="list-disc list-inside space-y-2 text-xs text-zinc-700 dark:text-zinc-300">
-                {contentType === "post" ? (
-                  <>
-                    <li>博客文章需要标题、日期和内容，可选标签</li>
-                    <li>支持完整的 Markdown 语法，包括代码块、数学公式、表格等</li>
-                    <li>内容提交后会通过 GitHub API 创建文件</li>
-                    <li>Vercel 会自动检测 GitHub 变更并重新部署</li>
-                    <li>通常需要 1-2 分钟才能在网站上看到新文章</li>
-                    <li>文件 ID 会自动生成</li>
-                  </>
-                ) : (
-                  <>
-                    <li>随笔只需要日期和内容，更简洁随意</li>
-                    <li>建议使用简单文本，Markdown 语法可选但不推荐复杂结构</li>
-                    <li>内容提交后会通过 GitHub API 创建文件</li>
-                    <li>Vercel 会自动检测 GitHub 变更并重新部署</li>
-                    <li>通常需要 1-2 分钟才能在网站上看到新随笔</li>
-                  </>
-                )}
-              </ul>
-            </PopoverContent>
-          </Popover>
         </div>
         
         {/* 登出按钮 */}

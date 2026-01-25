@@ -2,12 +2,14 @@
 
 import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
+import { ActionButton } from "@/components/ui/action-button"
+import { Alert } from "@/components/ui/alert"
 import { Layout } from "@/components/layout"
 import { Header } from "@/components/header"
 import { clearAuth, createPost, createNote, updatePost, updateNote, deletePost, deleteNote, getPostContent, getNoteContent } from "@/app/actions/posts"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
-import { Loader2, List, Plus } from "lucide-react"
+import { Loader2, Github } from "lucide-react"
 import { PageLoader } from "@/components/ui/loading-spinner"
 import { Card } from "@/components/ui/card"
 import { SubmitButton } from "@/components/ui/submit-button"
@@ -469,22 +471,24 @@ export default function AdminPage() {
               不过既然你找到了，那就用 GitHub 登录试试看吧～
             </p>
             {error && (
-              <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-red-700 dark:text-red-400 text-sm">
+              <Alert variant="destructive" className="mb-4">
                 {error}
-              </div>
+              </Alert>
             )}
             {success && (
-              <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md text-green-700 dark:text-green-400 text-sm">
+              <Alert variant="success" className="mb-4">
                 {success}
-              </div>
+              </Alert>
             )}
-            <Button
+            <ActionButton
+              icon={loading ? Loader2 : Github}
+              iconClassName={loading ? "animate-spin" : undefined}
               onClick={handleGitHubLogin}
               disabled={loading}
-              className="w-full"
+              className="w-full justify-center"
             >
               {loading ? "登录中..." : "用 GitHub 登录试试"}
-            </Button>
+            </ActionButton>
             <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-400 text-center italic">
               提示：只有仓库所有者或协作者才能进来哦
             </p>

@@ -34,6 +34,8 @@ export interface ActionButtonProps {
   /** <a> 专用：target、rel 等 */
   target?: string
   rel?: string
+  /** button 专用：是否禁用 */
+  disabled?: boolean
 }
 
 export const ActionButton = forwardRef<HTMLAnchorElement | HTMLButtonElement, ActionButtonProps>(
