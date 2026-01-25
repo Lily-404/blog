@@ -1,7 +1,7 @@
 import { Inter } from 'next/font/google'
 import type { Metadata, Viewport } from 'next'
 import GoogleAnalytics from "@/components/GoogleAnalytics"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/ui/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
 

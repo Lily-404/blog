@@ -1,5 +1,7 @@
 "use client"
 
+import { Card } from "@/components/ui/card"
+import { DecorativeLine } from "@/components/ui/decorative-line"
 import { DatePicker } from "@/components/ui/date-picker"
 import { TagInput } from "@/components/ui/tag-input"
 
@@ -21,9 +23,8 @@ export function PostForm({
   onTagsChange,
 }: PostFormProps) {
   return (
-    <div className="bg-white dark:bg-zinc-900/50 rounded-xl p-4 relative">
-      {/* 精致的顶部装饰线 */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-200 dark:via-zinc-700 to-transparent"></div>
+    <Card variant="default" size="md" className="relative">
+      <DecorativeLine />
       
       {/* 基础信息表单 - 极简设计，无边框 */}
       <div className="flex flex-col lg:flex-row gap-3">
@@ -56,6 +57,6 @@ export function PostForm({
           />
         </div>
       </div>
-    </div>
+    </Card>
   )
 }

@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Tag } from '@/components/tag';
+import { Tag } from '@/components/ui/tag';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
+import { Footer } from "@/components/ui/footer"
 import { delay } from '@/lib/utils';
 
 import type { PostMeta as Post } from '@/app/lib/content';
@@ -17,21 +17,24 @@ interface NotesContentProps {
 
 function useTags(initialTags: Array<{ tag: string; count: number }>) {
   const [allTags] = useState(initialTags);
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  // 使用 useTagFilter hook，但需要包装 handleTagClick 以支持过渡效果
+  const { selectedTag, handleTagClick: baseHandleTagClick, tagElements } = useTagFilter(initialTags);
 
   const handleTagClick = useCallback(async (tag: string | null) => {
     setIsTransitioning(true);
-    setSelectedTag(tag);
+    baseHandleTagClick(tag);
     await delay(300);
     setIsTransitioning(false);
-  }, []);
+  }, [baseHandleTagClick]);
 
   return {
     allTags,
     selectedTag,
     isTransitioning,
     handleTagClick,
+    tagElements,
   };
 }
 
@@ -70,34 +73,8 @@ function usePosts(initialPosts: Post[], selectedTag: string | null) {
 }
 
 export function NotesContent({ initialData }: NotesContentProps) {
-  const { allTags, selectedTag, isTransitioning, handleTagClick } = useTags(initialData.tags);
+  const { allTags, selectedTag, isTransitioning, handleTagClick, tagElements } = useTags(initialData.tags);
   const { posts, loading, error } = usePosts(initialData.posts, selectedTag);
-
-  const tagElements = useMemo(() => {
-    if (allTags.length === 0) return null;
-
-    return (
-      <div className="mb-8">
-        <div className="flex flex-wrap gap-2">
-          <Tag
-            tag="全部"
-            onClick={() => handleTagClick(null)}
-            interactive={true}
-            className={selectedTag === null ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200' : ''}
-          />
-          {allTags.map(({ tag }) => (
-            <Tag
-              key={tag}
-              tag={tag}
-              onClick={() => handleTagClick(tag)}
-              interactive={true}
-              className={selectedTag === tag ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200' : ''}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }, [allTags, selectedTag, handleTagClick]);
 
   const postElements = useMemo(() => (
     <div className={`space-y-6 transition-opacity duration-300 ${isTransitioning ? 'opacity-50' : 'opacity-100'}`}>
@@ -164,7 +141,11 @@ export function NotesContent({ initialData }: NotesContentProps) {
       <Header showBackButton={true} title="随笔" />
 
       <main>
-        {tagElements}
+        {allTags.length > 0 && (
+          <div className="mb-8">
+            {tagElements}
+          </div>
+        )}
         {postElements}
       </main>
 

@@ -1,9 +1,9 @@
 import { getAllPostIds, getPostById } from "@/app/lib/content"
 import { formatDate } from "@/lib/utils"
 import { notFound } from "next/navigation"
-import { Footer } from "@/components/footer"
+import { Footer } from "@/components/ui/footer"
 import { Layout } from "@/components/layout"
-import { Tags } from "@/components/tag"
+import { Tags } from "@/components/ui/tag"
 import { Header } from "@/components/header"
 import { MarkdownContent } from "@/components/markdown-content"
 

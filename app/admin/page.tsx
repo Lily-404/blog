@@ -8,6 +8,9 @@ import { clearAuth, createPost, createNote, updatePost, updateNote, deletePost, 
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { Loader2, List, Plus } from "lucide-react"
+import { PageLoader } from "@/components/ui/loading-spinner"
+import { Card } from "@/components/ui/card"
+import { SubmitButton } from "@/components/ui/submit-button"
 import {
   AdminHeader,
   StatsSection,
@@ -441,20 +444,11 @@ export default function AdminPage() {
       <Layout>
         <div className="max-w-2xl mx-auto px-4 py-6">
           <Header showBackButton={true} />
-          <div className="flex flex-col items-center justify-center min-h-[60vh]">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800 rounded-full blur-xl opacity-50 animate-pulse"></div>
-              <div className="relative bg-white dark:bg-zinc-900 rounded-full p-6 shadow-lg border border-zinc-200 dark:border-zinc-800">
-                <Loader2 className="w-8 h-8 text-zinc-600 dark:text-zinc-400 animate-spin" />
-              </div>
-            </div>
-            <p className="mt-6 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-              正在验证身份...
-            </p>
-            <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-500 italic">
-              稍等片刻
-            </p>
-          </div>
+          <PageLoader
+            message="正在验证身份..."
+            subMessage="稍等片刻"
+            size="lg"
+          />
         </div>
       </Layout>
     )
@@ -511,13 +505,13 @@ export default function AdminPage() {
                 <p className="text-xs text-zinc-400 dark:text-zinc-600 mt-4">
                   如果你真的进来了，记得帮我写点好东西 😊
                 </p>
-                <div className="mt-6 p-4 bg-zinc-50 dark:bg-zinc-900/30 rounded-lg border border-zinc-200 dark:border-zinc-800">
+                <Card variant="muted" size="md">
                   <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
                     <span className="font-semibold">小贴士：</span>
                     <br />
                     这个页面是我用来管理博客内容的，如果你也想搭建类似的博客，可以看看我的 GitHub 仓库源码哦～
                   </p>
-                </div>
+                </Card>
               </div>
             </div>
           </div>
@@ -619,26 +613,14 @@ export default function AdminPage() {
                     取消编辑
                   </Button>
                 )}
-                <Button 
-                  type="submit" 
-                  disabled={loading} 
-                  className={cn(
-                    "h-9 px-6 rounded-xl text-sm font-medium",
-                    "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900",
-                    "border border-zinc-900 dark:border-zinc-50",
-                    "shadow-sm hover:shadow-md transition-all",
-                    "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-sm"
-                  )}
-                >
-                  {loading ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      {editingId ? "更新中..." : "提交中..."}
-                    </span>
-                ) : (
-                  editingId ? "更新文章" : "发布文章"
-                )}
-                </Button>
+                <SubmitButton
+                  loading={loading}
+                  editing={!!editingId}
+                  editText="更新文章"
+                  createText="发布文章"
+                  editingLoadingText="更新中..."
+                  creatingLoadingText="提交中..."
+                />
               </div>
             </div>
           )}

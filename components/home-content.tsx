@@ -3,11 +3,12 @@
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Tag } from "@/components/tag"
-import { PaginationButtons } from "@/components/pagination-buttons"
+import { PostListItem } from "@/components/ui/post-list-item"
+import { PaginationButtons } from "@/components/ui/pagination-buttons"
 import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { formatDate } from "@/lib/utils"
+import { Footer } from "@/components/ui/footer"
+import { EmptyState } from "@/components/ui/empty-state"
+import { useTagFilter } from "@/hooks/use-tag-filter"
 import { articleStyles } from "@/styles/article"
 
 type HomeContentProps = {
@@ -20,7 +21,7 @@ type HomeContentProps = {
 
 export function HomeContent({ posts, allPosts, tags, currentPage, totalPages }: HomeContentProps) {
   const router = useRouter()
-  const [selectedTag, setSelectedTag] = useState<string | null>(null)
+  const { selectedTag, handleTagClick, tagElements } = useTagFilter(tags)
 
   const filteredPosts = useMemo(() => {
     if (!selectedTag) return posts;
@@ -53,47 +54,24 @@ export function HomeContent({ posts, allPosts, tags, currentPage, totalPages }: 
       <Header isHome={true} />
       <main className="min-h-[200px]">
         {/* 标签云区域 */}
-        <div className="mb-5 flex flex-wrap gap-2">
-          <Tag
-            tag="全部"
-            onClick={() => {
-              setSelectedTag(null)
-            }}
-            interactive={true}
-            className={selectedTag === null ? "bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200" : ""}
-          />
-          {tags.map(({ tag }) => (
-            <Tag
-              key={tag}
-              tag={tag}
-              onClick={() => {
-                setSelectedTag(tag)
-              }}
-              interactive={true}
-              className={selectedTag === tag ? "bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200" : ""}
-            />
-          ))}
+        <div className="mb-5">
+          {tagElements}
         </div>
         {/* 文章列表 */}
         <div className="space-y-4 min-h-[100px]">
           {paginatedPosts.length > 0 ? (
             paginatedPosts.map((post, index) => (
-              <article 
-                key={post.id} 
-                className={`border-b border-zinc-100 dark:border-zinc-800 pb-4 ${index === paginatedPosts.length - 1 ? 'border-b-0 pb-0' : ''}`}
-              >
-                <Link href={`/posts/${post.id}`} className="group block">
-                  <h2 className="text-base font-normal text-zinc-800 dark:text-zinc-200 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors duration-300">
-                    {post.title}
-                  </h2>
-                  <time className="text-xs text-zinc-400 dark:text-zinc-500 mt-1 block">
-                    {formatDate(post.date)}
-                  </time>
-                </Link>
-              </article>
+              <PostListItem
+                key={post.id}
+                id={post.id}
+                title={post.title}
+                date={post.date}
+                variant="default"
+                isLast={index === paginatedPosts.length - 1}
+              />
             ))
           ) : (
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm">暂无文章。</p>
+            <EmptyState message="暂无文章。" spacing="sm" />
           )}
         </div>
         {/* 分页控制 */}

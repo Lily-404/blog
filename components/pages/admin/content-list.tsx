@@ -4,6 +4,8 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Edit2, Trash2, Loader2 } from "lucide-react"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { EmptyState } from "@/components/ui/empty-state"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
@@ -78,24 +80,15 @@ export function ContentList({
   }
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16">
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800 rounded-full blur-xl opacity-50 animate-pulse"></div>
-          <div className="relative bg-white dark:bg-zinc-900 rounded-full p-4 shadow-lg border border-zinc-200 dark:border-zinc-800">
-            <Loader2 className="w-6 h-6 animate-spin text-zinc-600 dark:text-zinc-400" />
-          </div>
-        </div>
-        <p className="mt-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">加载中...</p>
-      </div>
-    )
+    return <LoadingSpinner message="加载中..." size="md" />
   }
 
   if (items.length === 0) {
     return (
-      <div className="text-center py-12 text-zinc-500 dark:text-zinc-400">
-        暂无{contentType === "post" ? "文章" : "随笔"}
-      </div>
+      <EmptyState
+        message={`暂无${contentType === "post" ? "文章" : "随笔"}`}
+        spacing="md"
+      />
     )
   }
 

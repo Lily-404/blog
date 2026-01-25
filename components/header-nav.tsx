@@ -1,41 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { Archive, User, Pencil, Moon, Sun } from "lucide-react"
+import { Archive, User, Pencil } from "lucide-react"
 import { usePathname } from "next/navigation"
-import { useTheme } from "next-themes"
-import { useEffect, useState, useCallback } from "react"
-
-// 将主题切换按钮抽离为独立组件
-const ThemeToggleButton = () => {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const toggleTheme = useCallback(() => {
-    setTheme(theme === "dark" ? "light" : "dark")
-  }, [theme, setTheme])
-
-  return (
-    <button
-      onClick={toggleTheme}
-      className="flex items-center text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-300 transition-colors"
-      aria-label="切换主题"
-      suppressHydrationWarning
-    >
-      {!mounted ? (
-        <Moon className="h-4 w-4" />
-      ) : theme === "dark" ? (
-        <Sun className="h-4 w-4" />
-      ) : (
-        <Moon className="h-4 w-4" />
-      )}
-    </button>
-  )
-}
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export function HeaderNav() {
   const pathname = usePathname()
@@ -82,7 +50,7 @@ export function HeaderNav() {
         <User className={iconClasses('/about')} />
         <span className="hidden md:inline">关于</span>
       </Link>
-      <ThemeToggleButton />
+      <ThemeToggle />
     </nav>
   )
 }

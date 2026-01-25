@@ -1,7 +1,7 @@
 import { Layout } from "@/components/layout"
 import { NotesPagination } from "@/components/notes-pagination"
 import { getPaginatedNotesAction } from "@/app/actions/notes"
-import { Footer } from "@/components/footer"
+import { Footer } from "@/components/ui/footer"
 import { Header } from "@/components/header"
 // 移除未使用的导入
 

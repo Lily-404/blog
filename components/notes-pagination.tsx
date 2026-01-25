@@ -2,8 +2,10 @@
 
 import { useEffect, useRef } from "react"
 import { useInfiniteNotes } from "@/hooks/use-infinite-notes"
-import { NoteCard } from "./note-card"
-import { NoteSkeleton } from "@/components/note-skeleton"
+import { NoteCard } from "@/components/ui/note-card"
+import { NoteSkeleton } from "@/components/ui/note-skeleton"
+import { EmptyState } from "@/components/ui/empty-state"
+import { Button } from "@/components/ui/button"
 import type { NotesPaginationProps } from "@/types/notes"
 
 export function NotesPagination({ 
@@ -58,19 +60,17 @@ export function NotesPagination({
         {error && (
           <div className="text-center py-8">
             <p className="text-red-500 dark:text-red-400 mb-4">{error}</p>
-            <button
-              onClick={retry}
-              className="px-4 py-2 rounded-md bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition"
-            >
+            <Button variant="secondary" size="sm" onClick={retry}>
               重试
-            </button>
+            </Button>
           </div>
         )}
 
         {!loading && notes.length === 0 && (
-          <p className="text-center text-zinc-500 dark:text-zinc-400 py-16">
-            还没有随笔内容...
-          </p>
+          <EmptyState
+            message="还没有随笔内容..."
+            spacing="lg"
+          />
         )}
 
         {hasMore && (

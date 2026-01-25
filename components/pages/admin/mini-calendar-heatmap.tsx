@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { zhCN } from "date-fns/locale"
+import { getDateKey, buildCountMap, getDotClassRelative } from "@/lib/calendar-heatmap-utils"
 
 interface MiniCalendarHeatmapProps {
   posts: { date: string }[]
@@ -12,53 +13,25 @@ interface MiniCalendarHeatmapProps {
 
 export function MiniCalendarHeatmap({ posts, notes }: MiniCalendarHeatmapProps) {
   const [hoveredDate, setHoveredDate] = useState<string | null>(null)
-  
-  const getDateKey = (date: Date) => {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-  }
-  
-  // 统计最近30天的创作数量
-  const countMap = useMemo(() => {
-    const map: Record<string, number> = {}
-    posts.forEach(post => {
-      const key = getDateKey(new Date(post.date))
-      map[key] = (map[key] || 0) + 1
-    })
-    notes.forEach(note => {
-      const key = getDateKey(new Date(note.date))
-      map[key] = (map[key] || 0) + 1
-    })
-    return map
-  }, [posts, notes])
-  
-  // 生成最近30天的日期数组
+
+  const countMap = useMemo(() => buildCountMap(posts, notes), [posts, notes])
+
   const dates = useMemo(() => {
     const today = new Date()
-    const dates: Date[] = []
+    const out: Date[] = []
     for (let i = 29; i >= 0; i--) {
-      const date = new Date(today)
-      date.setDate(today.getDate() - i)
-      dates.push(date)
+      const d = new Date(today)
+      d.setDate(today.getDate() - i)
+      out.push(d)
     }
-    return dates
+    return out
   }, [])
-  
-  // 获取最大数量，用于颜色分级
-  const maxCount = useMemo(() => {
-    return Math.max(...Object.values(countMap), 1)
-  }, [countMap])
-  
-  // 获取颜色类（增强对比度）
-  const getDotClass = (count: number) => {
-    if (!count) return "bg-zinc-200 dark:bg-zinc-800"
-    
-    const intensity = count / maxCount
-    if (intensity <= 0.25) return "bg-zinc-400 dark:bg-zinc-600"
-    if (intensity <= 0.5) return "bg-zinc-600 dark:bg-zinc-400"
-    if (intensity <= 0.75) return "bg-zinc-800 dark:bg-zinc-200"
-    return "bg-zinc-950 dark:bg-zinc-50"
-  }
-  
+
+  const maxCount = useMemo(
+    () => Math.max(...Object.values(countMap), 1),
+    [countMap]
+  )
+
   const todayKey = getDateKey(new Date())
   
   return (
@@ -79,7 +52,7 @@ export function MiniCalendarHeatmap({ posts, notes }: MiniCalendarHeatmapProps) 
               key={index}
               className={cn(
                 "w-2.5 h-2.5 rounded-full transition-all cursor-pointer",
-                getDotClass(count),
+                getDotClassRelative(count, maxCount),
                 isToday && "ring-1 ring-zinc-500 dark:ring-zinc-400 ring-offset-0.5",
                 isHovered && "scale-125 z-10 shadow-md"
               )}

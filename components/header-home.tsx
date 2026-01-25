@@ -1,30 +1,17 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useRef } from "react"
 import { HeaderNav } from "@/components/header-nav"
 import { OptimizedImage } from "@/components/ui/optimized-image"
+import { useDoubleClick } from "@/hooks/use-double-click"
 
 export function HeaderHome() {
   const router = useRouter()
-  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const clickCountRef = useRef(0)
-
-  const handleAvatarClick = () => {
-    clickCountRef.current += 1
-
-    if (clickCountRef.current === 1) {
-      clickTimeoutRef.current = setTimeout(() => {
-        clickCountRef.current = 0
-      }, 300) 
-    } else if (clickCountRef.current === 2) {
-      if (clickTimeoutRef.current) {
-        clearTimeout(clickTimeoutRef.current)
-      }
-      clickCountRef.current = 0
-      router.push("/admin")
-    }
-  }
+  
+  const handleAvatarClick = useDoubleClick({
+    timeout: 300,
+    onDoubleClick: () => router.push("/admin"),
+  })
 
   return (
     <header className="mb-6 flex justify-between items-center">

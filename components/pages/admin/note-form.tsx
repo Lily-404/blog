@@ -2,9 +2,11 @@
 
 import { useRef, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { DecorativeLine } from "@/components/ui/decorative-line"
+import { SubmitButton } from "@/components/ui/submit-button"
 import { DatePicker } from "@/components/ui/date-picker"
-import { NotePreview } from "@/components/note-preview"
-import { Loader2 } from "lucide-react"
+import { NotePreview } from "@/components/ui/note-preview"
 import { cn } from "@/lib/utils"
 
 type ViewMode = "edit" | "preview" | "split"
@@ -50,9 +52,8 @@ export function NoteForm({
   return (
     <div className="space-y-4">
       {/* 内容编辑区域 - 推特风格，简洁专业 */}
-      <div className="relative bg-stone-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm transition-all">
-        {/* 精致的装饰线 */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-200 dark:via-zinc-700 to-transparent"></div>
+      <Card variant="default" size="lg" shadow={false} className="relative">
+        <DecorativeLine />
         
         <textarea
           ref={textareaRef}
@@ -75,7 +76,7 @@ export function NoteForm({
             e.target.style.border = "none"
           }}
         />
-      </div>
+      </Card>
       
       {/* 底部操作栏 - 推特风格，简洁专业 */}
       <div className="flex items-center justify-between pt-2 px-1">
@@ -119,42 +120,22 @@ export function NoteForm({
               取消编辑
             </Button>
           )}
-          <button
-            type="submit"
-            disabled={loading || !content.trim()}
-            className={cn(
-              "h-9 px-6 rounded-xl text-sm font-medium",
-              "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900",
-              "border border-zinc-900 dark:border-zinc-50",
-              "shadow-sm hover:shadow-md transition-all",
-              "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-sm",
-              !content.trim() && "opacity-50"
-            )}
-          >
-            {loading ? (
-              <span className="flex items-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                {editing ? "更新中..." : "发布中..."}
-              </span>
-            ) : (
-              editing ? "更新" : "发布"
-            )}
-          </button>
+          <SubmitButton
+            loading={loading}
+            editing={editing}
+            disabled={!content.trim()}
+            className={cn(!content.trim() && "opacity-50")}
+          />
         </div>
       </div>
       
       {/* 预览区域 - 可选显示 */}
       {showPreview && (
-        <div
-          ref={previewRef}
-          className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 p-4 overflow-y-auto"
-          style={{
-            minHeight: "200px",
-            maxHeight: "400px",
-          }}
-        >
-          <NotePreview content={content} date={date} />
-        </div>
+        <Card variant="muted" size="md" className="overflow-y-auto" style={{ minHeight: "200px", maxHeight: "400px" }}>
+          <div ref={previewRef}>
+            <NotePreview content={content} date={date} />
+          </div>
+        </Card>
       )}
     </div>
   )

@@ -5,7 +5,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { HelpCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { useEffect } from "react"
+import { useEffect, useMemo, useCallback } from "react"
 
 type ContentType = "post" | "note"
 type ViewMode = "edit" | "preview" | "split"
@@ -20,6 +20,33 @@ interface AdminHeaderProps {
   onLogout: () => void
   onToggleList: () => void
 }
+
+// 提取重复的按钮样式类名
+const OUTLINE_BUTTON_BASE_STYLES = [
+  "h-10 px-3 rounded-md text-xs font-medium",
+  "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
+  "border border-zinc-200/60 dark:border-zinc-700/60",
+  "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
+  "text-zinc-700 dark:text-zinc-300",
+  "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
+  "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
+] as const
+
+const VIEW_MODE_BUTTON_BASE_STYLES = [
+  "h-8 px-3 rounded-md text-xs font-medium transition-all",
+] as const
+
+const VIEW_MODE_BUTTON_ACTIVE_STYLES = [
+  "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700",
+] as const
+
+const VIEW_MODE_BUTTON_INACTIVE_STYLES = [
+  "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100",
+] as const
+
+const TOGGLE_GROUP_STYLES = [
+  "flex gap-1.5 bg-zinc-100 dark:bg-zinc-800/50 p-1 rounded-lg border border-zinc-200/50 dark:border-zinc-700/50",
+] as const
 
 export function AdminHeader({
   username,
@@ -40,30 +67,30 @@ export function AdminHeader({
     }
   }, [isMobile, contentType, viewMode, onViewModeChange])
 
-  const getGreeting = () => {
+  // 使用 useMemo 优化问候语计算
+  const greeting = useMemo(() => {
     if (!username) return null
     
     const hour = new Date().getHours()
-    let greeting = "你好"
-    let emoji = "👋"
     if (hour >= 5 && hour < 12) {
-      greeting = "早上好"
-      emoji = "☀️"
+      return { greeting: "早上好", emoji: "☀️" }
     } else if (hour >= 12 && hour < 18) {
-      greeting = "下午好"
-      emoji = "🌤️"
+      return { greeting: "下午好", emoji: "🌤️" }
     } else if (hour >= 18 && hour < 22) {
-      greeting = "晚上好"
-      emoji = "🌃"
+      return { greeting: "晚上好", emoji: "🌃" }
     } else {
-      greeting = "夜深了"
-      emoji = "🌙"
+      return { greeting: "夜深了", emoji: "🌙" }
     }
-    
-    return { greeting, emoji }
-  }
+  }, [username])
 
-  const greeting = getGreeting()
+  // 使用 useCallback 优化事件处理函数
+  const handleViewModeChange = useCallback((mode: ViewMode) => {
+    onViewModeChange(mode)
+  }, [onViewModeChange])
+
+  const handleContentTypeChange = useCallback((type: ContentType) => {
+    onContentTypeChange(type)
+  }, [onContentTypeChange])
 
   return (
     <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4 md:gap-0">
@@ -87,77 +114,44 @@ export function AdminHeader({
         <div className="flex items-center gap-2">
           {/* 视图模式切换 - 仅在文章模式下显示，放在左边，移动端隐藏 */}
           {contentType === "post" && (
-            <div className="hidden md:flex gap-1.5 bg-zinc-100 dark:bg-zinc-800/50 p-1 rounded-lg border border-zinc-200/50 dark:border-zinc-700/50">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => onViewModeChange("edit")}
-                className={cn(
-                  "h-8 px-3 rounded-md text-xs font-medium transition-all",
-                  viewMode === "edit"
-                    ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700"
-                    : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
-                )}
-              >
-                编辑
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => onViewModeChange("split")}
-                className={cn(
-                  "h-8 px-3 rounded-md text-xs font-medium transition-all",
-                  viewMode === "split"
-                    ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700"
-                    : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
-                )}
-              >
-                分栏
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => onViewModeChange("preview")}
-                className={cn(
-                  "h-8 px-3 rounded-md text-xs font-medium transition-all",
-                  viewMode === "preview"
-                    ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700"
-                    : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
-                )}
-              >
-                预览
-              </Button>
+            <div className={cn("hidden md:flex", TOGGLE_GROUP_STYLES)}>
+              {(["edit", "split", "preview"] as const).map((mode) => (
+                <Button
+                  key={mode}
+                  type="button"
+                  variant="ghost"
+                  onClick={() => handleViewModeChange(mode)}
+                  className={cn(
+                    VIEW_MODE_BUTTON_BASE_STYLES,
+                    viewMode === mode
+                      ? VIEW_MODE_BUTTON_ACTIVE_STYLES
+                      : VIEW_MODE_BUTTON_INACTIVE_STYLES
+                  )}
+                >
+                  {mode === "edit" ? "编辑" : mode === "split" ? "分栏" : "预览"}
+                </Button>
+              ))}
             </div>
           )}
           
           {/* 类型切换 - 放在右边 */}
-          <div className="flex gap-1.5 bg-zinc-100 dark:bg-zinc-800/50 p-1 rounded-lg border border-zinc-200/50 dark:border-zinc-700/50">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => onContentTypeChange("post")}
-              className={cn(
-                "h-8 px-3 rounded-md text-xs font-medium transition-all",
-                contentType === "post"
-                  ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
-                  : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
-              )}
-            >
-              文章
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => onContentTypeChange("note")}
-              className={cn(
-                "h-8 px-3 rounded-md text-xs font-medium transition-all",
-                contentType === "note"
-                  ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
-                  : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100"
-              )}
-            >
-              随笔
-            </Button>
+          <div className={cn(TOGGLE_GROUP_STYLES)}>
+            {(["post", "note"] as const).map((type) => (
+              <Button
+                key={type}
+                type="button"
+                variant="ghost"
+                onClick={() => handleContentTypeChange(type)}
+                className={cn(
+                  VIEW_MODE_BUTTON_BASE_STYLES,
+                  contentType === type
+                    ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
+                    : VIEW_MODE_BUTTON_INACTIVE_STYLES
+                )}
+              >
+                {type === "post" ? "文章" : "随笔"}
+              </Button>
+            ))}
           </div>
 
           {/* 列表/新建切换按钮 - 放在类型切换右侧 */}
@@ -165,15 +159,7 @@ export function AdminHeader({
             type="button"
             variant="outline"
             onClick={onToggleList}
-            className={cn(
-              "h-10 px-3 rounded-md text-xs font-medium",
-              "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
-              "border border-zinc-200/60 dark:border-zinc-700/60",
-              "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
-              "text-zinc-700 dark:text-zinc-300",
-              "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
-              "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]"
-            )}
+            className={cn(OUTLINE_BUTTON_BASE_STYLES)}
           >
             {showList ? "写作" : "列表"}
           </Button>
@@ -186,12 +172,8 @@ export function AdminHeader({
                 variant="outline"
                 className={cn(
                   "h-10 w-10 p-0 rounded-md",
-                  "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
-                  "border border-zinc-200/60 dark:border-zinc-700/60",
-                  "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
+                  OUTLINE_BUTTON_BASE_STYLES,
                   "text-zinc-500 dark:text-zinc-300",
-                  "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
-                  "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
                   "hover:text-zinc-700 dark:hover:text-zinc-200"
                 )}
               >
@@ -199,7 +181,7 @@ export function AdminHeader({
               </Button>
             </PopoverTrigger>
             <PopoverContent 
-              className="w-80 p-4 bg-stone-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 shadow-lg"
+              className="w-80 p-4 bg-stone-50 dark:bg-zinc-900"
               align="end"
             >
               <h3 className="font-semibold mb-3 text-zinc-800 dark:text-zinc-200 text-sm">使用说明</h3>
@@ -231,15 +213,7 @@ export function AdminHeader({
         <Button 
           onClick={onLogout} 
           variant="outline" 
-          className={cn(
-            "h-10 px-3 rounded-md text-xs font-medium",
-            "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
-            "border border-zinc-200/60 dark:border-zinc-700/60",
-            "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
-            "text-zinc-700 dark:text-zinc-300",
-            "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
-            "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]"
-          )}
+          className={cn(OUTLINE_BUTTON_BASE_STYLES)}
         >
           登出
         </Button>
