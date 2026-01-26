@@ -27,7 +27,7 @@ const PreviewPane = React.forwardRef<HTMLDivElement, PreviewPaneProps>(
 
     const bgClasses =
       variant === "muted"
-        ? "bg-zinc-50 dark:bg-zinc-800/30"
+        ? "bg-zinc-50/80 dark:bg-zinc-800/30 backdrop-blur-sm"
         : "bg-transparent"
 
     return (

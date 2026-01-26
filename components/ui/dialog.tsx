@@ -41,7 +41,7 @@ export function DialogContent({ children, className }: DialogContentProps) {
   return (
     <div
       className={cn(
-        "bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-800",
+        "bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-800",
         "p-6 max-w-md w-full mx-4",
         "animate-in fade-in-0 zoom-in-95 duration-200",
         className

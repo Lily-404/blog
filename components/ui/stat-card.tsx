@@ -19,6 +19,8 @@ export interface StatCardProps {
   hover?: boolean
   /** horizontal 模式下是否使用 Card 包装 */
   wrapped?: boolean
+  /** 是否显示阴影，默认 true */
+  shadow?: boolean
 }
 
 const valueSizeStyles = {
@@ -40,6 +42,7 @@ export function StatCard({
   className,
   hover = false,
   wrapped = false,
+  shadow = false,
 }: StatCardProps) {
   const valueClass = cn(
     "font-bold text-zinc-900 dark:text-zinc-100",
@@ -62,7 +65,7 @@ export function StatCard({
   if (layout === "horizontal") {
     if (wrapped) {
       return (
-        <Card size="md" hover={hover} className={className} variant="muted" rounded="xl">
+        <Card size="md" hover={hover} shadow={shadow} className={className} variant="muted" rounded="xl">
           {content}
         </Card>
       )
@@ -71,7 +74,7 @@ export function StatCard({
   }
 
   return (
-    <Card size="md" hover={hover} className={className}>
+    <Card size="md" hover={hover} shadow={shadow} className={className}>
       <div className="relative">
         {label && (
           <div className="text-xs text-zinc-500 dark:text-zinc-400 mb-1.5 font-medium">

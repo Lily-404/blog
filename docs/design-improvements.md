@@ -119,29 +119,41 @@
 
 ---
 
-### 1.4 字体优化
+### 1.4 字体优化 ✅ **已完成**
 
 **现状**：
 - ✅ 使用 `next/font/google` 优化 Google Fonts
-- ⚠️ 字体文件较大，可能影响 FCP
+- ✅ 字体配置已优化，使用子集化和 CSS 变量
+- ✅ 已配置 `display: 'swap'` 和 `preload: true`
+- ✅ 已统一字体配置，避免重复加载
 
 **改进建议**：
 
-1. **字体子集化**
+1. **字体子集化** ✅ **已实现**
    ```ts
-   const inter = Inter({
-     subsets: ['latin', 'latin-ext'], // 只加载需要的字符集
-     display: 'swap',
-     preload: true,
-     variable: '--font-inter', // 使用 CSS 变量
+   // app/fonts.ts
+   export const inter = Inter({
+     subsets: ['latin'], // 只加载需要的字符集，减少字体文件大小
+     display: 'swap', // 使用 swap 避免 FOIT（Flash of Invisible Text）
+     preload: true, // 预加载字体以提升性能
+     variable: '--font-inter', // 使用 CSS 变量以便在全局样式中使用
+     fallback: ['system-ui', 'arial'], // 字体加载失败时的回退字体
    })
    ```
+   - ✅ 已在 `app/fonts.ts` 中实现
+   - ✅ 已在 `app/layout.tsx` 中统一使用
 
-2. **字体预加载优化**
-   - 在 `<head>` 中添加 `rel="preload"` 链接
-   - 使用 `font-display: swap` 避免 FOIT
+2. **字体预加载优化** ✅ **已实现**
+   - ✅ 已使用 `next/font/google` 自动处理字体预加载
+   - ✅ 已配置 `font-display: swap` 避免 FOIT
+   - ✅ 已统一字体配置，避免重复加载
+   - ✅ 已在 layout.tsx 中添加 `preconnect` 链接以优化字体加载
 
-**预期收益**：减少字体加载时间，避免布局偏移
+**实现文件**：
+- `app/fonts.ts` - 字体配置
+- `app/layout.tsx` - 字体应用
+
+**预期收益**：减少字体加载时间，避免布局偏移 ✅ **已实现**
 
 ---
 

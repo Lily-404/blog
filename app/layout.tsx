@@ -1,16 +1,9 @@
-import { Inter } from 'next/font/google'
 import type { Metadata, Viewport } from 'next'
 import GoogleAnalytics from "@/components/GoogleAnalytics"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
+import { inter } from './fonts'
 import "./globals.css"
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true,
-  fallback: ['system-ui', 'arial'],
-})
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -99,7 +92,7 @@ export default function RootLayout({
           type="image/jpeg"
         />
       </head>
-      <body className={`${inter.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 antialiased`}>
+      <body className={`${inter.variable} ${inter.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 antialiased`}>
         <ThemeProvider>
           {children}
           <Toaster />

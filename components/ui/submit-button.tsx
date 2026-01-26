@@ -21,7 +21,7 @@ export interface SubmitButtonProps
 
 const SUBMIT_BUTTON_STYLES = [
   "h-9 px-6 rounded-xl text-sm font-medium",
-  "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900",
+  "bg-zinc-900/70 dark:bg-zinc-50/70 backdrop-blur-sm text-white dark:text-zinc-900",
   "border border-zinc-900 dark:border-zinc-50",
   "shadow-sm hover:shadow-md transition-all",
   "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-sm",

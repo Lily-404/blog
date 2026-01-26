@@ -3,11 +3,11 @@ import { cn } from "@/lib/utils"
 
 const variantStyles = {
   default:
-    "bg-stone-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800",
+    "bg-stone-50/80 dark:bg-zinc-900/50 backdrop-blur-sm border-zinc-200 dark:border-zinc-800",
   elevated:
-    "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 shadow-lg",
+    "bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-zinc-200 dark:border-zinc-800 shadow-lg",
   muted:
-    "bg-zinc-50/50 dark:bg-zinc-800/50 border-zinc-200/50 dark:border-zinc-700/50",
+    "bg-zinc-50/50 dark:bg-zinc-800/50 backdrop-blur-sm border-zinc-200/50 dark:border-zinc-700/50",
 } as const
 
 const variantHoverBgStyles = {
@@ -26,6 +26,7 @@ const roundedStyles = {
   lg: "rounded-lg",
   xl: "rounded-xl",
   "2xl": "rounded-2xl",
+  "3xl": "rounded-3xl",
 } as const
 
 export type CardVariant = keyof typeof variantStyles
@@ -46,9 +47,9 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const sizeToRounded: Record<CardSize, CardRounded> = {
-  sm: "lg",
-  md: "lg",
-  lg: "xl",
+  sm: "xl",
+  md: "xl",
+  lg: "2xl",
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(

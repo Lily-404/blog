@@ -24,7 +24,7 @@ const sizeConfig = {
 // 基础样式类
 const BASE_STYLES = [
   "flex items-center justify-center rounded-full",
-  "bg-zinc-100/80 dark:bg-zinc-700/80",
+  "bg-zinc-100/50 dark:bg-zinc-700/50",
   "backdrop-blur-md backdrop-saturate-150",
   "border border-zinc-200/50 dark:border-zinc-600/50",
   "hover:border-zinc-300/50 dark:hover:border-zinc-500/50",
@@ -84,8 +84,8 @@ export interface IconButtonProps {
 
 // 背景变体样式
 const variantStyles = {
-  default: "bg-zinc-100/80 dark:bg-zinc-700/80",
-  light: "bg-white/60 dark:bg-zinc-900/60",
+  default: "bg-zinc-100/50 dark:bg-zinc-700/50",
+  light: "bg-zinc-50/50 dark:bg-zinc-800/50 backdrop-blur-sm",
   transparent: "bg-transparent",
 } as const
 
@@ -116,6 +116,7 @@ export const IconButton = forwardRef<
     BASE_STYLES,
     sizeStyles.container,
     baseBgStyle,
+    variant === "light" && "!backdrop-blur-sm !backdrop-saturate-100",
     active && ACTIVE_STYLES,
     disabled && DISABLED_STYLES,
     className

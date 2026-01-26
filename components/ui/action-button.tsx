@@ -6,8 +6,8 @@ import { type LucideIcon } from "lucide-react"
 
 const BASE_STYLES = [
   "flex items-center px-4 py-2 rounded-lg",
-  "bg-zinc-100/50 dark:bg-zinc-800/50",
-  "hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50",
+  "bg-zinc-100/30 dark:bg-zinc-800/30 backdrop-blur-sm",
+  "hover:bg-zinc-200/40 dark:hover:bg-zinc-700/40",
   "border border-zinc-200/50 dark:border-zinc-700/50",
   "hover:border-zinc-300/50 dark:hover:border-zinc-600/50",
   "text-zinc-600 dark:text-zinc-400",

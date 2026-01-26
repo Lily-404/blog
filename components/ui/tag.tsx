@@ -20,28 +20,28 @@ export interface TagProps {
 // 基础样式
 const BASE_STYLES = [
   "inline-flex items-center px-3 py-1 rounded-full text-xs font-normal",
-  "bg-zinc-100 dark:bg-zinc-800",
+  "bg-zinc-100/50 dark:bg-zinc-800/50 backdrop-blur-sm",
   "text-zinc-600 dark:text-zinc-300",
-  "hover:bg-zinc-200 dark:hover:bg-zinc-700",
+  "hover:bg-zinc-200/60 dark:hover:bg-zinc-700/60",
   "transition-colors duration-200",
   "border border-zinc-200/50 dark:border-zinc-700/50",
-  "hover:border-zinc-400/70 dark:hover:border-zinc-500/70",
+  "hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
   "hover:shadow-sm dark:hover:shadow-zinc-800/50",
 ] as const
 
 // 选中状态样式（与 hover 效果一致）
 const SELECTED_STYLES = [
-  "bg-zinc-200 dark:bg-zinc-700",
+  "bg-zinc-200/70 dark:bg-zinc-700/70",
   "text-zinc-800 dark:text-zinc-200",
   "border-zinc-400/70 dark:border-zinc-500/70",
   "shadow-sm dark:shadow-zinc-800/50",
-  "hover:bg-zinc-300 dark:hover:bg-zinc-600",
+  "hover:bg-zinc-300/80 dark:hover:bg-zinc-600/80",
   "hover:border-zinc-500/70 dark:hover:border-zinc-400/70",
 ] as const
 
 // 数量样式
 const COUNT_UNSELECTED_STYLES = "text-zinc-400 dark:text-zinc-500"
-const COUNT_SELECTED_STYLES = "text-zinc-300 dark:text-zinc-600"
+const COUNT_SELECTED_STYLES = "text-zinc-600 dark:text-zinc-400"
 
 /**
  * 标签组件

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 // 复用 IconButton 的基础样式常量
 const BASE_STYLES = [
   "flex items-center justify-center rounded-full",
-  "bg-zinc-100/80 dark:bg-zinc-700/80",
+  "bg-zinc-100/50 dark:bg-zinc-700/50",
   "backdrop-blur-md backdrop-saturate-150",
   "border border-zinc-200/50 dark:border-zinc-600/50",
   "hover:border-zinc-300/50 dark:hover:border-zinc-500/50",

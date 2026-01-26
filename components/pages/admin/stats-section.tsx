@@ -46,11 +46,11 @@ export function StatsSection({
   return (
     <>
       {/* 创作统计区域 */}
-      <div className="mb-6 grid grid-cols-1 lg:grid-cols-12 gap-4 max-w-full overflow-x-hidden">
+      <div className="mb-6 grid grid-cols-1 lg:grid-cols-12 gap-4 max-w-full overflow-visible px-1">
         {/* 左侧卡片 - 标题和日期 */}
         <div className="lg:col-span-4 grid grid-cols-2 gap-3">
           {/* 标题输入 - 支持多行 */}
-          <Card size="md" hover>
+          <Card size="md" hover shadow={false}>
             <div className="relative">
               <div className="text-xs text-zinc-500 dark:text-zinc-400 mb-2 font-medium">文章标题</div>
               <textarea
@@ -72,7 +72,7 @@ export function StatsSection({
           </Card>
           
           {/* 日期选择 - 优化设计 */}
-          <Card size="md" hover>
+          <Card size="md" hover shadow={false}>
             <div className="relative">
               <div className="text-xs text-zinc-500 dark:text-zinc-400 mb-6 font-medium">发布日期</div>
               <DatePicker
@@ -86,7 +86,7 @@ export function StatsSection({
         </div>
         
         {/* 中间 - 迷你日历热力图 */}
-        <Card className="lg:col-span-4" size="md" rounded="xl" hover>
+        <Card className="lg:col-span-4" size="md" rounded="xl" hover shadow={false}>
           <div className="relative">
             <div className="text-xs text-zinc-500 dark:text-zinc-400 mb-3 font-medium">最近30天</div>
             <MiniCalendarHeatmap posts={stats.posts} notes={stats.notes} />

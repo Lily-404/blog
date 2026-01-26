@@ -85,7 +85,7 @@ export function TagInput({
         {value.map((tag, index) => (
           <div
             key={`${tag}-${index}`}
-            className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-normal bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border border-zinc-200/50 dark:border-zinc-700/50"
+            className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-normal bg-zinc-100/50 dark:bg-zinc-800/50 backdrop-blur-sm text-zinc-600 dark:text-zinc-300 border border-zinc-200/50 dark:border-zinc-700/50"
           >
             <span>{tag}</span>
             <button

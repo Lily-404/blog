@@ -29,7 +29,7 @@ const defaultFormatDate = (year: number, month: number) => {
 
 const buttonBaseStyles = [
   "w-7 h-7 flex items-center justify-center rounded-full",
-  "bg-zinc-100/80 dark:bg-zinc-700/80",
+  "bg-zinc-100/50 dark:bg-zinc-700/50 backdrop-blur-sm",
   "border border-zinc-200/50 dark:border-zinc-600/50",
   "hover:border-zinc-300/50 dark:hover:border-zinc-500/50",
   "shadow-[0_1px_3px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_3px_0_rgb(0,0,0,0.2)]",
