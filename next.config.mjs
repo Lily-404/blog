@@ -40,8 +40,6 @@ const nextConfig = {
   },
   // 压缩配置
   compress: true,
-  // 生产环境优化
-  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },

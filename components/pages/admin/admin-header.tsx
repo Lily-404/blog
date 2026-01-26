@@ -58,13 +58,6 @@ export function AdminHeader({
 }: AdminHeaderProps) {
   const isMobile = useIsMobile()
 
-  // 移动端自动设置为分栏模式
-  useEffect(() => {
-    if (isMobile && contentType === "post" && viewMode !== "split") {
-      onViewModeChange("split")
-    }
-  }, [isMobile, contentType, viewMode, onViewModeChange])
-
   // 使用 useMemo 优化问候语计算
   const greeting = useMemo(() => {
     if (!username) return null
@@ -107,12 +100,12 @@ export function AdminHeader({
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">内容管理</h1>
         )}
       </div>
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
         {/* 类型切换和视图模式 - 统一放在右上角 */}
-        <div className="flex items-center gap-2">
-          {/* 视图模式切换 - 仅在文章模式下显示，放在左边，移动端隐藏 */}
+        <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+          {/* 视图模式切换 - 仅在文章模式下显示，移动端也显示 */}
           {contentType === "post" && (
-            <div className={cn("hidden md:flex", TOGGLE_GROUP_STYLES)}>
+            <div className={cn("flex", TOGGLE_GROUP_STYLES)}>
               {(["edit", "split", "preview"] as const).map((mode) => (
                 <Button
                   key={mode}
@@ -152,25 +145,25 @@ export function AdminHeader({
             ))}
           </div>
 
-          {/* 列表/新建切换按钮 - 放在类型切换右侧 */}
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onToggleList}
-            className={cn(OUTLINE_BUTTON_BASE_STYLES)}
-          >
-            {showList ? "写作" : "列表"}
-          </Button>
+          {/* 列表/新建切换按钮和登出按钮 - 放在同一行 */}
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onToggleList}
+              className={cn(OUTLINE_BUTTON_BASE_STYLES, "h-9 md:h-10 px-2.5 md:px-3 text-xs")}
+            >
+              {showList ? "写作" : "列表"}
+            </Button>
+            <Button 
+              onClick={onLogout} 
+              variant="outline" 
+              className={cn(OUTLINE_BUTTON_BASE_STYLES, "h-9 md:h-10 px-2.5 md:px-3 text-xs")}
+            >
+              登出
+            </Button>
+          </div>
         </div>
-        
-        {/* 登出按钮 */}
-        <Button 
-          onClick={onLogout} 
-          variant="outline" 
-          className={cn(OUTLINE_BUTTON_BASE_STYLES)}
-        >
-          登出
-        </Button>
       </div>
     </div>
   )

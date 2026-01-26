@@ -12,17 +12,17 @@ export function ThemeToggle() {
     setMounted(true)
   }, [])
 
-  if (!mounted) {
-    return <div className="w-6 h-6" />
-  }
-
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-300 transition-colors"
+      className="flex items-center justify-center w-4 h-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-300 transition-colors"
       aria-label="切换主题"
     >
-      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      {mounted ? (
+        theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />
+      ) : (
+        <Moon className="h-4 w-4 opacity-0" />
+      )}
     </button>
   )
 }
