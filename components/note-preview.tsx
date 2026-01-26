@@ -25,11 +25,20 @@ const emptyMessages = [
   "在这片空白中，书写你的世界",
 ]
 
+function stableIndex(seed: string, modulo: number) {
+  // 简单可重复 hash（避免 Math.random 引发 hydration mismatch）
+  let hash = 0
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
+  }
+  return modulo === 0 ? 0 : hash % modulo
+}
+
 export function NotePreview({ content, date }: NotePreviewProps) {
-  const emptyMessage = useMemo(
-    () => emptyMessages[Math.floor(Math.random() * emptyMessages.length)],
-    []
-  )
+  const emptyMessage = useMemo(() => {
+    const seed = `${date}|${content}`
+    return emptyMessages[stableIndex(seed, emptyMessages.length)]
+  }, [content, date])
 
   if (!content.trim()) {
     return <PreviewPlaceholder message={emptyMessage} italic />
@@ -49,9 +58,11 @@ export function NotePreview({ content, date }: NotePreviewProps) {
       meta={
         <>
           <div className="text-sm font-medium text-zinc-800 dark:text-zinc-200">Jimmy</div>
-          <time className="text-xs text-zinc-400 dark:text-zinc-500 font-mono tabular-nums">
-            {date ? format(new Date(date), "yyyy/MM/dd") : format(new Date(), "yyyy/MM/dd")}
-          </time>
+          {!!date && (
+            <time className="text-xs text-zinc-400 dark:text-zinc-500 font-mono tabular-nums">
+              {format(new Date(date), "yyyy/MM/dd")}
+            </time>
+          )}
         </>
       }
       contentClassName="note-preview-content"
@@ -60,3 +71,4 @@ export function NotePreview({ content, date }: NotePreviewProps) {
     </NoteTimelineBlock>
   )
 }
+

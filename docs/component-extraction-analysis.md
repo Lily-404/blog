@@ -332,12 +332,12 @@ return <div onClick={handleClick}>点击我</div>
 
 ---
 
-### 19. **文章列表项组件** `components/ui/post-list-item.tsx` ✅
+### 19. **文章列表项组件** `components/post-list-item.tsx` ✅
 
 **状态：** ✅ 已完成，已创建 PostListItem 组件
 
 **实现：**
-- ✅ 已创建 `components/ui/post-list-item.tsx`
+- ✅ 已创建 `components/post-list-item.tsx`
 - ✅ 支持 `variant` 变体（default/compact）
 - ✅ 支持 `isLast` 属性（用于移除最后一项的底部边框）
 - ✅ 已替换 `home-content.tsx` 中的文章列表项（使用 default 变体）

@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react"
 import { useInfiniteNotes } from "@/hooks/use-infinite-notes"
-import { NoteCard } from "@/components/ui/note-card"
-import { NoteSkeleton } from "@/components/ui/note-skeleton"
+import { NoteCard } from "@/components/note-card"
+import { NoteSkeleton } from "@/components/note-skeleton"
 import { EmptyState } from "@/components/ui/empty-state"
 import { Button } from "@/components/ui/button"
 import type { NotesPaginationProps } from "@/types/notes"

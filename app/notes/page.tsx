@@ -3,7 +3,8 @@ import { NotesPagination } from "@/components/notes-pagination"
 import { getPaginatedNotesAction } from "@/app/actions/notes"
 import { Footer } from "@/components/ui/footer"
 import { Header } from "@/components/header"
-// 移除未使用的导入
+import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
+import { getAllPostsMeta, getAllNotesMeta } from "@/app/lib/content"
 
 // 设置为完全静态生成
 export const dynamic = 'force-static'
@@ -24,9 +25,12 @@ export default async function NotesPage({
 }) {
   const currentPage = Number(searchParams?.page) || 1
   const { notes, total, totalPages } = await getPaginatedNotesAction(currentPage, 7)
+  const posts = getAllPostsMeta()
+  const allNotes = getAllNotesMeta()
 
   return (
     <Layout>
+      <CalendarHeatmapFloating posts={posts} notes={allNotes} />
       <div className="max-w-2xl mx-auto px-4 py-6">
         <Header showBackButton={true} title="随笔" />
 

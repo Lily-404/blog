@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { PostListItem } from "@/components/ui/post-list-item"
+import { PostListItem } from "@/components/post-list-item"
 import { PaginationButtons } from "@/components/ui/pagination-buttons"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/ui/footer"

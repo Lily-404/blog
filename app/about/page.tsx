@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { AboutContent } from "@/components/about-content"
-import { getAllPosts, getAllNotesMeta } from "@/app/lib/content"
+import { getAllPosts, getAllNotesMeta, getAllPostsMeta } from "@/app/lib/content"
+import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
 
 export const dynamic = 'force-static'
 export const revalidate = false // 禁用重新验证，因为内容是静态的
@@ -17,11 +18,17 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   const posts = getAllPosts()
   const notes = getAllNotesMeta()
+  const postsMeta = getAllPostsMeta()
   const tags = new Set(posts.flatMap(post => post.tags || []))
-  return <AboutContent initialStats={{
-    posts: posts.length,
-    notes: notes.length,
-    tags: tags.size
-  }} />
+  return (
+    <>
+      <CalendarHeatmapFloating posts={postsMeta} notes={notes} />
+      <AboutContent initialStats={{
+        posts: posts.length,
+        notes: notes.length,
+        tags: tags.size
+      }} />
+    </>
+  )
 }
 

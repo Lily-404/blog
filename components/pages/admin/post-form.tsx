@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/card"
 import { DecorativeLine } from "@/components/ui/decorative-line"
 import { DatePicker } from "@/components/ui/date-picker"
 import { TagInput } from "@/components/ui/tag-input"
+import { ResponsiveRow } from "@/components/ui/responsive-row"
+import { FormField } from "@/components/ui/form-field"
 
 interface PostFormProps {
   title: string
@@ -27,8 +29,8 @@ export function PostForm({
       <DecorativeLine />
       
       {/* 基础信息表单 - 极简设计，无边框 */}
-      <div className="flex flex-col lg:flex-row gap-3">
-        <div className="flex-1 min-w-0">
+      <ResponsiveRow>
+        <FormField>
           <input
             id="title"
             type="text"
@@ -38,25 +40,25 @@ export function PostForm({
             placeholder="文章标题"
             required
           />
-        </div>
+        </FormField>
 
-        <div className="flex-1 min-w-0">
+        <FormField>
           <DatePicker
             value={date}
             onChange={onDateChange}
             placeholder="选择日期"
             className="h-8 text-sm w-full"
           />
-        </div>
+        </FormField>
 
-        <div className="flex-1 min-w-0">
+        <FormField>
           <TagInput
             value={tags}
             onChange={onTagsChange}
             placeholder="标签（可选）"
           />
-        </div>
-      </div>
+        </FormField>
+      </ResponsiveRow>
     </Card>
   )
 }

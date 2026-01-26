@@ -6,7 +6,8 @@ import { Card } from "@/components/ui/card"
 import { DecorativeLine } from "@/components/ui/decorative-line"
 import { SubmitButton } from "@/components/ui/submit-button"
 import { DatePicker } from "@/components/ui/date-picker"
-import { NotePreview } from "@/components/ui/note-preview"
+import { NotePreview } from "@/components/note-preview"
+import { SimpleTextarea } from "@/components/ui/simple-textarea"
 import { cn } from "@/lib/utils"
 
 type ViewMode = "edit" | "preview" | "split"
@@ -55,26 +56,17 @@ export function NoteForm({
       <Card variant="default" size="lg" shadow={false} className="relative">
         <DecorativeLine />
         
-        <textarea
+        <SimpleTextarea
           ref={textareaRef}
           id="content"
           value={content}
           onChange={(e) => onContentChange(e.target.value)}
-          className="w-full px-0 py-0 border-none text-lg leading-relaxed dark:bg-transparent dark:text-zinc-100 bg-transparent text-zinc-900 resize-none overflow-y-auto focus:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
           style={{ 
             minHeight: "200px",
             maxHeight: "none",
-            outline: "none"
           }}
           required
-          title=""
-          placeholder="记录这一刻的想法..."
           autoFocus
-          onFocus={(e) => {
-            e.target.style.outline = "none"
-            e.target.style.boxShadow = "none"
-            e.target.style.border = "none"
-          }}
         />
       </Card>
       

@@ -1,7 +1,8 @@
 import { Metadata } from 'next'
 import { Suspense } from "react"
 import { ArchiveContent } from "@/components/archive-content"
-import { getAllPostsMeta, getTagsFromPosts } from "@/app/lib/content"
+import { getAllPostsMeta, getTagsFromPosts, getAllNotesMeta } from "@/app/lib/content"
+import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
 import type { Post, PostsByYear } from '@/types/post'
 
 export const metadata: Metadata = {
@@ -32,10 +33,12 @@ function groupPostsByYear(posts: Post[]): PostsByYear {
 
 export default function Archive() {
   const posts = getAllPostsMeta()
+  const notes = getAllNotesMeta()
   const tags = getTagsFromPosts(posts)
   const postsByYear = groupPostsByYear(posts)
   return (
     <Suspense>
+      <CalendarHeatmapFloating posts={posts} notes={notes} />
       <ArchiveContent initialData={{ postsByYear, tags }} />
     </Suspense>
   )

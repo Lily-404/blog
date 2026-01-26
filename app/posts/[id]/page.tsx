@@ -1,4 +1,4 @@
-import { getAllPostIds, getPostById } from "@/app/lib/content"
+import { getAllPostIds, getPostById, getAllPostsMeta, getAllNotesMeta } from "@/app/lib/content"
 import { formatDate } from "@/lib/utils"
 import { notFound } from "next/navigation"
 import { Footer } from "@/components/ui/footer"
@@ -6,6 +6,7 @@ import { Layout } from "@/components/layout"
 import { Tags } from "@/components/ui/tag"
 import { Header } from "@/components/header"
 import { MarkdownContent } from "@/components/markdown-content"
+import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
 
 import { Metadata } from 'next'
 
@@ -78,8 +79,12 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
       notFound()
     }
 
+    const posts = getAllPostsMeta()
+    const notes = getAllNotesMeta()
+
     return (
       <Layout>
+        <CalendarHeatmapFloating posts={posts} notes={notes} />
         <div className="max-w-2xl mx-auto px-4 py-6">
           <Header showBackButton={true} />
 

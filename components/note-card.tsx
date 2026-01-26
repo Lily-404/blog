@@ -30,3 +30,4 @@ export function NoteCard({ note, isLast }: { note: Note; isLast?: boolean }) {
     </NoteTimelineBlock>
   )
 }
+
