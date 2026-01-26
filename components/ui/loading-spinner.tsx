@@ -34,7 +34,7 @@ export interface LoadingSpinnerProps {
 }
 
 export function LoadingSpinner({
-  message = "加载中...",
+  message,
   subMessage,
   size = "md",
   fullPage = false,
@@ -51,20 +51,10 @@ export function LoadingSpinner({
         className
       )}
     >
-      <div className="relative">
-        {/* 模糊圆环背景 */}
-        <div className="absolute inset-0 bg-gradient-to-r from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800 rounded-full blur-xl opacity-50 animate-pulse" />
-        {/* 旋转图标容器 */}
-        <div className={cn(
-          "relative bg-white dark:bg-zinc-900 rounded-full shadow-lg border border-zinc-200 dark:border-zinc-800",
-          sizeStyles.container
-        )}>
-          <Loader2 className={cn(
-            "animate-spin text-zinc-600 dark:text-zinc-400",
-            sizeStyles.icon
-          )} />
-        </div>
-      </div>
+      <Loader2 className={cn(
+        "animate-spin text-zinc-600 dark:text-zinc-400",
+        sizeStyles.icon
+      )} />
       {/* 主消息 */}
       {message && (
         <p className={cn(

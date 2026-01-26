@@ -46,7 +46,7 @@ export function StatsSection({
   return (
     <>
       {/* 创作统计区域 */}
-      <div className="mb-6 grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <div className="mb-6 grid grid-cols-1 lg:grid-cols-12 gap-4 max-w-full overflow-x-hidden">
         {/* 左侧卡片 - 标题和日期 */}
         <div className="lg:col-span-4 grid grid-cols-2 gap-3">
           {/* 标题输入 - 支持多行 */}

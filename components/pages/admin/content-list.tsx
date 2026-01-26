@@ -80,7 +80,7 @@ export function ContentList({
   }
 
   if (loading) {
-    return <LoadingSpinner message="加载中..." size="md" />
+    return <LoadingSpinner size="md" />
   }
 
   if (items.length === 0) {

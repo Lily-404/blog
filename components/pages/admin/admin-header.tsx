@@ -84,7 +84,7 @@ export function AdminHeader({
   }, [onContentTypeChange])
 
   return (
-    <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4 md:gap-0">
+    <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4 md:gap-0 max-w-full overflow-x-hidden">
       <div>
         {username && greeting && (
           <>
@@ -100,9 +100,9 @@ export function AdminHeader({
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">内容管理</h1>
         )}
       </div>
-      <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+      <div className="flex items-center gap-1.5 md:gap-2 flex-wrap max-w-full min-w-0">
         {/* 类型切换和视图模式 - 统一放在右上角 */}
-        <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+        <div className="flex items-center gap-1.5 md:gap-2 flex-wrap max-w-full min-w-0">
           {/* 视图模式切换 - 仅在文章模式下显示，移动端也显示 */}
           {contentType === "post" && (
             <div className={cn("flex", TOGGLE_GROUP_STYLES)}>

@@ -10,7 +10,7 @@ import { clearAuth, createPost, createNote, updatePost, updateNote, deletePost, 
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { Loader2, Github } from "lucide-react"
-import { PageLoader } from "@/components/ui/loading-spinner"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Card } from "@/components/ui/card"
 import { SubmitButton } from "@/components/ui/submit-button"
 import {
@@ -446,10 +446,11 @@ export default function AdminPage() {
       <Layout>
         <div className="max-w-2xl mx-auto px-4 py-6">
           <Header showBackButton={true} />
-          <PageLoader
+          <LoadingSpinner
             message="正在验证身份..."
             subMessage="稍等片刻"
             size="lg"
+            fullPage={true}
           />
         </div>
       </Layout>
@@ -527,7 +528,7 @@ export default function AdminPage() {
   // 已认证，显示管理界面
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="max-w-7xl mx-auto px-4 py-6 overflow-x-hidden">
         <Header showBackButton={true} />
         
         <AdminHeader
