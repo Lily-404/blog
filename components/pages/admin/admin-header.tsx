@@ -151,14 +151,14 @@ export function AdminHeader({
               type="button"
               variant="outline"
               onClick={onToggleList}
-              className={cn(OUTLINE_BUTTON_BASE_STYLES, "h-9 md:h-10 px-2.5 md:px-3 text-xs")}
+              className={cn(OUTLINE_BUTTON_BASE_STYLES, "h-10 px-2.5 md:px-3 text-xs")}
             >
               {showList ? "写作" : "列表"}
             </Button>
             <Button 
               onClick={onLogout} 
               variant="outline" 
-              className={cn(OUTLINE_BUTTON_BASE_STYLES, "h-9 md:h-10 px-2.5 md:px-3 text-xs")}
+              className={cn(OUTLINE_BUTTON_BASE_STYLES, "h-10 px-2.5 md:px-3 text-xs")}
             >
               登出
             </Button>

@@ -19,12 +19,20 @@ export interface SubmitButtonProps
   creatingLoadingText?: string
 }
 
-const SUBMIT_BUTTON_STYLES = [
+const SUBMIT_BUTTON_BASE_STYLES = [
   "h-9 px-6 rounded-xl text-sm font-medium",
-  "bg-zinc-900/70 dark:bg-zinc-50/70 backdrop-blur-sm text-white dark:text-zinc-900",
-  "border border-zinc-900 dark:border-zinc-50",
   "shadow-sm hover:shadow-md transition-all",
-  "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-sm",
+] as const
+
+const SUBMIT_BUTTON_ENABLED_STYLES = [
+  "bg-black dark:bg-white text-white dark:text-black",
+  "border border-black dark:border-white",
+] as const
+
+const SUBMIT_BUTTON_DISABLED_STYLES = [
+  "bg-zinc-400 dark:bg-zinc-600 text-white dark:text-zinc-200",
+  "border border-zinc-400 dark:border-zinc-600",
+  "cursor-not-allowed hover:shadow-sm",
 ] as const
 
 /**
@@ -49,7 +57,11 @@ export function SubmitButton({
     <button
       type="submit"
       disabled={isDisabled}
-      className={cn(SUBMIT_BUTTON_STYLES, className)}
+      className={cn(
+        SUBMIT_BUTTON_BASE_STYLES,
+        isDisabled ? SUBMIT_BUTTON_DISABLED_STYLES : SUBMIT_BUTTON_ENABLED_STYLES,
+        className
+      )}
       {...props}
     >
       {loading ? (
