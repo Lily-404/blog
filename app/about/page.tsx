@@ -1,13 +1,7 @@
 import { Metadata } from 'next'
-import dynamic from 'next/dynamic'
 import { AboutContent } from "@/components/about-content"
 import { getAllPosts, getAllNotesMeta, getAllPostsMeta } from "@/app/lib/content"
-
-// 懒加载日历组件 - 不需要 SSR
-const CalendarHeatmapFloating = dynamic(
-  () => import('@/components/calendar-heatmap-floating').then(mod => ({ default: mod.CalendarHeatmapFloating })),
-  { ssr: false }
-)
+import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
 
 export const dynamic = 'force-static'
 export const revalidate = false // 禁用重新验证，因为内容是静态的

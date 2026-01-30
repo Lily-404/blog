@@ -1,21 +1,14 @@
 import { getAllPostIds, getPostById, getAllPostsMeta, getAllNotesMeta } from "@/app/lib/content"
 import { formatDate } from "@/lib/utils"
 import { notFound } from "next/navigation"
-import dynamicImport from 'next/dynamic'
 import { Footer } from "@/components/ui/footer"
 import { Layout } from "@/components/layout"
 import { Tags } from "@/components/ui/tag"
 import { Header } from "@/components/header"
 import { MarkdownContent } from "@/components/markdown-content"
+import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
 import { TableOfContents } from "@/components/ui/table-of-contents"
 import { Metadata } from 'next'
-
-// 懒加载日历组件 - 不需要 SSR
-const CalendarHeatmapFloating = dynamicImport(
-  () => import('@/components/calendar-heatmap-floating').then(mod => ({ default: mod.CalendarHeatmapFloating })),
-  { ssr: false }
-)
-
 
 // 设置为完全静态生成
 export const dynamic = 'force-static'

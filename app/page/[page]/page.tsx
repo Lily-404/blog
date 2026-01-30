@@ -1,13 +1,7 @@
 import { notFound } from "next/navigation"
-import dynamicImport from 'next/dynamic'
 import { HomeContent } from "@/components/home-content"
 import { getAllPostsMeta, getTagsFromPosts, getAllNotesMeta } from "@/app/lib/content"
-
-// 懒加载日历组件 - 不需要 SSR
-const CalendarHeatmapFloating = dynamicImport(
-  () => import('@/components/calendar-heatmap-floating').then(mod => ({ default: mod.CalendarHeatmapFloating })),
-  { ssr: false }
-)
+import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
 
 const PAGE_SIZE = 10
 

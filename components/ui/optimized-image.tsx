@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useMemo, memo } from "react"
+import { useState, useEffect, useCallback, memo } from "react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 
@@ -56,14 +56,15 @@ function OptimizedImageComponent({
   sizes,
   ...props
 }: OptimizedImageProps) {
-  // 使用 useMemo：优先读内存，再读 sessionStorage，避免移动端切页后仍显示加载占位
-  const isCached = useMemo(() => isImageLoadedInSession(src), [src]);
-  const [isLoading, setIsLoading] = useState(() => !isImageLoadedInSession(src));
+  // 初始状态必须与服务端一致，避免 hydration 报错（服务端无 window/sessionStorage）
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCached, setIsCached] = useState(false);
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    // 如果图片已经在全局缓存中，直接设置为已加载
-    if (isCached) {
+    // 仅在客户端：如果图片已在会话中加载过，直接显示
+    if (isImageLoadedInSession(src)) {
+      setIsCached(true);
       setIsLoading(false);
       setIsError(false);
       return;
@@ -131,10 +132,11 @@ function OptimizedImageComponent({
         img.src = '';
       }
     };
-  }, [src, isCached]);
+  }, [src]);
 
   const handleLoad = useCallback(() => {
     setIsLoading(false);
+    setIsCached(true);
     markImageLoaded(src);
   }, [src]);
 

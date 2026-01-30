@@ -59,36 +59,19 @@
 
 ---
 
-### 1.2 代码分割与动态导入 ✅ **已完成**
+### 1.2 代码分割与动态导入 ⚠️ **已回退**
 
 **现状**：
-- ✅ 日历组件已做懒加载
+- ⚠️ 日历组件曾改为 dynamic import，在 Vercel 构建时报 webpack 错误，已回退为静态导入
 - ✅ KaTeX 在服务端按需使用，客户端已优化
 - ⚠️ 管理后台组件可进一步优化（暂不需要）
 
-**已完成的优化**：
+**尝试过的优化**：
 
-1. **日历组件懒加载** ✅
-   - ✅ 所有页面的 `CalendarHeatmapFloating` 已改为 dynamic import
-   - ✅ 禁用 SSR (`ssr: false`)，因为日历是客户端交互组件
-   - ✅ 减少首屏 bundle 大小
-
-   **应用于**：
-   - `app/page.tsx` - 首页
-   - `app/page/[page]/page.tsx` - 分页
-   - `app/posts/[id]/page.tsx` - 文章详情
-   - `app/archive/page.tsx` - 归档
-   - `app/about/page.tsx` - 关于
-   - `app/notes/page.tsx` - 随笔
-
-   **代码示例**：
-   ```tsx
-   const CalendarHeatmapFloating = dynamic(
-     () => import('@/components/calendar-heatmap-floating')
-       .then(mod => ({ default: mod.CalendarHeatmapFloating })),
-     { ssr: false }
-   )
-   ```
+1. **日历组件懒加载** ⚠️ **已回退**
+   - 曾将 `CalendarHeatmapFloating` 改为 `next/dynamic` 懒加载
+   - 本地无问题，但 Vercel 构建失败：`Build failed because of webpack errors`（与 dynamic import 相关）
+   - 已恢复为普通静态 import，保证部署成功
 
 2. **Markdown 相关依赖优化** ✅
    - ✅ KaTeX 在服务端渲染时使用（`lib/math-formulas.ts`）
@@ -100,17 +83,9 @@
    - 由于访问频率低，暂不需要进一步分割
    - 未来可按需将大型表单组件分割
 
-**实现文件**：
-- `app/page.tsx` - 首页日历懒加载
-- `app/page/[page]/page.tsx` - 分页日历懒加载
-- `app/posts/[id]/page.tsx` - 文章详情日历懒加载
-- `app/archive/page.tsx` - 归档日历懒加载
-- `app/about/page.tsx` - 关于日历懒加载
-- `app/notes/page.tsx` - 随笔日历懒加载
+**若需再次尝试日历懒加载**：可考虑将日历放入一个带 `"use client"` 的包装组件，在包装组件内使用 `dynamic()`，避免在服务端路由文件中直接使用 `next/dynamic`。
 
-**预期收益**：减少初始包大小 15-20%（日历组件约 30KB gzipped），提升首屏加载速度 ✅ **已实现**
-
-**完成时间**：2026-01-30
+**完成时间**：2026-01-30（优化尝试）；回退时间：同日后
 
 ---
 
@@ -989,10 +964,10 @@
 2. ❌ 错误边界和监控（稳定性）
 3. ❌ TypeScript 严格模式（代码质量）
 4. ✅ **图片优化统一（性能）- 已完成 2026-01-30**
-5. ✅ **代码分割优化（性能）- 已完成 2026-01-30**
+5. ⚠️ **代码分割优化（性能）- 已尝试，Vercel 构建失败已回退**
 
 ### 第二阶段（近期实施）🟡
-1. ✅ ~~代码分割和懒加载~~ - 已完成
+1. ⚠️ ~~代码分割和懒加载~~ - 曾实现，Vercel 构建失败已回退
 2. SEO 优化（结构化数据、sitemap）
 3. 缓存策略优化（API 缓存、ISR）
 4. 无障碍访问增强
@@ -1011,7 +986,7 @@
 | 优化项 | 状态 | 预期收益 | 实施难度 | 完成时间 |
 |--------|------|----------|----------|----------|
 | 图片优化 | ✅ 已完成 | ⭐⭐⭐⭐ | 🟢 低 | 2026-01-30 |
-| 代码分割 | ✅ 已完成 | ⭐⭐⭐⭐ | 🟢 低 | 2026-01-30 |
+| 代码分割 | ⚠️ 已回退 | ⭐⭐⭐⭐ | 🟢 低 | Vercel 构建失败 |
 | 搜索功能 | 🚫 暂不实施 | ⭐⭐⭐⭐⭐ | 🟡 中 | - |
 | SEO 优化 | ❌ 未完成 | ⭐⭐⭐⭐ | 🟢 低 | - |
 | 错误监控 | ❌ 未完成 | ⭐⭐⭐⭐⭐ | 🟡 中 | - |
