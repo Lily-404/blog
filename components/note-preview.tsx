@@ -53,6 +53,8 @@ export function NotePreview({ content, date }: NotePreviewProps) {
           width={40}
           height={40}
           className={NOTE_AVATAR_CLASSES}
+          sizes="40px"
+          quality={85}
         />
       }
       meta={

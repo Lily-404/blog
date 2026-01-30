@@ -14,6 +14,8 @@ export function NoteCard({ note, isLast }: { note: Note; isLast?: boolean }) {
           width={40}
           height={40}
           className={NOTE_AVATAR_CLASSES}
+          sizes="40px"
+          quality={85}
         />
       }
       meta={

@@ -11,8 +11,8 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   height?: number
   priority?: boolean
   className?: string
-  quality?: number
-  sizes?: string
+  quality?: number // 默认 75
+  sizes?: string // 响应式尺寸
 }
 
 // 全局缓存所有图片加载状态（内存，用于当前会话）
@@ -52,6 +52,8 @@ function OptimizedImageComponent({
   height,
   priority = false,
   className,
+  quality = 75,
+  sizes,
   ...props
 }: OptimizedImageProps) {
   // 使用 useMemo：优先读内存，再读 sessionStorage，避免移动端切页后仍显示加载占位
@@ -146,11 +148,13 @@ function OptimizedImageComponent({
 
   return (
     <div className={cn("relative overflow-hidden", className)}>
-      {/* 底部基础占位符 - 始终显示，确保切换时不会空白 */}
-      {isAvatar ? (
-        <div className="absolute inset-0 z-0 rounded-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900" />
-      ) : (
-        <div className="absolute inset-0 z-0 rounded-lg bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900" />
+      {/* 底部基础占位符：未缓存时显示，防止时间线竖线透出；已缓存时不显示，避免随笔页切回时闪「底」 */}
+      {!isCached && (
+        isAvatar ? (
+          <div className="absolute inset-0 z-0 rounded-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900" />
+        ) : (
+          <div className="absolute inset-0 z-0 rounded-lg bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900" />
+        )
       )}
 
       {/* Loading placeholder - 模糊动态效果，在基础占位符上方 */}
@@ -194,6 +198,8 @@ function OptimizedImageComponent({
         width={width}
         height={height}
         priority={priority}
+        quality={quality}
+        sizes={sizes}
         onLoad={handleLoad}
         onError={handleError}
         className={cn(
@@ -219,6 +225,8 @@ export const OptimizedImage = memo(OptimizedImageComponent, (prevProps, nextProp
     prevProps.width === nextProps.width &&
     prevProps.height === nextProps.height &&
     prevProps.priority === nextProps.priority &&
-    prevProps.className === nextProps.className
+    prevProps.className === nextProps.className &&
+    prevProps.quality === nextProps.quality &&
+    prevProps.sizes === nextProps.sizes
   )
 }) 

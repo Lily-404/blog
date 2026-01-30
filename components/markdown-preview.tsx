@@ -1,6 +1,7 @@
 "use client"
 
 import { useMarkdownHtml } from "@/hooks/use-markdown-html"
+import { useMarkdownImages } from "@/hooks/use-markdown-images"
 import { MarkdownProse } from "@/components/ui/markdown-prose"
 import { PreviewPlaceholder } from "@/components/ui/preview-placeholder"
 
@@ -13,6 +14,8 @@ export function MarkdownPreview({ content, className = "" }: MarkdownPreviewProp
   const { html, loading } = useMarkdownHtml(content, {
     blockFormulaClass: "katex-block my-4",
   })
+
+  useMarkdownImages({ enabled: !!html })
 
   if (!content.trim()) {
     return (

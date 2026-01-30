@@ -3,6 +3,7 @@
 import { useMemo } from "react"
 import { useMarkdownHtml } from "@/hooks/use-markdown-html"
 import { useCodeBlockCopy } from "@/hooks/use-code-block-copy"
+import { useMarkdownImages } from "@/hooks/use-markdown-images"
 import { MarkdownProse } from "@/components/ui/markdown-prose"
 import { PreviewPlaceholder } from "@/components/ui/preview-placeholder"
 
@@ -37,6 +38,7 @@ export function PostPreview({ content }: PostPreviewProps) {
   })
 
   useCodeBlockCopy({ enabled: !!html })
+  useMarkdownImages({ enabled: !!html })
 
   const emptyMessage = useMemo(
     () => emptyMessages[Math.floor(Math.random() * emptyMessages.length)],

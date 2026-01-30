@@ -24,6 +24,8 @@ export function HeaderHome() {
             height={40}
             priority
             className="w-10 h-10 rounded-full object-cover cursor-pointer transition-all duration-150 hover:opacity-90 active:scale-95"
+            sizes="40px"
+            quality={85}
           />
         </div>
         <h1 
