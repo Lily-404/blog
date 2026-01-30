@@ -15,8 +15,35 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   sizes?: string
 }
 
-// 全局缓存所有图片加载状态
+// 全局缓存所有图片加载状态（内存，用于当前会话）
 const globalImageLoadedMap = new Map<string, boolean>();
+
+const STORAGE_KEY_PREFIX = "img-loaded-";
+
+/** 检查图片是否已在本会话中加载过（内存 + sessionStorage，解决移动端切页后重新显示加载的问题） */
+function isImageLoadedInSession(src: string): boolean {
+  if (globalImageLoadedMap.get(src)) return true;
+  if (typeof window === "undefined") return false;
+  try {
+    if (sessionStorage.getItem(STORAGE_KEY_PREFIX + src) === "1") {
+      globalImageLoadedMap.set(src, true);
+      return true;
+    }
+  } catch {
+    // sessionStorage 不可用（隐私模式等）时忽略
+  }
+  return false;
+}
+
+/** 标记图片已加载（同时写入内存和 sessionStorage） */
+function markImageLoaded(src: string): void {
+  globalImageLoadedMap.set(src, true);
+  try {
+    sessionStorage.setItem(STORAGE_KEY_PREFIX + src, "1");
+  } catch {
+    // 忽略
+  }
+}
 
 function OptimizedImageComponent({
   src,
@@ -27,9 +54,9 @@ function OptimizedImageComponent({
   className,
   ...props
 }: OptimizedImageProps) {
-  // 使用 useMemo 优化缓存检查
-  const isCached = useMemo(() => globalImageLoadedMap.get(src) || false, [src]);
-  const [isLoading, setIsLoading] = useState(!isCached);
+  // 使用 useMemo：优先读内存，再读 sessionStorage，避免移动端切页后仍显示加载占位
+  const isCached = useMemo(() => isImageLoadedInSession(src), [src]);
+  const [isLoading, setIsLoading] = useState(() => !isImageLoadedInSession(src));
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
@@ -49,7 +76,7 @@ function OptimizedImageComponent({
       if (!isResolved) {
         isResolved = true;
         setIsLoading(false);
-        globalImageLoadedMap.set(src, true);
+        markImageLoaded(src);
       }
     };
 
@@ -106,7 +133,7 @@ function OptimizedImageComponent({
 
   const handleLoad = useCallback(() => {
     setIsLoading(false);
-    globalImageLoadedMap.set(src, true);
+    markImageLoaded(src);
   }, [src]);
 
   const handleError = useCallback(() => {
