@@ -1,9 +1,15 @@
 import { Metadata } from 'next'
 import { Suspense } from "react"
+import dynamic from 'next/dynamic'
 import { ArchiveContent } from "@/components/archive-content"
 import { getAllPostsMeta, getTagsFromPosts, getAllNotesMeta } from "@/app/lib/content"
-import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
 import type { Post, PostsByYear } from '@/types/post'
+
+// 懒加载日历组件 - 不需要 SSR
+const CalendarHeatmapFloating = dynamic(
+  () => import('@/components/calendar-heatmap-floating').then(mod => ({ default: mod.CalendarHeatmapFloating })),
+  { ssr: false }
+)
 
 export const metadata: Metadata = {
   title: '归档',

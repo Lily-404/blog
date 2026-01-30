@@ -146,18 +146,19 @@ function OptimizedImageComponent({
   // 判断是否为头像（圆形图片）
   const isAvatar = src === "/cat.jpg" || className?.includes("rounded-full");
 
+  // 同一资源已在会话中加载过：不展示「重新加载」、不做过渡，直接显示图片
+  const showAsAlreadyLoaded = isCached && !isLoading;
+
   return (
     <div className={cn("relative overflow-hidden", className)}>
-      {/* 底部基础占位符：未缓存时显示，防止时间线竖线透出；已缓存时不显示，避免随笔页切回时闪「底」 */}
-      {!isCached && (
-        isAvatar ? (
-          <div className="absolute inset-0 z-0 rounded-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900" />
-        ) : (
-          <div className="absolute inset-0 z-0 rounded-lg bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900" />
-        )
+      {/* 底：始终保留，防止图片未绘制时时间线竖线透出（折中：宁可见底，不可见线） */}
+      {isAvatar ? (
+        <div className="absolute inset-0 z-0 rounded-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900" />
+      ) : (
+        <div className="absolute inset-0 z-0 rounded-lg bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900" />
       )}
 
-      {/* Loading placeholder - 模糊动态效果，在基础占位符上方 */}
+      {/* Loading：仅未加载时显示；已缓存同一资源时不显示，避免「重新加载」感 */}
       {isLoading && (
         <div className="absolute inset-0 z-10 pointer-events-none">
           {isAvatar ? (
@@ -191,7 +192,7 @@ function OptimizedImageComponent({
         </div>
       )}
 
-      {/* Main image - 模糊到清晰的动态效果，在最上层 */}
+      {/* Main image：已加载过的同一资源无过渡、直接显示；首次加载才有模糊→清晰 */}
       <Image
         src={src}
         alt={alt}
@@ -203,10 +204,15 @@ function OptimizedImageComponent({
         onLoad={handleLoad}
         onError={handleError}
         className={cn(
-          "relative z-20 transition-all duration-700 ease-out",
-          isLoading && !isCached 
-            ? "opacity-0 blur-xl scale-110" 
-            : "opacity-100 blur-0 scale-100",
+          "relative z-20",
+          showAsAlreadyLoaded
+            ? "opacity-100 blur-0 scale-100"
+            : "transition-all duration-700 ease-out",
+          !showAsAlreadyLoaded && isLoading && !isCached
+            ? "opacity-0 blur-xl scale-110"
+            : !showAsAlreadyLoaded
+              ? "opacity-100 blur-0 scale-100"
+              : "",
           isError && "hidden"
         )}
         loading={priority ? undefined : "lazy"}

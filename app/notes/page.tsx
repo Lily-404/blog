@@ -1,10 +1,16 @@
+import dynamic from 'next/dynamic'
 import { Layout } from "@/components/layout"
 import { NotesPagination } from "@/components/notes-pagination"
 import { getPaginatedNotesAction } from "@/app/actions/notes"
 import { Footer } from "@/components/ui/footer"
 import { Header } from "@/components/header"
-import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
 import { getAllPostsMeta, getAllNotesMeta } from "@/app/lib/content"
+
+// 懒加载日历组件 - 不需要 SSR
+const CalendarHeatmapFloating = dynamic(
+  () => import('@/components/calendar-heatmap-floating').then(mod => ({ default: mod.CalendarHeatmapFloating })),
+  { ssr: false }
+)
 
 // 设置为完全静态生成
 export const dynamic = 'force-static'
