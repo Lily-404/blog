@@ -1,5 +1,13 @@
 import { useEffect } from "react"
 
+const COPY_ICON =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>'
+const SUCCESS_ICON =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+
+const BTN_BASE_CLASS =
+  "p-1.5 rounded-full bg-white/85 dark:bg-zinc-800/90 backdrop-blur-sm border border-zinc-200/90 dark:border-zinc-600/80 text-zinc-700 dark:text-zinc-200 hover:bg-white dark:hover:bg-zinc-700 dark:hover:text-zinc-50 dark:hover:border-zinc-500/80 transition-[background-color,border-color,color] duration-200 ease-out shadow-sm [transform:translateZ(0)] [will-change:backdrop-filter]"
+
 export interface UseCodeBlockCopyOptions {
   /** 代码块选择器，默认 'pre' */
   selector?: string
@@ -12,10 +20,10 @@ export interface UseCodeBlockCopyOptions {
 /**
  * 代码块复制功能 Hook
  * 自动为页面中的所有代码块添加复制按钮
- * 
+ *
  * @param options 配置选项
  * @returns 清理函数（通常不需要手动调用，useEffect 会自动处理）
- * 
+ *
  * @example
  * ```tsx
  * useCodeBlockCopy({
@@ -27,7 +35,7 @@ export interface UseCodeBlockCopyOptions {
  */
 export function useCodeBlockCopy(options: UseCodeBlockCopyOptions = {}) {
   const {
-    selector = 'pre',
+    selector = "pre",
     successDuration = 2000,
     enabled = true,
   } = options
@@ -35,72 +43,60 @@ export function useCodeBlockCopy(options: UseCodeBlockCopyOptions = {}) {
   useEffect(() => {
     if (!enabled) return
 
-    // 为所有代码块添加复制按钮
+    const timeouts = new Set<ReturnType<typeof setTimeout>>()
     const codeBlocks = document.querySelectorAll(selector)
 
     codeBlocks.forEach((pre) => {
-      // 检查是否已经添加过按钮（避免重复添加）
-      if (pre.parentElement?.classList.contains("relative")) {
-        return
-      }
+      if (pre.closest(".code-block-copy-wrapper")) return
 
-      // 创建外层容器
-      const wrapper = document.createElement('div')
-      wrapper.className = 'relative mb-6 group'
+      const wrapper = document.createElement("div")
+      wrapper.className = "code-block-copy-wrapper relative group"
 
-      // 创建复制按钮容器
-      const buttonContainer = document.createElement('div')
-      buttonContainer.className = 'absolute right-3 top-3 flex items-center gap-1 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200'
+      const buttonContainer = document.createElement("div")
+      buttonContainer.className =
+        "code-block-copy-btn-wrap absolute right-4 top-4 z-10 flex items-center opacity-0 group-hover:opacity-100 [transform:translateZ(0)]"
 
-      // 创建复制按钮
-      const copyButton = document.createElement('button')
-      copyButton.className = 'p-1.5 rounded-md bg-black hover:bg-zinc-800 text-white hover:text-white transition-all duration-200 shadow-sm hover:shadow-md dark:bg-white dark:text-black dark:hover:bg-zinc-100'
-      copyButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>'
-      copyButton.setAttribute('aria-label', '复制代码')
+      const btn = document.createElement("button")
+      btn.type = "button"
+      btn.className = BTN_BASE_CLASS
+      btn.innerHTML = COPY_ICON
+      btn.setAttribute("aria-label", "复制代码")
 
-      // 创建成功提示按钮
-      const successButton = document.createElement('button')
-      successButton.className = 'p-1.5 rounded-md bg-black hover:bg-zinc-800 text-white hover:text-white transition-all duration-200 shadow-sm hover:shadow-md dark:bg-white dark:text-black dark:hover:bg-zinc-100 hidden'
-      successButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
-      successButton.setAttribute('aria-label', '已复制')
+      btn.addEventListener("click", async () => {
+        if (btn.getAttribute("aria-label") === "已复制") return
 
-      // 添加点击事件
-      copyButton.addEventListener('click', async () => {
-        const code = pre.querySelector('code')?.textContent || ''
+        const code = pre.querySelector("code")?.textContent ?? ""
         try {
           await navigator.clipboard.writeText(code)
+          btn.innerHTML = SUCCESS_ICON
+          btn.setAttribute("aria-label", "已复制")
 
-          // 立即更新UI状态
-          copyButton.style.display = 'none'
-          successButton.style.display = 'block'
-
-          // 指定时长后恢复原始状态
-          setTimeout(() => {
-            copyButton.style.display = 'block'
-            successButton.style.display = 'none'
+          const id = setTimeout(() => {
+            btn.innerHTML = COPY_ICON
+            btn.setAttribute("aria-label", "复制代码")
+            timeouts.delete(id)
           }, successDuration)
+          timeouts.add(id)
         } catch (err) {
-          console.error('Failed to copy code:', err)
+          console.error("Failed to copy code:", err)
         }
       })
 
-      // 添加元素到容器
-      buttonContainer.appendChild(copyButton)
-      buttonContainer.appendChild(successButton)
-
-      // 将代码块包装在外层容器中
-      pre.parentNode?.insertBefore(wrapper, pre)
+      buttonContainer.appendChild(btn)
+      pre.classList.add("pt-12")
+      pre.parentElement?.insertBefore(wrapper, pre)
       wrapper.appendChild(pre)
       wrapper.appendChild(buttonContainer)
     })
 
-    // 清理函数
     return () => {
-      const wrappers = document.querySelectorAll('div.relative.mb-6.group')
-      wrappers.forEach(wrapper => {
-        const pre = wrapper.querySelector(selector)
-        if (pre) {
-          wrapper.parentNode?.insertBefore(pre, wrapper)
+      timeouts.forEach(clearTimeout)
+      timeouts.clear()
+      document.querySelectorAll(".code-block-copy-wrapper").forEach((wrapper) => {
+        const pre = wrapper.firstElementChild
+        if (pre?.tagName === "PRE") {
+          pre.classList.remove("pt-12")
+          wrapper.parentElement?.insertBefore(pre, wrapper)
         }
         wrapper.remove()
       })

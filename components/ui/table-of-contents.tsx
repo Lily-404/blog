@@ -310,7 +310,7 @@ export function TableOfContents({ html, className }: TableOfContentsProps) {
   return (
     <nav
       className={cn(
-        "hidden lg:block",
+        "hidden xl:block",
         "w-48",
         "text-xs",
         "max-h-[calc(100vh-8rem)]",

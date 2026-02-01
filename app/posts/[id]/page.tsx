@@ -85,7 +85,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
       <Layout>
         <CalendarHeatmapFloating posts={posts} notes={notes} />
         {/* 右侧导航：不改变正文宽度与位置（脱离文档流） */}
-        <aside className="hidden lg:block fixed right-24 top-24 w-56 z-40">
+        <aside className="hidden xl:block fixed right-24 top-24 w-56 z-40">
           <TableOfContents html={post.contentHtml} />
         </aside>
 
