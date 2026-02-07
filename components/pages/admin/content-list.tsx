@@ -108,22 +108,23 @@ export function ContentList({
           >
             <div className="flex-1 min-w-0">
               {contentType === "post" ? (
-                <>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-zinc-900 dark:text-zinc-100 truncate">
-                      {(item as Post).title}
-                    </h3>
-                    <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                      {formatDate(item.date)}
-                    </span>
-                  </div>
-                </>
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-medium text-zinc-900 dark:text-zinc-100 truncate min-w-0">
+                    {(item as Post).title}
+                  </h3>
+                  <span className="text-sm text-zinc-500 dark:text-zinc-400 flex-shrink-0">
+                    {formatDate(item.date)}
+                  </span>
+                </div>
               ) : (
-                <>
-                  <p className="text-sm text-zinc-700 dark:text-zinc-300 line-clamp-2">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm text-zinc-700 dark:text-zinc-300 line-clamp-2 min-w-0 flex-1">
                     {(item as Note).content}
                   </p>
-                </>
+                  <span className="text-sm text-zinc-500 dark:text-zinc-400 flex-shrink-0">
+                    {formatDate(item.date)}
+                  </span>
+                </div>
               )}
             </div>
             <div className="flex items-center gap-2 ml-4 opacity-0 group-hover:opacity-100 transition-opacity">

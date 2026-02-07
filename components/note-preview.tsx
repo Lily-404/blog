@@ -61,7 +61,7 @@ export function NotePreview({ content, date }: NotePreviewProps) {
         <>
           <div className="text-sm font-medium text-zinc-800 dark:text-zinc-200">Jimmy</div>
           {!!date && (
-            <time className="text-xs text-zinc-400 dark:text-zinc-500 font-mono tabular-nums">
+            <time className="text-xs text-zinc-400 dark:text-zinc-500 tabular-nums">
               {format(new Date(date), "yyyy/MM/dd")}
             </time>
           )}

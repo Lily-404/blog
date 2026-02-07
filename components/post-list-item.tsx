@@ -44,7 +44,7 @@ export function PostListItem({
         <span className="text-base font-normal group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors duration-200 truncate mr-4">
           {title}
         </span>
-        <time className="text-xs text-zinc-400 dark:text-zinc-500 flex-shrink-0 font-mono tabular-nums">
+        <time className="text-xs text-zinc-400 dark:text-zinc-500 flex-shrink-0 tabular-nums">
           {format(new Date(date), "MM/dd")}
         </time>
       </Link>

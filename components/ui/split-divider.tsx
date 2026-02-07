@@ -18,8 +18,11 @@ const SplitDivider = React.forwardRef<HTMLDivElement, SplitDividerProps>(
     return (
       <div
         ref={ref}
+        aria-hidden
+        role="separator"
         className={cn(
-          "h-px lg:h-full lg:w-px flex-shrink-0",
+          "flex-shrink-0",
+          "h-px w-full lg:h-full lg:w-[2px] lg:min-w-[2px] lg:min-h-0",
           colorClasses,
           className
         )}

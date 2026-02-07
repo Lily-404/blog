@@ -4,7 +4,6 @@ import { useRef } from "react"
 import { PostPreview } from "@/components/post-preview"
 import { Card } from "@/components/ui/card"
 import { MarkdownTextarea } from "@/components/ui/markdown-textarea"
-import { SplitDivider } from "@/components/ui/split-divider"
 import { EditorPane } from "@/components/ui/editor-pane"
 import { PreviewPane } from "@/components/ui/preview-pane"
 import { EditorWrapper } from "@/components/ui/editor-wrapper"
@@ -39,8 +38,6 @@ export function ContentEditor({
               required
             />
           </EditorPane>
-
-          <SplitDivider />
 
           <PreviewPane ref={previewRef} splitMode>
             <PostPreview content={content} />

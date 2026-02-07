@@ -30,6 +30,10 @@ const PreviewPane = React.forwardRef<HTMLDivElement, PreviewPaneProps>(
         ? "bg-zinc-50/80 dark:bg-zinc-800/30 backdrop-blur-sm"
         : "bg-transparent"
 
+    const splitBorderClasses = splitMode
+      ? "border-t border-zinc-300 dark:border-zinc-600 lg:border-t-0 lg:border-l lg:box-border"
+      : ""
+
     return (
       <div
         ref={ref}
@@ -38,6 +42,7 @@ const PreviewPane = React.forwardRef<HTMLDivElement, PreviewPaneProps>(
           "px-5 py-4 overflow-y-auto overflow-x-hidden",
           bgClasses,
           heightClasses,
+          splitBorderClasses,
           className
         )}
         style={{

@@ -73,7 +73,7 @@ export const MonthNavigation = React.forwardRef<
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
-        <span className="text-xs text-zinc-400 font-mono w-[6.5em] text-center">
+        <span className="text-xs text-zinc-400 w-[6.5em] text-center">
           {formatDate(year, month)}
         </span>
         <button
