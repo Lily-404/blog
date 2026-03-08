@@ -154,15 +154,15 @@ export function AboutContent({ initialStats }: AboutContentProps) {
           <Card variant="muted" size="lg">
             <h2 className="text-xl font-semibold mb-4">本站</h2>
             <div className="space-y-3 text-zinc-600 dark:text-zinc-400">
-              <p>这个博客使用 Next.js构建，用来记录我在技术学习和工作中的心得体会。</p>
-              <p>同时也会分享一些关于生活、阅读的想法。</p>
+              <p>这个博客基于 Next.js 搭建，用来记录我在技术学习和工作实践中的思考与总结。</p>
+              <p>不定期分享一些关于生活、阅读和随笔的内容。</p>
             </div>
           </Card>
 
           <Card variant="muted" size="lg">
             <h2 className="text-xl font-semibold mb-4">项目</h2>
             <div className="space-y-3 text-zinc-600 dark:text-zinc-400">
-              <p>本博客是开源的，感兴趣的话麻烦点个Star，你可以在 GitHub 查看源码：</p>
+              <p>本博客是一个开源项目，感兴趣的话麻烦点个Star：</p>
               <a 
                 href="https://github.com/Lily-404/blog"
                 target="_blank"

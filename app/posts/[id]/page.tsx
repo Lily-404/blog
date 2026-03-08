@@ -78,7 +78,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
       notFound()
     }
 
-    const formattedDate = format(new Date(post.date), "yyyy.MM.dd")
+    const formattedDate = format(new Date(post.date), "yyyy/MM/dd")
 
     const posts = getAllPostsMeta()
     const notes = getAllNotesMeta()
@@ -97,7 +97,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
           <article>
             <header>
               <h1 className="text-3xl font-bold leading-tight">{post.title}</h1>
-              <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+              <p className="mt-2 text-sm text-zinc-400 dark:text-zinc-500">
                 {formattedDate}
                 {post.tags && post.tags.length > 0 && (
                   <>
