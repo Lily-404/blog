@@ -24,7 +24,8 @@ export interface MonthNavigationProps {
 const pad2 = (n: number) => n.toString().padStart(2, "0")
 
 const defaultFormatDate = (year: number, month: number) => {
-  return `${year}年${pad2(month + 1)}月`
+  // 显示为 YYYY/MM/DD，这里用当月的第 1 天作为代表
+  return `${year}/${pad2(month + 1)}/01`
 }
 
 const buttonBaseStyles = [

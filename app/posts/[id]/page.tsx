@@ -1,5 +1,5 @@
 import { getAllPostIds, getPostById, getAllPostsMeta, getAllNotesMeta } from "@/app/lib/content"
-import { formatDate } from "@/lib/utils"
+import { format } from "date-fns"
 import { notFound } from "next/navigation"
 import { Footer } from "@/components/ui/footer"
 import { Layout } from "@/components/layout"
@@ -78,6 +78,8 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
       notFound()
     }
 
+    const formattedDate = format(new Date(post.date), "yyyy.MM.dd")
+
     const posts = getAllPostsMeta()
     const notes = getAllNotesMeta()
 
@@ -94,13 +96,21 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
 
           <article>
             <header>
-              <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-              <time className="block text-xs text-zinc-400 dark:text-zinc-500">{formatDate(post.date)}</time>
-              {post.tags && post.tags.length > 0 && (
-                <Tags tags={post.tags} className="mt-2" interactive={false} />
-              )}
+              <h1 className="text-3xl font-bold leading-tight">{post.title}</h1>
+              <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+                {formattedDate}
+                {post.tags && post.tags.length > 0 && (
+                  <>
+                    {" "}
+                    · {post.tags.join(" · ")}
+                  </>
+                )}
+              </p>
             </header>
-            <MarkdownContent content={post.contentHtml} />
+            <MarkdownContent
+              content={post.contentHtml}
+              className="mt-2 [&>*:first-child]:mt-0"
+            />
           </article>
 
           <Footer />

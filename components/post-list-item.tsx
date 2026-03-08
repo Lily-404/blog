@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { format } from "date-fns"
-import { zhCN } from "date-fns/locale"
 import { cn } from "@/lib/utils"
 
 export interface PostListItemProps {
@@ -60,12 +59,15 @@ export function PostListItem({
         className
       )}
     >
-      <Link href={`/posts/${id}`} className="group block">
-        <h2 className="text-base font-normal text-zinc-800 dark:text-zinc-200 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors duration-300">
+      <Link
+        href={`/posts/${id}`}
+        className="group flex items-baseline justify-between gap-3"
+      >
+        <h2 className="text-lg  text-zinc-800 dark:text-zinc-200 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors duration-300 truncate mr-2">
           {title}
         </h2>
-        <time className="text-xs text-zinc-400 dark:text-zinc-500 mt-1 block">
-          {format(new Date(date), "yyyy年MM月dd日", { locale: zhCN })}
+        <time className="text-xs text-zinc-400 dark:text-zinc-500 flex-shrink-0 tabular-nums">
+          {format(new Date(date), "yyyy/MM/dd")}
         </time>
       </Link>
     </article>

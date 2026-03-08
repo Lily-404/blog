@@ -6,9 +6,9 @@ import { useMarkdownImages } from "@/hooks/use-markdown-images"
 import { MarkdownProse } from "@/components/ui/markdown-prose"
 import { processMathFormulas } from "@/lib/math-formulas"
 
-export function MarkdownContent({ content }: MarkdownContentProps) {
+export function MarkdownContent({ content, className }: MarkdownContentProps) {
   useCodeBlockCopy()
   useMarkdownImages()
   const html = processMathFormulas(content)
-  return <MarkdownProse html={html} />
+  return <MarkdownProse html={html} className={className} />
 }
