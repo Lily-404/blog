@@ -29,19 +29,19 @@ const BASE_STYLES = [
   "hover:shadow-sm dark:hover:shadow-zinc-800/50",
 ] as const
 
-// 选中状态样式（与 hover 效果一致）
+// 选中状态样式：亮色纯黑，暗色纯白
 const SELECTED_STYLES = [
-  "bg-zinc-200/70 dark:bg-zinc-700/70",
-  "text-zinc-800 dark:text-zinc-200",
-  "border-zinc-400/70 dark:border-zinc-500/70",
-  "shadow-sm dark:shadow-zinc-800/50",
-  "hover:bg-zinc-300/80 dark:hover:bg-zinc-600/80",
-  "hover:border-zinc-500/70 dark:hover:border-zinc-400/70",
+  "bg-black dark:bg-white",
+  "text-white dark:text-black",
+  "border-black dark:border-white",
+  "shadow-sm dark:shadow-zinc-900",
+  "hover:bg-black dark:hover:bg-white",
+  "hover:border-black dark:hover:border-white",
 ] as const
 
 // 数量样式
 const COUNT_UNSELECTED_STYLES = "text-zinc-400 dark:text-zinc-500"
-const COUNT_SELECTED_STYLES = "text-zinc-600 dark:text-zinc-400"
+const COUNT_SELECTED_STYLES = "text-white dark:text-black"
 
 /**
  * 标签组件
