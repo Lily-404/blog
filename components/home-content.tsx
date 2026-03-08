@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { PostListItem } from "@/components/post-list-item"
@@ -22,6 +22,24 @@ type HomeContentProps = {
 export function HomeContent({ posts, allPosts, tags, currentPage, totalPages }: HomeContentProps) {
   const router = useRouter()
   const { selectedTag, handleTagClick, tagElements } = useTagFilter(tags)
+
+  // 预加载相邻页的数据，减少翻页按钮首次点击的等待时间
+  useEffect(() => {
+    if (totalPages <= 1) return
+
+    const getHrefForPage = (page: number) => (page === 1 ? "/" : `/page/${page}`)
+
+    const nextPage = Math.min(totalPages, currentPage + 1)
+    const prevPage = Math.max(1, currentPage - 1)
+
+    if (nextPage !== currentPage) {
+      router.prefetch(getHrefForPage(nextPage))
+    }
+
+    if (prevPage !== currentPage) {
+      router.prefetch(getHrefForPage(prevPage))
+    }
+  }, [router, currentPage, totalPages])
 
   const filteredPosts = useMemo(() => {
     if (!selectedTag) return posts;

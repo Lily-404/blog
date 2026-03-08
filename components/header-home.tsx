@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { HeaderNav } from "@/components/header-nav"
 import { OptimizedImage } from "@/components/ui/optimized-image"
@@ -8,6 +9,11 @@ import { useDoubleClick } from "@/hooks/use-double-click"
 export function HeaderHome() {
   const router = useRouter()
   
+  // 预加载管理后台页面，减少首次进入时的等待
+  useEffect(() => {
+    router.prefetch("/admin")
+  }, [router])
+
   const handleAvatarClick = useDoubleClick({
     timeout: 300,
     onDoubleClick: () => router.push("/admin"),
