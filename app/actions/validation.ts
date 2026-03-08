@@ -1,6 +1,7 @@
-"use server"
+\"use server\"
 
 import { cookies } from "next/headers"
+import { FILE_ID_PATTERN } from "@/lib/file-id"
 
 // 检查文件是否存在
 export async function checkFileExists(
@@ -11,9 +12,8 @@ export async function checkFileExists(
     return { exists: false }
   }
 
-  // 验证文件 ID 格式
-  const validIdPattern = /^[a-z0-9_-]+$/
-  if (!validIdPattern.test(fileId.toLowerCase())) {
+  // 验证文件 ID 格式（与前端保持一致）
+  if (!FILE_ID_PATTERN.test(fileId.toLowerCase())) {
     return {
       exists: false,
       message: "文件 ID 只能包含小写字母、数字、连字符和下划线",

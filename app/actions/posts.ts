@@ -1,6 +1,7 @@
 "use server"
 
 import { cookies } from "next/headers"
+import { FILE_ID_PATTERN, generateFileId, generateFallbackId } from "@/lib/file-id"
 
 // 检查是否已认证（通过 GitHub OAuth）
 export async function checkAuth(): Promise<{ authenticated: boolean; username?: string }> {
@@ -106,7 +107,7 @@ async function createContent(
     }
     
     // 确保 ID 有效（非空且符合格式）
-    if (!fileId || !/^[a-z0-9_-]+$/.test(fileId)) {
+    if (!fileId || !FILE_ID_PATTERN.test(fileId)) {
       // 如果 ID 仍然无效，使用时间戳作为最后手段
       fileId = `content-${Date.now()}`
     }
@@ -273,35 +274,6 @@ async function checkFileExists(
   } catch (error) {
     return { exists: false }
   }
-}
-
-// 生成文件 ID（简单实现，可以改进）
-function generateFileId(title: string): string {
-  // 移除特殊字符，转换为小写，用连字符替换空格
-  let id = title
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "") // 移除特殊字符
-    .replace(/\s+/g, "-") // 空格替换为连字符
-    .replace(/-+/g, "-") // 合并多个连字符
-    .replace(/^-|-$/g, "") // 移除首尾连字符
-    .trim()
-    .substring(0, 50) // 限制长度
-  
-  // 确保 ID 不为空
-  if (!id || id.length === 0) {
-    return ""
-  }
-  
-  return id
-}
-
-// 生成备用文件 ID（当标题生成失败时使用）
-function generateFallbackId(type: "post" | "note", date: string): string {
-  const dateStr = date.replace(/-/g, "")
-  const timestamp = Date.now().toString().slice(-8) // 使用后 8 位时间戳
-  const randomSuffix = Math.random().toString(36).substring(2, 6) // 添加随机后缀确保唯一性
-  const prefix = type === "post" ? "post" : "note"
-  return `${prefix}-${dateStr}-${timestamp}-${randomSuffix}`
 }
 
 // 转义 YAML 字符串

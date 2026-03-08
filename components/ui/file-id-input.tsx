@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { FILE_ID_PATTERN, formatFileIdInput } from "@/lib/file-id"
 
 interface FileIdInputProps {
   value: string
@@ -26,7 +27,7 @@ export function FileIdInput({
     exists: boolean
     message?: string
   } | null>(null)
-  const debounceTimerRef = useRef<NodeJS.Timeout>()
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [hasUserInput, setHasUserInput] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -34,22 +35,13 @@ export function FileIdInput({
   // 显示值：如果有用户输入的值则显示，否则显示默认值（仅在未开始输入时）
   const displayValue = value || (defaultValue && !hasUserInput ? defaultValue : "")
 
-  // 格式化文件 ID
-  const formatFileId = (input: string): string => {
-    return input
-      .toLowerCase()
-      .replace(/[^a-z0-9_-]/g, "-") // 替换非法字符为连字符
-      .replace(/-+/g, "-") // 合并多个连字符
-      .replace(/^-|-$/g, "") // 移除首尾连字符
-  }
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value
     // 如果用户开始输入（输入框有内容且不等于defaultValue，或者之前显示的是defaultValue但现在有变化）
     if (!hasUserInput && defaultValue && inputValue !== defaultValue) {
       setHasUserInput(true)
     }
-    const formatted = formatFileId(inputValue)
+    const formatted = formatFileIdInput(inputValue)
     onChange(formatted)
   }
   
@@ -131,7 +123,7 @@ export function FileIdInput({
     }
   }, [value, contentType])
 
-  const isValidFormat = /^[a-z0-9_-]*$/.test(value)
+  const isValidFormat = FILE_ID_PATTERN.test(value || "")
 
   return (
     <div>
