@@ -1,12 +1,10 @@
-\"use server\"
-
-import { cookies } from "next/headers"
 import { FILE_ID_PATTERN } from "@/lib/file-id"
 
 // 检查文件是否存在
 export async function checkFileExists(
   type: "post" | "note",
-  fileId: string
+  fileId: string,
+  accessToken: string | undefined
 ): Promise<{ exists: boolean; message?: string }> {
   if (!fileId || !fileId.trim()) {
     return { exists: false }
@@ -20,18 +18,16 @@ export async function checkFileExists(
     }
   }
 
-  const cookieStore = await cookies()
-  const accessToken = cookieStore.get("github_access_token")?.value
-
   if (!accessToken) {
     return { exists: false }
   }
 
   const githubOwner = process.env.GITHUB_OWNER || "Lily-404"
   const githubRepo = process.env.GITHUB_REPO || "blog"
-  const filePath = type === "post" 
-    ? `content/posts/${fileId}.md`
-    : `content/notes/${fileId}.md`
+  const filePath =
+    type === "post"
+      ? `content/posts/${fileId}.md`
+      : `content/notes/${fileId}.md`
 
   try {
     const response = await fetch(
@@ -49,7 +45,10 @@ export async function checkFileExists(
     }
 
     if (response.ok) {
-      return { exists: true, message: "文件已存在，提交后将更新现有内容" }
+      return {
+        exists: true,
+        message: "文件已存在，提交后将更新现有内容",
+      }
     }
 
     return { exists: false }
@@ -64,3 +63,4 @@ export async function getAllTags(): Promise<string[]> {
   // 暂时返回空数组，后续可以实现
   return []
 }
+

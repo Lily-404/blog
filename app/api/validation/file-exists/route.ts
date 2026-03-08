@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { cookies } from "next/headers"
 import { checkFileExists } from "@/app/actions/validation"
 
 export async function POST(request: Request) {
@@ -12,7 +13,14 @@ export async function POST(request: Request) {
       )
     }
 
-    const result = await checkFileExists(type as "post" | "note", fileId)
+    const cookieStore = await cookies()
+    const accessToken = cookieStore.get("github_access_token")?.value
+
+    const result = await checkFileExists(
+      type as "post" | "note",
+      fileId,
+      accessToken
+    )
     return NextResponse.json(result)
   } catch (error) {
     console.error("检查文件存在性时出错:", error)
