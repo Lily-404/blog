@@ -160,30 +160,20 @@ function OptimizedImageComponent({
         <div className="absolute inset-0 z-0 rounded-lg bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900" />
       )}
 
-      {/* Loading：仅未加载时显示；已缓存同一资源时不显示，避免「重新加载」感 */}
-      {isLoading && (
+      {/* Loading：仅非头像且未加载时显示；头像不显示加载骨架，避免短暂闪烁 */}
+      {isLoading && !isAvatar && (
         <div className="absolute inset-0 z-10 pointer-events-none">
-          {isAvatar ? (
-            // 圆形头像：模糊动态效果
-            <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden">
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900 animate-pulse" 
-                   style={{
-                     filter: 'blur(8px)',
-                     transform: 'scale(1.1)',
-                     animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
-                   }} />
-            </div>
-          ) : (
-            // 方形图片：模糊动态效果
-            <div className="w-full h-full rounded-lg overflow-hidden">
-              <div className="w-full h-full rounded-lg bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900 animate-pulse"
-                   style={{
-                     filter: 'blur(8px)',
-                     transform: 'scale(1.1)',
-                     animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
-                   }} />
-            </div>
-          )}
+          {/* 方形/非头像图片：模糊动态效果 */}
+          <div className="w-full h-full rounded-lg overflow-hidden">
+            <div
+              className="w-full h-full rounded-lg bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900 animate-pulse"
+              style={{
+                filter: "blur(8px)",
+                transform: "scale(1.1)",
+                animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+              }}
+            />
+          </div>
         </div>
       )}
 
@@ -207,14 +197,16 @@ function OptimizedImageComponent({
         onError={handleError}
         className={cn(
           "relative z-20",
-          showAsAlreadyLoaded
-            ? "opacity-100 blur-0 scale-100"
-            : "transition-all duration-700 ease-out",
-          !showAsAlreadyLoaded && isLoading && !isCached
-            ? "opacity-0 blur-xl scale-110"
-            : !showAsAlreadyLoaded
-              ? "opacity-100 blur-0 scale-100"
-              : "",
+          isAvatar
+            ? "opacity-100 blur-0 scale-100" // 头像始终直接显示，避免返回时闪烁
+            : showAsAlreadyLoaded
+                ? "opacity-100 blur-0 scale-100"
+                : "transition-all duration-700 ease-out",
+          !isAvatar &&
+            !showAsAlreadyLoaded &&
+            isLoading &&
+            !isCached &&
+            "opacity-0 blur-xl scale-110",
           isError && "hidden"
         )}
         loading={priority ? undefined : "lazy"}

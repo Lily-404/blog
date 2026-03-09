@@ -77,11 +77,7 @@ export function NotesPagination({
           <div ref={observerTarget} className="h-16" />
         )}
 
-        {!hasMore && notes.length > 0 && (
-          <p className="text-center text-zinc-400 dark:text-zinc-600 py-4 text-sm">
-            已经到底啦～
-          </p>
-        )}
+     
       </div>
     </div>
   )

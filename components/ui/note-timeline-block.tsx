@@ -34,7 +34,7 @@ export function NoteTimelineBlock({
   }
 
   return (
-      <div className={cn("group relative pb-6", className)}>
+      <div className={cn("group relative", !isLast && "pb-6", className)}>
       {!isLast && (
         <div className="absolute left-5 top-0 w-px bottom-[-12px] bg-zinc-200 dark:bg-zinc-700" />
       )}
