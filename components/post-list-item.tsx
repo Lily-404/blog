@@ -43,7 +43,7 @@ export function PostListItem({
         <span className="text-base font-normal group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors duration-200 truncate mr-4">
           {title}
         </span>
-        <time className="text-xs text-zinc-400 dark:text-zinc-500 flex-shrink-0 tabular-nums">
+        <time className="text-sm text-zinc-400 dark:text-zinc-500 flex-shrink-0 tabular-nums">
           {format(new Date(date), "MM/dd")}
         </time>
       </Link>
@@ -54,19 +54,19 @@ export function PostListItem({
   return (
     <article
       className={cn(
-        "border-b border-zinc-100 dark:border-zinc-800 pb-4",
+        "border-b border-zinc-100 dark:border-zinc-800 pb-5",
         isLast && "border-b-0 pb-0",
         className
       )}
     >
       <Link
         href={`/posts/${id}`}
-        className="group flex items-baseline justify-between gap-3"
+        className="group flex items-end justify-between gap-3"
       >
         <h2 className="text-lg  text-zinc-800 dark:text-zinc-200 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors duration-300 truncate mr-2">
           {title}
         </h2>
-        <time className="text-xs text-zinc-400 dark:text-zinc-500 flex-shrink-0 tabular-nums">
+        <time className="text-sm text-zinc-400 dark:text-zinc-500 flex-shrink-0 tabular-nums">
           {format(new Date(date), "yyyy/MM/dd")}
         </time>
       </Link>

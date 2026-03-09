@@ -70,7 +70,10 @@
   }
   body {
     @apply bg-background text-foreground transition-colors duration-200;
-    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
+    font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Text",
+      system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+      "PingFang SC", "Noto Sans SC", "Microsoft YaHei",
+      sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -87,7 +90,10 @@
 
 .prose {
   @apply text-zinc-700 dark:text-zinc-300;
-  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "PingFang SC", "Noto Sans SC", "Microsoft YaHei",
+    sans-serif;
 }
 
 /* OptimizedImage shimmer 动画 */
@@ -116,7 +122,10 @@
 
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
   @apply font-medium tracking-tight text-zinc-800 dark:text-zinc-200 scroll-m-20;
-  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "PingFang SC", "Noto Sans SC", "Microsoft YaHei",
+    sans-serif;
   font-weight: 600;
 }
 
