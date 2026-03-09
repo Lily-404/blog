@@ -65,7 +65,7 @@ export function AboutContent({ initialStats }: AboutContentProps) {
           <div className="flex-1 space-y-6 text-center md:text-left">
             <div>
               <h1 className="text-3xl font-bold mb-2">关于</h1>
-              <p className="text-lg text-zinc-600 dark:text-zinc-400">O Captain! My Captain!</p>
+            <p className="text-lg text-zinc-600 dark:text-zinc-400">O Captain! My Captain!</p>
             </div>
             <div className="flex flex-wrap justify-center md:justify-start gap-3">
               <ActionButton
@@ -123,7 +123,7 @@ export function AboutContent({ initialStats }: AboutContentProps) {
             <Card variant="muted" size="lg" rounded="2xl" className="relative">
               <h2 className="text-xl font-semibold mb-4">简介</h2>
               <div className="space-y-4">
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">在这里记录生活的点点滴滴，分享一些有趣的想法和感受</p>
+                <p className="text-base text-zinc-600 dark:text-zinc-400">在这里记录生活的点点滴滴，分享一些有趣的想法和感受</p>
                 <div className="grid grid-cols-3 gap-4">
                   <StatCard
                     value={stats.posts}

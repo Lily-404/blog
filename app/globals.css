@@ -70,7 +70,7 @@
   }
   body {
     @apply bg-background text-foreground transition-colors duration-200;
-    font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    font-family: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "SF Pro Text",
       system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial,
       "PingFang SC", "Noto Sans SC", "Microsoft YaHei",
       sans-serif;
@@ -90,7 +90,7 @@
 
 .prose {
   @apply text-zinc-700 dark:text-zinc-300;
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Text",
+  font-family: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "SF Pro Text",
     system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial,
     "PingFang SC", "Noto Sans SC", "Microsoft YaHei",
     sans-serif;
@@ -122,7 +122,7 @@
 
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
   @apply font-medium tracking-tight text-zinc-800 dark:text-zinc-200 scroll-m-20;
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Text",
+  font-family: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "SF Pro Text",
     system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial,
     "PingFang SC", "Noto Sans SC", "Microsoft YaHei",
     sans-serif;
@@ -181,12 +181,12 @@
 
 .prose code {
   @apply bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-sm font-mono text-zinc-800 dark:text-zinc-200;
-  font-family: "SF Mono", "SF Mono SC", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: "SF Mono", "SF Mono SC", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 .prose pre {
   @apply bg-zinc-100 dark:bg-zinc-800 p-4 rounded-lg overflow-x-auto my-6 text-sm border border-zinc-200 dark:border-zinc-700;
-  font-family: "SF Mono", "SF Mono SC", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: "SF Mono", "SF Mono SC", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 .prose pre code {
@@ -243,7 +243,7 @@
 .katex-inline {
   display: inline-block;
   padding: 0 0.2em;
-  font-family: "SF Mono", "SF Mono SC", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: "SF Mono", "SF Mono SC", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 .katex-block {
@@ -251,7 +251,7 @@
   margin: 1em 0;
   padding: 1em;
   overflow-x: auto;
-  font-family: "SF Mono", "SF Mono SC", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: "SF Mono", "SF Mono SC", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 /* 随笔预览样式 - 移除多余的 margin */

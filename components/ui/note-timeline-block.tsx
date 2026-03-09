@@ -1,4 +1,7 @@
+"use client"
+
 import type { ReactNode } from "react"
+import { useState, isValidElement, cloneElement } from "react"
 import { cn } from "@/lib/utils"
 
 export interface NoteTimelineBlockProps {
@@ -21,6 +24,20 @@ export function NoteTimelineBlock({
   className,
   contentClassName,
 }: NoteTimelineBlockProps) {
+  const [avatarLoaded, setAvatarLoaded] = useState(false)
+
+  // 如果 avatar 是一个 React 元素（例如 OptimizedImage），给它注入 onLoad，
+  // 这样只有头像加载完成后，我们才显示时间线的竖线
+  const enhancedAvatar = isValidElement(avatar)
+    ? cloneElement(avatar, {
+        onLoad: (e: React.SyntheticEvent<HTMLImageElement>) => {
+          setAvatarLoaded(true)
+          // 保留原有 onLoad 行为（如果有）
+          // @ts-ignore
+          avatar.props?.onLoad?.(e)
+        },
+      })
+    : avatar
   if (variant === "skeleton") {
     return (
       <div className={cn("flex items-start gap-3 py-4 animate-pulse", className)}>
@@ -35,11 +52,11 @@ export function NoteTimelineBlock({
 
   return (
       <div className={cn("group relative", !isLast && "pb-6", className)}>
-      {!isLast && (
-        <div className="absolute left-5 top-0 w-px bottom-[-12px] bg-zinc-200 dark:bg-zinc-700" />
+      {!isLast && avatarLoaded && (
+        <div className="absolute left-5 top-0 w-px bottom-[-12px] bg-zinc-200 dark:bg-zinc-700 animate-in fade-in duration-500" />
       )}
       <div className="relative flex items-stretch gap-3">
-        <div className="relative flex-shrink-0">{avatar}</div>
+        <div className="relative flex-shrink-0">{enhancedAvatar}</div>
         <div className="flex-1 -mt-1">
           <div className="flex items-baseline gap-2">{meta}</div>
           <div

@@ -54,6 +54,7 @@ function OptimizedImageComponent({
   className,
   quality = 75,
   sizes,
+  onLoad,
   ...props
 }: OptimizedImageProps) {
   // 初始状态必须与服务端一致，避免 hydration 报错（服务端无 window/sessionStorage）
@@ -134,11 +135,15 @@ function OptimizedImageComponent({
     };
   }, [src]);
 
-  const handleLoad = useCallback(() => {
+  const handleLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
     setIsLoading(false);
     setIsCached(true);
     markImageLoaded(src);
-  }, [src]);
+    // 透传给外部的 onLoad（例如时间线用来知道头像已加载）
+    if (typeof onLoad === "function") {
+      onLoad(e);
+    }
+  }, [src, onLoad]);
 
   const handleError = useCallback(() => {
     setIsLoading(false);
@@ -153,10 +158,8 @@ function OptimizedImageComponent({
 
   return (
     <div className={cn("relative overflow-hidden", className)}>
-      {/* 底：始终保留，防止图片未绘制时时间线竖线透出（折中：宁可见底，不可见线） */}
-      {isAvatar ? (
-        <div className="absolute inset-0 z-0 rounded-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900" />
-      ) : (
+      {/* 底：仅非头像时保留，头像不再显示底层渐变，避免切换时先看到底色 */}
+      {!isAvatar && (
         <div className="absolute inset-0 z-0 rounded-lg bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900" />
       )}
 
@@ -198,7 +201,7 @@ function OptimizedImageComponent({
         className={cn(
           "relative z-20",
           isAvatar
-            ? "opacity-100 blur-0 scale-100" // 头像始终直接显示，避免返回时闪烁
+            ? "transition-opacity duration-500 " + (isLoading ? "opacity-0" : "opacity-100") // 头像：由浅到深的透明度过渡
             : showAsAlreadyLoaded
                 ? "opacity-100 blur-0 scale-100"
                 : "transition-all duration-700 ease-out",
