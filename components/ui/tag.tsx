@@ -29,14 +29,18 @@ const BASE_STYLES = [
   "hover:shadow-sm dark:hover:shadow-zinc-800/50",
 ] as const
 
-// 选中状态样式：亮色纯黑，暗色纯白
+// 选中状态样式：参考分页按钮的激活色系，再稍微提亮一点
 const SELECTED_STYLES = [
-  "bg-black dark:bg-white",
-  "text-white dark:text-black",
-  "border-black dark:border-white",
-  "shadow-sm dark:shadow-zinc-900",
-  "hover:bg-black dark:hover:bg-white",
-  "hover:border-black dark:hover:border-white",
+  // 亮色：更亮一点的深灰背景 + 纯白文字
+  "bg-zinc-900 text-white",
+  "border border-zinc-600",
+  "hover:bg-zinc-800 hover:border-zinc-500",
+  // 暗色：更亮一点的浅灰背景 + 深文字
+  "dark:bg-zinc-100 dark:text-zinc-900",
+  "dark:border-zinc-400",
+  "dark:hover:bg-zinc-200 dark:hover:border-zinc-500",
+  // 轻微阴影，和分页按钮的浮起感接近
+  "shadow-sm dark:shadow-[0_1px_3px_0_rgb(0,0,0,0.5)]",
 ] as const
 
 // 数量样式
