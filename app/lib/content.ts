@@ -48,7 +48,15 @@ function readMarkdownFiles<T>(
     .sort((a: any, b: any) => {
       const dateA = new Date(a.date || 0).getTime()
       const dateB = new Date(b.date || 0).getTime()
-      return dateB - dateA // 最新的在前
+      if (dateB !== dateA) {
+        // 不同日期：按时间倒序（最新在前）
+        return dateB - dateA
+      }
+
+      // 同一天：再按 id 进行稳定的倒序排序
+      const idA = (a.id ?? "").toString()
+      const idB = (b.id ?? "").toString()
+      return idB.localeCompare(idA)
     })
 
   cache.set(cacheKey, { data: items, lastUpdated: Date.now() })
