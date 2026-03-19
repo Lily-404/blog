@@ -61,7 +61,7 @@ export function PostListItem({
     >
       <Link
         href={`/posts/${id}`}
-        className="group flex items-end justify-between gap-3"
+        className="group flex items-center justify-between gap-3"
       >
         <h2 className="text-lg  text-zinc-800 dark:text-zinc-200 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors duration-300 truncate mr-2">
           {title}

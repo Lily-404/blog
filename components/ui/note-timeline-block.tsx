@@ -75,4 +75,4 @@ export function NoteTimelineBlock({
 
 /** 随笔头像统一样式 */
 export const NOTE_AVATAR_CLASSES =
-  "w-10 h-10 rounded-full object-cover border-[1px] border-zinc-100 dark:border-zinc-800 shadow-sm" as const
+  "w-10 h-10 rounded-full object-cover border border-zinc-200 dark:border-zinc-700 inline-block overflow-hidden" as const

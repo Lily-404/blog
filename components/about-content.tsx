@@ -177,6 +177,33 @@ export function AboutContent({ initialStats }: AboutContentProps) {
               </a>
             </div>
           </Card>
+
+          <Card variant="muted" size="lg">
+            <h2 className="text-xl font-semibold mb-4">友链</h2>
+            <div className="space-y-3 text-zinc-600 dark:text-zinc-400">
+              <p>如果你也在写博客，欢迎交换友链：</p>
+              <ul className="list-disc list-inside space-y-1">
+                <li>
+                  <span className="font-medium">站点名称：</span>Jimmy Blog
+                </li>
+                <li>
+                  <span className="font-medium">友链地址：</span>
+                  <a
+                    href="https://about.jimmy-blog.top/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 underline-offset-4 hover:underline"
+                  >
+                    about.jimmy-blog.top
+                  </a>
+                </li>
+                <li>
+                  <span className="font-medium">介绍：</span>记录生活与技术的个人博客
+                </li>
+              </ul>
+              <p>想要交换友链，可以通过上面的邮箱或微信联系我。</p>
+            </div>
+          </Card>
         </div>
       </main>
 
