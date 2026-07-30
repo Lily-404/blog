@@ -23,7 +23,7 @@ export function ContentEditor({
   if (viewMode === "split") {
     return (
       <div className="nd-surface overflow-hidden flex flex-col lg:flex-row">
-        <div className="flex-1 flex flex-col min-w-0 h-[300px] lg:h-[600px]">
+        <div className="flex-1 flex flex-col min-w-0 min-h-[55vh] h-[55vh] lg:min-h-0 lg:h-[600px]">
           <div className="px-4 pt-3 pb-1">
             <p className="nd-label">编辑</p>
           </div>
@@ -41,7 +41,7 @@ export function ContentEditor({
           ref={previewRef}
           className={cn(
             "flex-1 flex flex-col min-w-0 overflow-y-auto px-4 py-3",
-            "h-[300px] lg:h-[600px]",
+            "min-h-[45vh] h-[45vh] lg:min-h-0 lg:h-[600px]",
             "border-t border-[var(--nd-border)] lg:border-t-0 lg:border-l"
           )}
         >
@@ -63,7 +63,7 @@ export function ContentEditor({
           id="content"
           value={content}
           onChange={(e) => onContentChange(e.target.value)}
-          className="nd-textarea px-4 py-2 min-h-[600px] overflow-y-auto"
+          className="nd-textarea px-4 py-2 min-h-[70vh] lg:min-h-[600px] overflow-y-auto"
           placeholder="粘贴或输入 Markdown 内容..."
           required
         />
@@ -73,7 +73,7 @@ export function ContentEditor({
 
   return (
     <div className="nd-surface overflow-hidden" style={{ background: "var(--nd-surface-raised)" }}>
-      <div ref={previewRef} className="px-4 py-3 min-h-[600px] overflow-y-auto">
+      <div ref={previewRef} className="px-4 py-3 min-h-[70vh] lg:min-h-[600px] overflow-y-auto">
         <p className="nd-label mb-2">预览</p>
         <PostPreview content={content} />
       </div>

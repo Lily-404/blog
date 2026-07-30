@@ -354,16 +354,17 @@
 }
 
 /* ─── Nothing Design — Admin scope ─── */
+/* 页面底色与站点首页对齐：white / zinc-900 */
 .nd-admin {
-  --nd-black: #F5F5F5;
+  --nd-black: #FFFFFF;
   --nd-surface: #FFFFFF;
-  --nd-surface-raised: #F0F0F0;
-  --nd-border: #E8E8E8;
-  --nd-border-visible: #CCCCCC;
-  --nd-text-disabled: #999999;
-  --nd-text-secondary: #666666;
-  --nd-text-primary: #1A1A1A;
-  --nd-text-display: #000000;
+  --nd-surface-raised: #F4F4F5; /* zinc-100 */
+  --nd-border: #E4E4E7; /* zinc-200 */
+  --nd-border-visible: #D4D4D8; /* zinc-300 */
+  --nd-text-disabled: #A1A1AA; /* zinc-400 */
+  --nd-text-secondary: #71717A; /* zinc-500 */
+  --nd-text-primary: #27272A; /* zinc-800 */
+  --nd-text-display: #18181B; /* zinc-900 */
   --nd-accent: #D71921;
   --nd-accent-subtle: rgba(215, 25, 33, 0.15);
   --nd-success: #4A9E5C;
@@ -379,15 +380,15 @@
 }
 
 .dark .nd-admin {
-  --nd-black: #000000;
-  --nd-surface: #111111;
-  --nd-surface-raised: #1A1A1A;
-  --nd-border: #222222;
-  --nd-border-visible: #333333;
-  --nd-text-disabled: #666666;
-  --nd-text-secondary: #999999;
-  --nd-text-primary: #E8E8E8;
-  --nd-text-display: #FFFFFF;
+  --nd-black: #18181B; /* zinc-900 — 与 body dark:bg-zinc-900 一致 */
+  --nd-surface: #18181B;
+  --nd-surface-raised: #27272A; /* zinc-800 */
+  --nd-border: #27272A; /* zinc-800 */
+  --nd-border-visible: #3F3F46; /* zinc-700 */
+  --nd-text-disabled: #52525B; /* zinc-600 */
+  --nd-text-secondary: #A1A1AA; /* zinc-400 */
+  --nd-text-primary: #E4E4E7; /* zinc-200 */
+  --nd-text-display: #FAFAFA; /* zinc-50 */
   --nd-interactive: #5B9BF6;
 }
 
