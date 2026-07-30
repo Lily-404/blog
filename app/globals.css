@@ -107,6 +107,63 @@
   animation: shimmer 1.2s infinite;
 }
 
+/* Pixel-grid loading state */
+:root {
+  --loading-ink: #18181b;
+  --loading-ink-3: #a1a1aa;
+}
+
+.dark {
+  --loading-ink: #fafafa;
+  --loading-ink-3: #71717a;
+}
+
+@keyframes pixel-on {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  40%,
+  60% {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer-text {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.loading-state-label {
+  background-image: linear-gradient(
+    90deg,
+    var(--loading-ink-3) 35%,
+    var(--loading-ink) 50%,
+    var(--loading-ink-3) 65%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-text 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-state-cell {
+    animation: none !important;
+    opacity: 0.15 !important;
+  }
+
+  .loading-state-label {
+    animation: none !important;
+    color: var(--loading-ink-3);
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+  }
+}
+
 .prose p {
   @apply leading-relaxed my-6 text-base;
   line-height: 1.75;
@@ -353,9 +410,9 @@
   @apply bg-zinc-100 dark:bg-zinc-800;
 }
 
-/* ─── Nothing Design — Admin scope ─── */
+/* ─── Nothing Design — shared page scope ─── */
 /* 页面底色与站点首页对齐：white / zinc-900 */
-.nd-admin {
+.nd {
   --nd-black: #FFFFFF;
   --nd-surface: #FFFFFF;
   --nd-surface-raised: #F4F4F5; /* zinc-100 */
@@ -379,7 +436,7 @@
   font-weight: 400;
 }
 
-.dark .nd-admin {
+.dark .nd {
   --nd-black: #18181B; /* zinc-900 — 与 body dark:bg-zinc-900 一致 */
   --nd-surface: #18181B;
   --nd-surface-raised: #27272A; /* zinc-800 */
@@ -392,7 +449,7 @@
   --nd-interactive: #5B9BF6;
 }
 
-.nd-admin .nd-display {
+.nd .nd-display {
   font-family: var(--font-doto), var(--font-space-mono), monospace;
   color: var(--nd-text-display);
   letter-spacing: -0.02em;
@@ -400,11 +457,11 @@
   font-weight: 400;
 }
 
-.nd-admin .nd-mono {
+.nd .nd-mono {
   font-family: var(--font-space-mono), "JetBrains Mono", ui-monospace, monospace;
 }
 
-.nd-admin .nd-label {
+.nd .nd-label {
   font-family: var(--font-space-mono), "JetBrains Mono", ui-monospace, monospace;
   font-size: 11px;
   line-height: 1.2;
@@ -413,7 +470,7 @@
   color: var(--nd-text-secondary);
 }
 
-.nd-admin .nd-caption {
+.nd .nd-caption {
   font-family: var(--font-space-mono), "JetBrains Mono", ui-monospace, monospace;
   font-size: 12px;
   line-height: 1.4;
@@ -421,13 +478,13 @@
   color: var(--nd-text-disabled);
 }
 
-.nd-admin .nd-surface {
+.nd .nd-surface {
   background: var(--nd-surface);
   border: 1px solid var(--nd-border);
   border-radius: 12px;
 }
 
-.nd-admin .nd-btn {
+.nd .nd-btn {
   font-family: var(--font-space-mono), "JetBrains Mono", ui-monospace, monospace;
   font-size: 13px;
   line-height: 1;
@@ -445,56 +502,56 @@
   background: transparent;
 }
 
-.nd-admin .nd-btn:disabled {
+.nd .nd-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-.nd-admin .nd-btn-primary {
+.nd .nd-btn-primary {
   background: var(--nd-text-display);
   color: var(--nd-black);
   border-radius: 999px;
 }
 
-.nd-admin .nd-btn-primary:hover:not(:disabled) {
+.nd .nd-btn-primary:hover:not(:disabled) {
   opacity: 0.88;
 }
 
-.nd-admin .nd-btn-secondary {
+.nd .nd-btn-secondary {
   color: var(--nd-text-primary);
   border: 1px solid var(--nd-border-visible);
   border-radius: 999px;
   background: transparent;
 }
 
-.nd-admin .nd-btn-secondary:hover:not(:disabled) {
+.nd .nd-btn-secondary:hover:not(:disabled) {
   border-color: var(--nd-text-primary);
   color: var(--nd-text-display);
 }
 
-.nd-admin .nd-btn-ghost {
+.nd .nd-btn-ghost {
   color: var(--nd-text-secondary);
   border-radius: 0;
   padding: 8px 12px;
   min-height: 36px;
 }
 
-.nd-admin .nd-btn-ghost:hover:not(:disabled) {
+.nd .nd-btn-ghost:hover:not(:disabled) {
   color: var(--nd-text-display);
 }
 
-.nd-admin .nd-btn-destructive {
+.nd .nd-btn-destructive {
   color: var(--nd-accent);
   border: 1px solid var(--nd-accent);
   border-radius: 999px;
   background: transparent;
 }
 
-.nd-admin .nd-btn-destructive:hover:not(:disabled) {
+.nd .nd-btn-destructive:hover:not(:disabled) {
   background: var(--nd-accent-subtle);
 }
 
-.nd-admin .nd-segment {
+.nd .nd-segment {
   display: inline-flex;
   border: 1px solid var(--nd-border-visible);
   border-radius: 999px;
@@ -502,7 +559,7 @@
   gap: 0;
 }
 
-.nd-admin .nd-segment-item {
+.nd .nd-segment-item {
   font-family: var(--font-space-mono), "JetBrains Mono", ui-monospace, monospace;
   font-size: 11px;
   letter-spacing: 0.08em;
@@ -517,16 +574,16 @@
   transition: color 200ms var(--nd-ease), background-color 200ms var(--nd-ease);
 }
 
-.nd-admin .nd-segment-item[data-active="true"] {
+.nd .nd-segment-item[data-active="true"] {
   background: var(--nd-text-display);
   color: var(--nd-black);
 }
 
-.nd-admin .nd-segment-item:hover:not([data-active="true"]) {
+.nd .nd-segment-item:hover:not([data-active="true"]) {
   color: var(--nd-text-display);
 }
 
-.nd-admin .nd-input {
+.nd .nd-input {
   width: 100%;
   background: transparent;
   border: none;
@@ -540,15 +597,15 @@
   transition: border-color 200ms var(--nd-ease);
 }
 
-.nd-admin .nd-input:focus {
+.nd .nd-input:focus {
   border-bottom-color: var(--nd-text-primary);
 }
 
-.nd-admin .nd-input::placeholder {
+.nd .nd-input::placeholder {
   color: var(--nd-text-disabled);
 }
 
-.nd-admin .nd-textarea {
+.nd .nd-textarea {
   width: 100%;
   background: transparent;
   border: none;
@@ -560,11 +617,11 @@
   color: var(--nd-text-primary);
 }
 
-.nd-admin .nd-textarea::placeholder {
+.nd .nd-textarea::placeholder {
   color: var(--nd-text-disabled);
 }
 
-.nd-admin .nd-chip {
+.nd .nd-chip {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -580,22 +637,22 @@
   transition: color 200ms var(--nd-ease), border-color 200ms var(--nd-ease), background-color 200ms var(--nd-ease);
 }
 
-.nd-admin .nd-chip[data-active="true"] {
+.nd .nd-chip[data-active="true"] {
   background: var(--nd-text-display);
   color: var(--nd-black);
   border-color: var(--nd-text-display);
 }
 
-.nd-admin .nd-chip:hover:not([data-active="true"]) {
+.nd .nd-chip:hover:not([data-active="true"]) {
   color: var(--nd-text-display);
   border-color: var(--nd-text-primary);
 }
 
-.nd-admin .nd-chip[data-active="true"]:hover {
+.nd .nd-chip[data-active="true"]:hover {
   opacity: 0.88;
 }
 
-.nd-admin .nd-tag-field {
+.nd .nd-tag-field {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -605,7 +662,7 @@
   cursor: text;
 }
 
-.nd-admin .nd-row {
+.nd .nd-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -614,55 +671,55 @@
   border-bottom: 1px solid var(--nd-border);
 }
 
-.nd-admin .nd-row:last-child {
+.nd .nd-row:last-child {
   border-bottom: none;
 }
 
-.nd-admin .nd-status {
+.nd .nd-status {
   font-family: var(--font-space-mono), "JetBrains Mono", ui-monospace, monospace;
   font-size: 12px;
   letter-spacing: 0.04em;
   color: var(--nd-text-secondary);
 }
 
-.nd-admin .nd-status[data-tone="error"] {
+.nd .nd-status[data-tone="error"] {
   color: var(--nd-accent);
 }
 
-.nd-admin .nd-status[data-tone="success"] {
+.nd .nd-status[data-tone="success"] {
   color: var(--nd-success);
 }
 
-.nd-admin .nd-dot-grid {
+.nd .nd-dot-grid {
   background-image: radial-gradient(circle, var(--nd-border) 0.5px, transparent 0.5px);
   background-size: 12px 12px;
 }
 
-.nd-admin .nd-heat-empty {
+.nd .nd-heat-empty {
   background: var(--nd-border);
 }
 
-.nd-admin .nd-heat-1 {
+.nd .nd-heat-1 {
   background: color-mix(in srgb, var(--nd-text-display) 30%, transparent);
 }
 
-.nd-admin .nd-heat-2 {
+.nd .nd-heat-2 {
   background: color-mix(in srgb, var(--nd-text-display) 55%, transparent);
 }
 
-.nd-admin .nd-heat-3 {
+.nd .nd-heat-3 {
   background: color-mix(in srgb, var(--nd-text-display) 80%, transparent);
 }
 
-.nd-admin .nd-heat-4 {
+.nd .nd-heat-4 {
   background: var(--nd-text-display);
 }
 
-.nd-admin .nd-modal-backdrop {
+.nd .nd-modal-backdrop {
   background: rgba(0, 0, 0, 0.8);
 }
 
-.nd-admin .nd-modal {
+.nd .nd-modal {
   background: var(--nd-surface);
   border: 1px solid var(--nd-border-visible);
   border-radius: 16px;

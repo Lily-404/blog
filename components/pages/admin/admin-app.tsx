@@ -384,7 +384,7 @@ export function AdminApp() {
   if (!isAuthenticated) {
     return (
       <Layout>
-        <div className="nd-admin">
+        <div className="nd">
           <div className="max-w-2xl mx-auto px-4 py-6">
             <Header showBackButton={true} showNavLinks={false} />
             <AdminUnauthenticatedView
@@ -401,7 +401,7 @@ export function AdminApp() {
 
   return (
     <Layout>
-      <div className="nd-admin">
+      <div className="nd">
         <div className="max-w-7xl mx-auto px-4 py-6 overflow-x-hidden pb-16">
           <Header showBackButton={true} showNavLinks={false} />
 

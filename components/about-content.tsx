@@ -118,9 +118,8 @@ export function AboutContent({ initialStats }: AboutContentProps) {
         </div>
 
         <div className="space-y-6">
-          <div className="relative mb-8">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-50/10 via-purple-50/10 to-pink-50/10 dark:from-blue-900/5 dark:via-purple-900/5 dark:to-pink-900/5 blur-3xl" />
-            <Card variant="muted" size="lg" rounded="2xl" className="relative">
+          <div className="mb-8">
+            <Card variant="muted" size="lg" rounded="2xl">
               <h2 className="text-xl font-semibold mb-4">简介</h2>
               <div className="space-y-4">
                 <p className="text-base text-zinc-600 dark:text-zinc-400">在这里记录生活的点点滴滴，分享一些有趣的想法和感受</p>

@@ -97,7 +97,7 @@ export function NdDatePicker({
       <PopoverContent
         align="start"
         className={cn(
-          "nd-admin w-auto !p-0 !shadow-none !backdrop-blur-none !min-h-0",
+          "nd w-auto !p-0 !shadow-none !backdrop-blur-none !min-h-0",
           "!bg-[var(--nd-surface)] !border-[var(--nd-border-visible)] !rounded-xl"
         )}
       >
