@@ -97,8 +97,10 @@ export function NdDatePicker({
       <PopoverContent
         align="start"
         className={cn(
-          "nd w-auto !p-0 !shadow-none !backdrop-blur-none !min-h-0",
-          "!bg-[var(--nd-surface)] !border-[var(--nd-border-visible)] !rounded-xl"
+          "w-auto !p-0 !min-h-0 !backdrop-blur-none",
+          "rounded-2xl bg-white dark:bg-zinc-900",
+          "border border-zinc-200/80 dark:border-zinc-800",
+          "shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)]"
         )}
       >
         <DayPicker
@@ -108,49 +110,72 @@ export function NdDatePicker({
           locale={zhCN}
           initialFocus
           defaultMonth={date || new Date()}
-          className="p-3"
+          className={cn(
+            "p-3",
+            "[--rdp-accent-color:#18181b] [--rdp-accent-color-dark:#fafafa]",
+            "[--rdp-background-color:#f4f4f5] [--rdp-background-color-dark:#27272a]",
+            "[--rdp-selected-color:#ffffff]",
+            "dark:[--rdp-accent-color:#fafafa] dark:[--rdp-background-color:#27272a]",
+            "dark:[--rdp-selected-color:#18181b]"
+          )}
           classNames={{
             months: "flex flex-col",
-            month: "space-y-3",
-            caption: "flex justify-center pt-1 relative items-center mb-2",
-            caption_label: "nd-mono text-[13px] text-[var(--nd-text-display)]",
+            month: "space-y-2",
+            caption: "flex justify-center pt-0.5 relative items-center mb-2",
+            caption_label:
+              "text-[12px] font-medium text-zinc-900 dark:text-zinc-100",
             nav: "space-x-1 flex items-center",
             nav_button: cn(
-              "h-8 w-8 bg-transparent p-0 inline-flex items-center justify-center",
-              "text-[var(--nd-text-secondary)] hover:text-[var(--nd-text-display)]",
-              "rounded-full border border-transparent hover:border-[var(--nd-border-visible)]",
-              "transition-colors duration-200"
+              "h-6.5 w-6.5 bg-transparent p-0 inline-flex items-center justify-center",
+              "text-zinc-500 dark:text-zinc-400",
+              "rounded-full",
+              "hover:bg-zinc-100 hover:text-zinc-900",
+              "dark:hover:!bg-zinc-800 dark:hover:!text-zinc-100",
+              "transition-[background-color,color] duration-200"
             ),
-            nav_button_previous: "absolute left-1",
-            nav_button_next: "absolute right-1",
+            nav_button_previous: "absolute left-0.5",
+            nav_button_next: "absolute right-0.5",
             table: "w-full border-collapse",
             head_row: "flex mb-1",
             head_cell:
-              "nd-mono text-[10px] tracking-wider uppercase text-[var(--nd-text-disabled)] w-9 font-normal",
-            row: "flex w-full mt-1",
-            cell: "h-9 w-9 text-center text-sm p-0 relative",
+              "w-9 font-medium text-[11.5px] text-zinc-400 dark:text-zinc-500",
+            row: "flex w-full mt-0.5",
+            cell: "h-9 w-9 text-center text-[12px] p-0 relative",
             day: cn(
-              "h-9 w-9 p-0 font-normal rounded-full cursor-pointer transition-colors duration-150",
-              "nd-mono text-[12px] text-[var(--nd-text-primary)]",
-              "hover:bg-[var(--nd-surface-raised)]"
+              "h-8 w-8 p-0 font-medium rounded-[5px] cursor-pointer",
+              "text-[12px] text-zinc-700 dark:text-zinc-300 tabular-nums",
+              "transition-[background-color,box-shadow,color] duration-200",
+              "hover:bg-zinc-100 hover:text-zinc-900",
+              "dark:hover:!bg-zinc-800 dark:hover:!text-zinc-100"
             ),
             day_selected: cn(
-              "!bg-[var(--nd-text-display)] !text-[var(--nd-black)]",
-              "hover:!bg-[var(--nd-text-display)] hover:!opacity-90"
+              "!bg-zinc-900 !text-white",
+              "dark:!bg-zinc-100 dark:!text-zinc-900",
+              "hover:!bg-zinc-900 hover:!text-white",
+              "dark:hover:!bg-zinc-100 dark:hover:!text-zinc-900",
+              "shadow-[0_1px_2px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.04)]"
             ),
             day_today:
-              "border border-[var(--nd-border-visible)] font-medium",
-            day_outside: "text-[var(--nd-text-disabled)] opacity-40",
-            day_disabled: "text-[var(--nd-text-disabled)] opacity-40 cursor-not-allowed",
+              "ring-1 ring-zinc-300 dark:ring-zinc-600 font-semibold",
+            day_outside:
+              "text-zinc-300 dark:text-zinc-600 opacity-60",
+            day_disabled:
+              "text-zinc-300 dark:text-zinc-600 opacity-40 cursor-not-allowed",
             day_hidden: "invisible",
           }}
         />
         {showTodayButton && (
-          <div className="border-t border-[var(--nd-border)] p-2">
+          <div className="border-t border-zinc-200/80 dark:border-zinc-800 px-2 py-2">
             <button
               type="button"
               onClick={handleTodayClick}
-              className="nd-btn nd-btn-ghost w-full !min-h-[36px] !text-[11px]"
+              className={cn(
+                "flex h-6.5 w-full items-center justify-center rounded-full px-2.5",
+                "text-[12px] font-medium text-zinc-600 dark:text-zinc-400",
+                "transition-[background-color,box-shadow,color] duration-200",
+                "hover:bg-zinc-100 hover:text-zinc-900",
+                "dark:hover:!bg-zinc-800 dark:hover:!text-zinc-100"
+              )}
             >
               今天
             </button>

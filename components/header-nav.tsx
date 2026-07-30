@@ -57,7 +57,7 @@ export function HeaderNav({ showLinks = true }: { showLinks?: boolean }) {
           </Link>
         </>
       )}
-      <div className="flex items-center min-w-[1.5rem] h-6">
+      <div className="flex items-center">
         <ThemeToggle />
       </div>
     </nav>
