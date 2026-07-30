@@ -1,42 +1,75 @@
 import { useEffect } from "react"
 
 const COPY_ICON =
-  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>'
+  '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>'
 const SUCCESS_ICON =
-  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+  '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>'
 
-const BTN_BASE_CLASS =
-  "p-1.5 rounded-full bg-white/85 dark:bg-zinc-800/90 backdrop-blur-sm border border-zinc-200/90 dark:border-zinc-600/80 text-zinc-700 dark:text-zinc-200 hover:bg-white dark:hover:bg-zinc-700 dark:hover:text-zinc-50 dark:hover:border-zinc-500/80 transition-[background-color,border-color,color] duration-200 ease-out shadow-sm [transform:translateZ(0)] [will-change:backdrop-filter]"
+const LANG_LABELS: Record<string, string> = {
+  js: "JavaScript",
+  javascript: "JavaScript",
+  jsx: "JSX",
+  ts: "TypeScript",
+  typescript: "TypeScript",
+  tsx: "TSX",
+  py: "Python",
+  python: "Python",
+  rb: "Ruby",
+  go: "Go",
+  rust: "Rust",
+  rs: "Rust",
+  java: "Java",
+  kotlin: "Kotlin",
+  swift: "Swift",
+  c: "C",
+  cpp: "C++",
+  csharp: "C#",
+  cs: "C#",
+  php: "PHP",
+  ruby: "Ruby",
+  shell: "Shell",
+  bash: "Bash",
+  sh: "Shell",
+  zsh: "Zsh",
+  json: "JSON",
+  yaml: "YAML",
+  yml: "YAML",
+  toml: "TOML",
+  html: "HTML",
+  css: "CSS",
+  scss: "SCSS",
+  sql: "SQL",
+  md: "Markdown",
+  markdown: "Markdown",
+  text: "Text",
+  plaintext: "Text",
+}
+
+function getLanguageLabel(pre: Element): string {
+  const code = pre.querySelector("code")
+  const cls = code?.className ?? pre.className ?? ""
+  const match = cls.match(/language-([\w+#]+)/i)
+  if (!match) return "Code"
+  const key = match[1].toLowerCase()
+  return LANG_LABELS[key] ?? match[1]
+}
 
 export interface UseCodeBlockCopyOptions {
   /** 代码块选择器，默认 'pre' */
   selector?: string
-  /** 成功提示显示时长（毫秒），默认 2000 */
+  /** 成功提示显示时长（毫秒），默认 1500 */
   successDuration?: number
   /** 是否启用，默认 true */
   enabled?: boolean
 }
 
 /**
- * 代码块复制功能 Hook
- * 自动为页面中的所有代码块添加复制按钮
- *
- * @param options 配置选项
- * @returns 清理函数（通常不需要手动调用，useEffect 会自动处理）
- *
- * @example
- * ```tsx
- * useCodeBlockCopy({
- *   selector: 'pre',
- *   successDuration: 2000,
- *   enabled: true,
- * })
- * ```
+ * 为页面中的 markdown 代码块加上卡片头栏与复制按钮
  */
 export function useCodeBlockCopy(options: UseCodeBlockCopyOptions = {}) {
   const {
     selector = "pre",
-    successDuration = 2000,
+    successDuration = 1500,
     enabled = true,
   } = options
 
@@ -47,32 +80,42 @@ export function useCodeBlockCopy(options: UseCodeBlockCopyOptions = {}) {
     const codeBlocks = document.querySelectorAll(selector)
 
     codeBlocks.forEach((pre) => {
-      if (pre.closest(".code-block-copy-wrapper")) return
+      if (pre.closest(".md-code-block")) return
 
       const wrapper = document.createElement("div")
-      wrapper.className = "code-block-copy-wrapper relative group"
+      wrapper.className = "md-code-block"
 
-      const buttonContainer = document.createElement("div")
-      buttonContainer.className =
-        "code-block-copy-btn-wrap absolute right-4 top-4 z-10 flex items-center opacity-0 group-hover:opacity-100 [transform:translateZ(0)]"
+      const header = document.createElement("div")
+      header.className = "md-code-header"
+
+      const meta = document.createElement("span")
+      meta.className = "md-code-meta"
+      const lang = document.createElement("span")
+      lang.className = "md-code-lang"
+      lang.textContent = getLanguageLabel(pre)
+      meta.appendChild(lang)
 
       const btn = document.createElement("button")
       btn.type = "button"
-      btn.className = BTN_BASE_CLASS
-      btn.innerHTML = COPY_ICON
+      btn.className = "md-code-copy"
       btn.setAttribute("aria-label", "复制代码")
+      btn.innerHTML = `${COPY_ICON}<span>复制</span>`
 
       btn.addEventListener("click", async () => {
-        if (btn.getAttribute("aria-label") === "已复制") return
+        if (btn.dataset.copied === "true") return
 
         const code = pre.querySelector("code")?.textContent ?? ""
         try {
           await navigator.clipboard.writeText(code)
-          btn.innerHTML = SUCCESS_ICON
+          btn.dataset.copied = "true"
+          btn.classList.add("is-copied")
+          btn.innerHTML = `${SUCCESS_ICON}<span>已复制</span>`
           btn.setAttribute("aria-label", "已复制")
 
           const id = setTimeout(() => {
-            btn.innerHTML = COPY_ICON
+            btn.dataset.copied = "false"
+            btn.classList.remove("is-copied")
+            btn.innerHTML = `${COPY_ICON}<span>复制</span>`
             btn.setAttribute("aria-label", "复制代码")
             timeouts.delete(id)
           }, successDuration)
@@ -82,20 +125,20 @@ export function useCodeBlockCopy(options: UseCodeBlockCopyOptions = {}) {
         }
       })
 
-      buttonContainer.appendChild(btn)
-      pre.classList.add("pt-12")
+      header.appendChild(meta)
+      header.appendChild(btn)
+
       pre.parentElement?.insertBefore(wrapper, pre)
+      wrapper.appendChild(header)
       wrapper.appendChild(pre)
-      wrapper.appendChild(buttonContainer)
     })
 
     return () => {
       timeouts.forEach(clearTimeout)
       timeouts.clear()
-      document.querySelectorAll(".code-block-copy-wrapper").forEach((wrapper) => {
-        const pre = wrapper.firstElementChild
-        if (pre?.tagName === "PRE") {
-          pre.classList.remove("pt-12")
+      document.querySelectorAll(".md-code-block").forEach((wrapper) => {
+        const pre = wrapper.querySelector("pre")
+        if (pre) {
           wrapper.parentElement?.insertBefore(pre, wrapper)
         }
         wrapper.remove()

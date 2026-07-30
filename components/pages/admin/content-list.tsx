@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { toast } from "sonner"
+import { LoadingState } from "@/components/ui/loading-state"
 
 interface Post {
   id: string
@@ -23,6 +24,8 @@ interface ContentListProps {
   onEdit: (id: string) => void
   onDelete: (id: string) => Promise<void>
   loading?: boolean
+  /** 正在加载某条内容（点击编辑后） */
+  editingLoading?: boolean
 }
 
 export function ContentList({
@@ -32,6 +35,7 @@ export function ContentList({
   onEdit,
   onDelete,
   loading = false,
+  editingLoading = false,
 }: ContentListProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -73,10 +77,13 @@ export function ContentList({
     }
   }
 
-  if (loading) {
+  if (loading || editingLoading) {
     return (
-      <div className="py-16 text-center">
-        <p className="nd-status">[加载中]</p>
+      <div className="flex justify-center py-16">
+        <LoadingState
+          label={editingLoading ? "加载内容" : "加载列表"}
+          variant="Drive"
+        />
       </div>
     )
   }
@@ -97,10 +104,14 @@ export function ContentList({
       <div className="border-t border-[var(--nd-border)]">
         {items.map((item) => (
           <div key={item.id} className="nd-row group">
-            <div className="flex-1 min-w-0">
+            <button
+              type="button"
+              onClick={() => onEdit(item.id)}
+              className="flex-1 min-w-0 text-left bg-transparent border-0 p-0 cursor-pointer"
+            >
               {contentType === "post" ? (
                 <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="text-[16px] text-[var(--nd-text-primary)] truncate">
+                  <h3 className="text-[16px] text-[var(--nd-text-primary)] truncate group-hover:text-[var(--nd-text-display)] transition-colors duration-200">
                     {(item as Post).title}
                   </h3>
                   <span className="nd-caption flex-shrink-0 tabular-nums">
@@ -109,7 +120,7 @@ export function ContentList({
                 </div>
               ) : (
                 <div className="flex items-baseline justify-between gap-4">
-                  <p className="text-[14px] text-[var(--nd-text-primary)] line-clamp-2 min-w-0 flex-1">
+                  <p className="text-[14px] text-[var(--nd-text-primary)] line-clamp-2 min-w-0 flex-1 group-hover:text-[var(--nd-text-display)] transition-colors duration-200">
                     {(item as Note).content}
                   </p>
                   <span className="nd-caption flex-shrink-0 tabular-nums">
@@ -117,7 +128,7 @@ export function ContentList({
                   </span>
                 </div>
               )}
-            </div>
+            </button>
             <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200">
               <button
                 type="button"

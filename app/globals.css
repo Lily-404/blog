@@ -242,12 +242,123 @@
 }
 
 .prose pre {
-  @apply bg-zinc-100 dark:bg-zinc-800 p-4 rounded-lg overflow-x-auto my-6 text-sm border border-zinc-200 dark:border-zinc-700;
+  @apply overflow-x-auto text-sm;
   font-family: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 .prose pre code {
-  @apply bg-transparent p-0 text-zinc-800 dark:text-zinc-200;
+  @apply bg-transparent p-0 text-zinc-700 dark:text-zinc-300;
+}
+
+/* Markdown code block card (CodeBlock-style chrome) */
+.md-code-block {
+  margin: 1.5rem 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(228, 228, 231, 0.9);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.dark .md-code-block {
+  background: #18181b;
+  border-color: #27272a;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.md-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(228, 228, 231, 0.9);
+}
+
+.dark .md-code-header {
+  border-bottom-color: #27272a;
+}
+
+.md-code-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.md-code-lang {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #71717a;
+}
+
+.dark .md-code-lang {
+  color: #a1a1aa;
+}
+
+.md-code-copy {
+  display: inline-flex;
+  height: 24px;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  padding: 0 6px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #a1a1aa;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 100ms ease, background-color 100ms ease;
+}
+
+.md-code-copy:hover {
+  color: #18181b;
+  background: #f4f4f5;
+}
+
+.dark .md-code-copy:hover {
+  color: #fafafa;
+  background: #27272a;
+}
+
+.md-code-copy.is-copied {
+  color: #25a878;
+}
+
+.md-code-copy.is-copied:hover {
+  color: #25a878;
+  background: transparent;
+}
+
+.md-code-block pre {
+  margin: 0 !important;
+  padding: 10px 12px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: #fafafa !important;
+  box-shadow: none !important;
+  font-size: 11.5px !important;
+  line-height: 1.7 !important;
+  color: #3f3f46;
+}
+
+.dark .md-code-block pre {
+  background: #09090b !important;
+  color: #d4d4d8;
+}
+
+.md-code-block pre code {
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: transparent !important;
+  padding: 0 !important;
 }
 
 .prose img {

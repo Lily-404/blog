@@ -446,6 +446,7 @@ export function AdminApp() {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 loading={listLoading}
+                editingLoading={loading && !listLoading}
               />
             </div>
           ) : (
