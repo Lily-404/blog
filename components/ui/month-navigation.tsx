@@ -24,7 +24,6 @@ export interface MonthNavigationProps {
 const pad2 = (n: number) => n.toString().padStart(2, "0")
 
 const defaultFormatDate = (year: number, month: number) => {
-  // 显示为 YYYY/MM/DD，这里用当月的第 1 天作为代表
   return `${year}/${pad2(month + 1)}/01`
 }
 
@@ -68,6 +67,7 @@ export const MonthNavigation = React.forwardRef<
         className={cn("flex items-center mb-2 gap-2", className)}
       >
         <button
+          type="button"
           onClick={onPrev}
           className={cn(buttonBaseStyles)}
           aria-label="上个月"
@@ -78,6 +78,7 @@ export const MonthNavigation = React.forwardRef<
           {formatDate(year, month)}
         </span>
         <button
+          type="button"
           onClick={onNext}
           disabled={disableNext}
           className={cn(

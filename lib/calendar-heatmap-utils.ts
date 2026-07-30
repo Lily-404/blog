@@ -20,12 +20,12 @@ export function buildCountMap(
   return map
 }
 
-/** 固定分级：0 / 1 / 2 / 3+，用于月历热力图 */
+/** 固定分级：0 / 1 / 2 / 3+，单色透明度（Nothing） */
 export function getDotClassFixed(count: number): string {
-  if (!count) return "bg-zinc-100 dark:bg-zinc-800"
-  if (count === 1) return "bg-zinc-400 dark:bg-zinc-600"
-  if (count === 2) return "bg-zinc-600 dark:bg-zinc-400"
-  return "bg-black dark:bg-white"
+  if (!count) return "bg-zinc-200 dark:bg-zinc-800"
+  if (count === 1) return "bg-zinc-900/30 dark:bg-zinc-100/30"
+  if (count === 2) return "bg-zinc-900/55 dark:bg-zinc-100/55"
+  return "bg-zinc-900 dark:bg-zinc-100"
 }
 
 /** 相对分级：按 maxCount 比例，用于 mini 热力图 */
