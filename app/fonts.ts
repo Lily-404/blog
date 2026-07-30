@@ -1,4 +1,4 @@
-import { Inter, Plus_Jakarta_Sans, Poppins, JetBrains_Mono } from 'next/font/google'
+import { Inter, Plus_Jakarta_Sans, Poppins, JetBrains_Mono, Space_Grotesk, Space_Mono, Doto } from 'next/font/google'
 
 // 原来的 Inter，留作备用
 export const inter = Inter({
@@ -37,4 +37,34 @@ export const jetbrainsMono = JetBrains_Mono({
   variable: '--font-jetbrains-mono',
   weight: ['400', '500', '600', '700'],
   fallback: ['ui-monospace', 'SF Mono', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
+})
+
+// Nothing design — display (dot-matrix)
+export const doto = Doto({
+  subsets: ['latin'],
+  display: 'swap',
+  preload: false,
+  variable: '--font-doto',
+  weight: ['400', '700'],
+  fallback: ['Space Mono', 'monospace'],
+})
+
+// Nothing design — body / UI
+export const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  preload: false,
+  variable: '--font-space-grotesk',
+  weight: ['300', '400', '500'],
+  fallback: ['DM Sans', 'system-ui', 'sans-serif'],
+})
+
+// Nothing design — data / labels
+export const spaceMono = Space_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  preload: false,
+  variable: '--font-space-mono',
+  weight: ['400', '700'],
+  fallback: ['JetBrains Mono', 'SF Mono', 'monospace'],
 })

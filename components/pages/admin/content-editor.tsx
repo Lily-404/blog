@@ -2,11 +2,7 @@
 
 import { useRef } from "react"
 import { PostPreview } from "@/components/post-preview"
-import { Card } from "@/components/ui/card"
-import { MarkdownTextarea } from "@/components/ui/markdown-textarea"
-import { EditorPane } from "@/components/ui/editor-pane"
-import { PreviewPane } from "@/components/ui/preview-pane"
-import { EditorWrapper } from "@/components/ui/editor-wrapper"
+import { cn } from "@/lib/utils"
 
 type ViewMode = "edit" | "preview" | "split"
 
@@ -26,51 +22,61 @@ export function ContentEditor({
 
   if (viewMode === "split") {
     return (
-      <EditorWrapper>
-        <Card variant="default" shadow={false} className="flex flex-col lg:flex-row overflow-hidden p-0 max-w-full">
-          <EditorPane splitMode>
-            <MarkdownTextarea
-              ref={textareaRef}
-              id="content"
-              value={content}
-              onChange={(e) => onContentChange(e.target.value)}
-              splitMode
-              required
-            />
-          </EditorPane>
-
-          <PreviewPane ref={previewRef} splitMode>
-            <PostPreview content={content} />
-          </PreviewPane>
-        </Card>
-      </EditorWrapper>
+      <div className="nd-surface overflow-hidden flex flex-col lg:flex-row">
+        <div className="flex-1 flex flex-col min-w-0 h-[300px] lg:h-[600px]">
+          <div className="px-4 pt-3 pb-1">
+            <p className="nd-label">MARKDOWN</p>
+          </div>
+          <textarea
+            ref={textareaRef}
+            id="content"
+            value={content}
+            onChange={(e) => onContentChange(e.target.value)}
+            className="nd-textarea flex-1 px-4 py-2 overflow-y-auto"
+            placeholder="粘贴或输入 Markdown 内容..."
+            required
+          />
+        </div>
+        <div
+          ref={previewRef}
+          className={cn(
+            "flex-1 flex flex-col min-w-0 overflow-y-auto px-4 py-3",
+            "h-[300px] lg:h-[600px]",
+            "border-t border-[var(--nd-border)] lg:border-t-0 lg:border-l"
+          )}
+        >
+          <p className="nd-label mb-2">PREVIEW</p>
+          <PostPreview content={content} />
+        </div>
+      </div>
     )
   }
 
   if (viewMode === "edit") {
     return (
-      <EditorWrapper>
-        <Card variant="default" shadow={false} className="p-0 max-w-full overflow-hidden">
-          <MarkdownTextarea
-            ref={textareaRef}
-            id="content"
-            value={content}
-            onChange={(e) => onContentChange(e.target.value)}
-            required
-          />
-        </Card>
-      </EditorWrapper>
+      <div className="nd-surface overflow-hidden">
+        <div className="px-4 pt-3 pb-1">
+          <p className="nd-label">MARKDOWN</p>
+        </div>
+        <textarea
+          ref={textareaRef}
+          id="content"
+          value={content}
+          onChange={(e) => onContentChange(e.target.value)}
+          className="nd-textarea px-4 py-2 min-h-[600px] overflow-y-auto"
+          placeholder="粘贴或输入 Markdown 内容..."
+          required
+        />
+      </div>
     )
   }
 
-  // preview mode
   return (
-    <EditorWrapper>
-      <Card variant="muted" shadow={false} className="p-0 max-w-full overflow-hidden">
-        <PreviewPane ref={previewRef} variant="muted">
-          <PostPreview content={content} />
-        </PreviewPane>
-      </Card>
-    </EditorWrapper>
+    <div className="nd-surface overflow-hidden" style={{ background: "var(--nd-surface-raised)" }}>
+      <div ref={previewRef} className="px-4 py-3 min-h-[600px] overflow-y-auto">
+        <p className="nd-label mb-2">PREVIEW</p>
+        <PostPreview content={content} />
+      </div>
+    </div>
   )
 }

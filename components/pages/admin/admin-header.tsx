@@ -1,9 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
-import { useIsMobile } from "@/hooks/use-mobile"
-import { useEffect, useMemo, useCallback } from "react"
+import { useMemo } from "react"
 
 type ContentType = "post" | "note"
 type ViewMode = "edit" | "preview" | "split"
@@ -19,33 +16,6 @@ interface AdminHeaderProps {
   onToggleList: () => void
 }
 
-// 提取重复的按钮样式类名
-const OUTLINE_BUTTON_BASE_STYLES = [
-  "h-10 px-3 rounded-md text-xs font-medium",
-  "bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm",
-  "border border-zinc-200/60 dark:border-zinc-700/60",
-  "shadow-[0_1px_2px_0_rgb(0,0,0,0.05)] dark:shadow-[0_1px_2px_0_rgb(0,0,0,0.2)]",
-  "text-zinc-700 dark:text-zinc-300",
-  "hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:border-zinc-300/60 dark:hover:border-zinc-600/60",
-  "hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.08)] dark:hover:shadow-[0_2px_4px_0_rgb(0,0,0,0.25)]",
-] as const
-
-const VIEW_MODE_BUTTON_BASE_STYLES = [
-  "h-8 px-3 rounded-md text-xs font-medium transition-all",
-] as const
-
-const VIEW_MODE_BUTTON_ACTIVE_STYLES = [
-  "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-white dark:hover:bg-zinc-700",
-] as const
-
-const VIEW_MODE_BUTTON_INACTIVE_STYLES = [
-  "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100",
-] as const
-
-const TOGGLE_GROUP_STYLES = [
-  "flex gap-1.5 bg-zinc-100 dark:bg-zinc-800/50 p-1 rounded-lg border border-zinc-200/50 dark:border-zinc-700/50",
-] as const
-
 export function AdminHeader({
   username,
   contentType,
@@ -56,113 +26,75 @@ export function AdminHeader({
   onLogout,
   onToggleList,
 }: AdminHeaderProps) {
-  const isMobile = useIsMobile()
-
-  // 使用 useMemo 优化问候语计算
   const greeting = useMemo(() => {
-    if (!username) return null
-    
     const hour = new Date().getHours()
-    if (hour >= 5 && hour < 12) {
-      return { greeting: "早上好", emoji: "☀️" }
-    } else if (hour >= 12 && hour < 18) {
-      return { greeting: "下午好", emoji: "🌤️" }
-    } else if (hour >= 18 && hour < 22) {
-      return { greeting: "晚上好", emoji: "🌃" }
-    } else {
-      return { greeting: "夜深了", emoji: "🌙" }
-    }
-  }, [username])
-
-  // 使用 useCallback 优化事件处理函数
-  const handleViewModeChange = useCallback((mode: ViewMode) => {
-    onViewModeChange(mode)
-  }, [onViewModeChange])
-
-  const handleContentTypeChange = useCallback((type: ContentType) => {
-    onContentTypeChange(type)
-  }, [onContentTypeChange])
+    if (hour >= 5 && hour < 12) return "MORNING"
+    if (hour >= 12 && hour < 18) return "AFTERNOON"
+    if (hour >= 18 && hour < 22) return "EVENING"
+    return "LATE"
+  }, [])
 
   return (
-    <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4 md:gap-0 max-w-full overflow-x-hidden">
-      <div>
-        {username && greeting && (
-          <>
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-              {greeting.greeting}，{username}！{greeting.emoji}
-            </h1>
-            <p className="text-base text-zinc-600 dark:text-zinc-400 mt-2">
-              {contentType === "note" ? "记录这一刻的想法" : "今天想写点什么？"}
-            </p>
-          </>
-        )}
-        {!username && (
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">内容管理</h1>
-        )}
-      </div>
-      <div className="flex items-center gap-1.5 md:gap-2 flex-wrap max-w-full min-w-0">
-        {/* 类型切换和视图模式 - 统一放在右上角 */}
-        <div className="flex items-center gap-1.5 md:gap-2 flex-wrap max-w-full min-w-0">
-          {/* 视图模式切换 - 仅在文章模式下显示，移动端也显示 */}
-          {contentType === "post" && (
-            <div className={cn("flex", TOGGLE_GROUP_STYLES)}>
+    <div className="mb-6 max-w-full overflow-x-hidden">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="min-w-0">
+          <p className="nd-label mb-1">
+            {greeting}
+            {username ? ` / ${username}` : ""}
+          </p>
+          <h1 className="text-[22px] md:text-[24px] font-medium tracking-tight text-[var(--nd-text-display)] leading-tight">
+            {username ? `${username}` : "ADMIN"}
+          </h1>
+          <p className="mt-1 text-[13px] text-[var(--nd-text-secondary)]">
+            {contentType === "note" ? "记录这一刻的想法" : "今天想写点什么？"}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-1.5 md:gap-2">
+          {contentType === "post" && !showList && (
+            <div className="nd-segment">
               {(["edit", "split", "preview"] as const).map((mode) => (
-                <Button
+                <button
                   key={mode}
                   type="button"
-                  variant="ghost"
-                  onClick={() => handleViewModeChange(mode)}
-                  className={cn(
-                    VIEW_MODE_BUTTON_BASE_STYLES,
-                    viewMode === mode
-                      ? VIEW_MODE_BUTTON_ACTIVE_STYLES
-                      : VIEW_MODE_BUTTON_INACTIVE_STYLES
-                  )}
+                  onClick={() => onViewModeChange(mode)}
+                  className="nd-segment-item !min-h-[32px] !px-3 !py-1.5"
+                  data-active={viewMode === mode}
                 >
-                  {mode === "edit" ? "编辑" : mode === "split" ? "分栏" : "预览"}
-                </Button>
+                  {mode === "edit" ? "EDIT" : mode === "split" ? "SPLIT" : "PREVIEW"}
+                </button>
               ))}
             </div>
           )}
-          
-          {/* 类型切换 - 放在右边 */}
-          <div className={cn(TOGGLE_GROUP_STYLES)}>
+
+          <div className="nd-segment">
             {(["post", "note"] as const).map((type) => (
-              <Button
+              <button
                 key={type}
                 type="button"
-                variant="ghost"
-                onClick={() => handleContentTypeChange(type)}
-                className={cn(
-                  VIEW_MODE_BUTTON_BASE_STYLES,
-                  contentType === type
-                    ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 shadow-sm hover:bg-stone-50 dark:hover:bg-zinc-700"
-                    : VIEW_MODE_BUTTON_INACTIVE_STYLES
-                )}
+                onClick={() => onContentTypeChange(type)}
+                className="nd-segment-item !min-h-[32px] !px-3 !py-1.5"
+                data-active={contentType === type}
               >
-                {type === "post" ? "文章" : "随笔"}
-              </Button>
+                {type === "post" ? "POST" : "NOTE"}
+              </button>
             ))}
           </div>
 
-          {/* 列表/新建切换按钮和登出按钮 - 放在同一行 */}
-          <div className="flex items-center gap-1.5 md:gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onToggleList}
-              className={cn(OUTLINE_BUTTON_BASE_STYLES, "h-10 px-2.5 md:px-3 text-xs")}
-            >
-              {showList ? "写作" : "列表"}
-            </Button>
-            <Button 
-              onClick={onLogout} 
-              variant="outline" 
-              className={cn(OUTLINE_BUTTON_BASE_STYLES, "h-10 px-2.5 md:px-3 text-xs")}
-            >
-              登出
-            </Button>
-          </div>
+          <button
+            type="button"
+            onClick={onToggleList}
+            className="nd-btn nd-btn-secondary !min-h-[32px] !px-3 !py-1.5 !text-[11px]"
+          >
+            {showList ? "WRITE" : "LIST"}
+          </button>
+          <button
+            type="button"
+            onClick={onLogout}
+            className="nd-btn nd-btn-ghost !min-h-[32px] !px-2 !text-[11px]"
+          >
+            LOGOUT
+          </button>
         </div>
       </div>
     </div>

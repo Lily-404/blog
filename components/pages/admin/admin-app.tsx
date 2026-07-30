@@ -1,17 +1,13 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react"
 import { Layout } from "@/components/layout"
 import { Header } from "@/components/header"
 import { clearAuth, createPost, createNote, updatePost, updateNote, deletePost, deleteNote, getPostContent, getNoteContent } from "@/app/actions/posts"
 import { toast } from "sonner"
-import { cn } from "@/lib/utils"
-import { SubmitButton } from "@/components/ui/submit-button"
 import {
   AdminHeader,
   StatsSection,
-  PostForm,
   NoteForm,
   ContentEditor,
 } from "@/components/pages/admin"
@@ -51,10 +47,6 @@ export function AdminApp() {
   const [postsList, setPostsList] = useState<Array<{ id: string; title: string; date: string; tags: string[] }>>([])
   const [notesList, setNotesList] = useState<Array<{ id: string; date: string; content: string }>>([])
   const [listLoading, setListLoading] = useState(false)
-
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const previewRef = useRef<HTMLDivElement>(null)
-  const isScrollingRef = useRef(false)
 
   const getTodayDate = (): string => {
     const today = new Date()
@@ -200,19 +192,8 @@ export function AdminApp() {
         tags: [],
         id: "",
       })
-      setTimeout(() => {
-        textareaRef.current?.focus()
-      }, 100)
     }
   }, [contentType])
-  
-  useEffect(() => {
-    if (contentType === "note" && isAuthenticated) {
-      setTimeout(() => {
-        textareaRef.current?.focus()
-      }, 300)
-    }
-  }, [isAuthenticated, contentType])
 
   const handleEdit = async (id: string) => {
     setLoading(true)
@@ -403,14 +384,16 @@ export function AdminApp() {
   if (!isAuthenticated) {
     return (
       <Layout>
-        <div className="max-w-2xl mx-auto px-4 py-6">
-          <Header showBackButton={true} />
-          <AdminUnauthenticatedView
-            error={error}
-            success={success}
-            loading={loading}
-            onGitHubLogin={handleGitHubLogin}
-          />
+        <div className="nd-admin">
+          <div className="max-w-2xl mx-auto px-4 py-6">
+            <Header showBackButton={true} />
+            <AdminUnauthenticatedView
+              error={error}
+              success={success}
+              loading={loading}
+              onGitHubLogin={handleGitHubLogin}
+            />
+          </div>
         </div>
       </Layout>
     )
@@ -418,118 +401,126 @@ export function AdminApp() {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-4 py-6 overflow-x-hidden">
-        <Header showBackButton={true} />
-        
-        <AdminHeader
-          username={username}
-          contentType={contentType}
-          viewMode={viewMode}
-          showList={showList}
-          onContentTypeChange={(type) => {
-            setContentType(type)
-            setShowList(false)
-            handleNew()
-          }}
-          onViewModeChange={setViewMode}
-          onLogout={handleLogout}
-          onToggleList={() => {
-            setShowList(!showList)
-            if (!showList) {
-              fetchContentList()
-            }
-          }}
-        />
+      <div className="nd-admin">
+        <div className="max-w-7xl mx-auto px-4 py-6 overflow-x-hidden pb-16">
+          <Header showBackButton={true} />
 
-        {showList ? (
-          <div className="bg-transparent">
-            <h2 className="text-lg font-semibold mb-4 text-zinc-900 dark:text-zinc-100">
-              {contentType === "post" ? "文章列表" : "随笔列表"}
-            </h2>
-            <ContentList
-              contentType={contentType}
-              posts={postsList}
-              notes={notesList}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              loading={listLoading}
-            />
-          </div>
-        ) : (
-          <>
-            {stats && contentType === "post" && (
-              <StatsSection
-                stats={stats}
-                selectedTags={formData.tags}
-                onTagToggle={(tag: string) => {
-                  setFormData(prev => ({
-                    ...prev,
-                    tags: prev.tags.includes(tag)
-                      ? prev.tags.filter(t => t !== tag)
-                      : [...prev.tags, tag]
-                  }))
-                }}
-                title={formData.title}
-                date={formData.date}
-                onTitleChange={(title: string) => setFormData(prev => ({ ...prev, title }))}
-                onDateChange={(date: string) => setFormData(prev => ({ ...prev, date }))}
-                onTagsChange={(tags: string[]) => setFormData(prev => ({ ...prev, tags }))}
+          <AdminHeader
+            username={username}
+            contentType={contentType}
+            viewMode={viewMode}
+            showList={showList}
+            onContentTypeChange={(type) => {
+              setContentType(type)
+              setShowList(false)
+              handleNew()
+            }}
+            onViewModeChange={setViewMode}
+            onLogout={handleLogout}
+            onToggleList={() => {
+              setShowList(!showList)
+              if (!showList) {
+                fetchContentList()
+              }
+            }}
+          />
+
+          {(error || success) && (
+            <p
+              className="nd-status mb-6"
+              data-tone={error ? "error" : "success"}
+            >
+              {error ? `[ERROR] ${error}` : `[OK] ${success}`}
+            </p>
+          )}
+
+          {showList ? (
+            <div>
+              <p className="nd-label mb-4">
+                {contentType === "post" ? "POST LIST" : "NOTE LIST"}
+              </p>
+              <ContentList
+                contentType={contentType}
+                posts={postsList}
+                notes={notesList}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                loading={listLoading}
               />
-            )}
-
-            <form onSubmit={handleSubmit} className={cn("space-y-0", contentType === "note" && "space-y-0")}>
-              {contentType === "post" && (
-                <div className="bg-transparent dark:bg-transparent rounded-xl overflow-hidden">
-                  <ContentEditor
-                    content={formData.content}
-                    viewMode={viewMode}
-                    onContentChange={(content: string) => setFormData(prev => ({ ...prev, content }))}
-                  />
-                  <div className="flex justify-end items-center gap-3 py-4">
-                    {editingId && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={handleNew}
-                        className={cn(
-                          "h-9 px-6 rounded-xl text-sm font-medium",
-                          "bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700",
-                          "text-zinc-700 dark:text-zinc-300",
-                          "hover:bg-zinc-50 dark:hover:bg-zinc-700"
-                        )}
-                      >
-                        取消编辑
-                      </Button>
-                    )}
-                    <SubmitButton
-                      loading={loading}
-                      editing={!!editingId}
-                      editText="更新文章"
-                      createText="发布文章"
-                      editingLoadingText="更新中..."
-                      creatingLoadingText="提交中..."
-                    />
-                  </div>
-                </div>
-              )}
-              
-              {contentType === "note" && (
-                <NoteForm
-                  content={formData.content}
+            </div>
+          ) : (
+            <>
+              {stats && contentType === "post" && (
+                <StatsSection
+                  stats={stats}
+                  selectedTags={formData.tags}
+                  onTagToggle={(tag: string) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      tags: prev.tags.includes(tag)
+                        ? prev.tags.filter(t => t !== tag)
+                        : [...prev.tags, tag]
+                    }))
+                  }}
+                  title={formData.title}
                   date={formData.date}
-                  autoGeneratedId={autoGeneratedId}
-                  viewMode={viewMode}
-                  loading={loading}
-                  editing={!!editingId}
-                  onContentChange={(content: string) => setFormData(prev => ({ ...prev, content }))}
+                  onTitleChange={(title: string) => setFormData(prev => ({ ...prev, title }))}
                   onDateChange={(date: string) => setFormData(prev => ({ ...prev, date }))}
-                  onViewModeChange={setViewMode}
-                  onCancelEdit={handleNew}
+                  onTagsChange={(tags: string[]) => setFormData(prev => ({ ...prev, tags }))}
                 />
               )}
-            </form>
-          </>
-        )}
+
+              <form onSubmit={handleSubmit}>
+                {contentType === "post" && (
+                  <div>
+                    <ContentEditor
+                      content={formData.content}
+                      viewMode={viewMode}
+                      onContentChange={(content: string) => setFormData(prev => ({ ...prev, content }))}
+                    />
+                    <div className="flex justify-end items-center gap-2 py-4">
+                      {editingId && (
+                        <button
+                          type="button"
+                          onClick={handleNew}
+                          className="nd-btn nd-btn-secondary !min-h-[40px] !px-4 !py-2 !text-[11px]"
+                        >
+                          CANCEL
+                        </button>
+                      )}
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="nd-btn nd-btn-primary !min-h-[40px] !px-6 !py-2 !text-[11px]"
+                      >
+                        {loading
+                          ? "[LOADING]"
+                          : editingId
+                            ? "UPDATE POST"
+                            : "PUBLISH POST"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {contentType === "note" && (
+                  <NoteForm
+                    content={formData.content}
+                    date={formData.date}
+                    autoGeneratedId={autoGeneratedId}
+                    viewMode={viewMode}
+                    loading={loading}
+                    editing={!!editingId}
+                    onContentChange={(content: string) => setFormData(prev => ({ ...prev, content }))}
+                    onDateChange={(date: string) => setFormData(prev => ({ ...prev, date }))}
+                    onViewModeChange={setViewMode}
+                    onCancelEdit={handleNew}
+                  />
+                )}
+              </form>
+            </>
+          )}
+        </div>
       </div>
     </Layout>
   )

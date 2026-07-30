@@ -1,12 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
-import { Edit2, Trash2, Loader2 } from "lucide-react"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { EmptyState } from "@/components/ui/empty-state"
-import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
 interface Post {
@@ -80,113 +74,129 @@ export function ContentList({
   }
 
   if (loading) {
-    return <LoadingSpinner size="md" />
+    return (
+      <div className="py-16 text-center">
+        <p className="nd-status">[LOADING]</p>
+      </div>
+    )
   }
 
   if (items.length === 0) {
     return (
-      <EmptyState
-        message={`暂无${contentType === "post" ? "文章" : "随笔"}`}
-        spacing="md"
-      />
+      <div className="py-24 text-center">
+        <p className="nd-label mb-2">EMPTY</p>
+        <p className="nd-caption">
+          暂无{contentType === "post" ? "文章" : "随笔"}
+        </p>
+      </div>
     )
   }
 
   return (
     <>
-      <div className="space-y-2">
+      <div className="border-t border-[var(--nd-border)]">
         {items.map((item) => (
-          <div
-            key={item.id}
-            className={cn(
-              "group flex items-center justify-between p-4 rounded-lg border",
-              "bg-white dark:bg-zinc-900",
-              "border-zinc-200 dark:border-zinc-800",
-              "hover:bg-zinc-50 dark:hover:bg-zinc-800/50",
-              "transition-colors"
-            )}
-          >
+          <div key={item.id} className="nd-row group">
             <div className="flex-1 min-w-0">
               {contentType === "post" ? (
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="font-medium text-zinc-900 dark:text-zinc-100 truncate min-w-0">
+                <div className="flex items-baseline justify-between gap-4">
+                  <h3 className="text-[16px] text-[var(--nd-text-primary)] truncate">
                     {(item as Post).title}
                   </h3>
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400 flex-shrink-0">
+                  <span className="nd-caption flex-shrink-0 tabular-nums">
                     {formatDate(item.date)}
                   </span>
                 </div>
               ) : (
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm text-zinc-700 dark:text-zinc-300 line-clamp-2 min-w-0 flex-1">
+                <div className="flex items-baseline justify-between gap-4">
+                  <p className="text-[14px] text-[var(--nd-text-primary)] line-clamp-2 min-w-0 flex-1">
                     {(item as Note).content}
                   </p>
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400 flex-shrink-0">
+                  <span className="nd-caption flex-shrink-0 tabular-nums">
                     {formatDate(item.date)}
                   </span>
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-2 ml-4 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Button
-                variant="ghost"
-                size="sm"
+            <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200">
+              <button
+                type="button"
                 onClick={() => onEdit(item.id)}
-                className="h-8 w-8 p-0"
-                title="编辑"
+                className="nd-btn nd-btn-ghost !min-h-[32px] !px-2 !text-[11px]"
               >
-                <Edit2 className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
+                EDIT
+              </button>
+              <button
+                type="button"
                 onClick={() => handleDeleteClick(item.id)}
-                className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
-                title="删除"
+                className="nd-btn nd-btn-ghost !min-h-[32px] !px-2 !text-[11px] !text-[var(--nd-accent)]"
               >
-                <Trash2 className="w-4 h-4" />
-              </Button>
+                DEL
+              </button>
             </div>
           </div>
         ))}
       </div>
 
-      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>确认删除</DialogTitle>
-            <DialogDescription>
-              确定要删除这个{contentType === "post" ? "文章" : "随笔"}吗？此操作无法撤销。
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setDeleteDialogOpen(false)
-                setDeletingId(null)
-              }}
-              disabled={deleting}
-            >
-              取消
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDeleteConfirm}
-              disabled={deleting}
-            >
-              {deleting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  删除中...
-                </>
-              ) : (
-                "确认删除"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {deleteDialogOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 nd-modal-backdrop"
+          onClick={() => {
+            if (deleting) return
+            setDeleteDialogOpen(false)
+            setDeletingId(null)
+          }}
+        >
+          <div
+            className="nd-modal w-full p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <p className="nd-label mb-2">CONFIRM</p>
+                <h2 className="text-[18px] text-[var(--nd-text-display)]">
+                  删除{contentType === "post" ? "文章" : "随笔"}
+                </h2>
+                <p className="nd-caption mt-2">
+                  此操作无法撤销。确定继续？
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setDeleteDialogOpen(false)
+                  setDeletingId(null)
+                }}
+                className="nd-btn nd-btn-ghost !min-h-[32px] !px-2"
+                disabled={deleting}
+              >
+                [ X ]
+              </button>
+            </div>
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setDeleteDialogOpen(false)
+                  setDeletingId(null)
+                }}
+                disabled={deleting}
+                className="nd-btn nd-btn-secondary !min-h-[40px] !px-4 !py-2 !text-[11px]"
+              >
+                CANCEL
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteConfirm}
+                disabled={deleting}
+                className="nd-btn nd-btn-destructive !min-h-[40px] !px-4 !py-2 !text-[11px]"
+              >
+                {deleting ? "[LOADING]" : "DELETE"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }

@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import GoogleAnalytics from "@/components/GoogleAnalytics"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-import { plusJakarta, jetbrainsMono } from './fonts'
+import { plusJakarta, jetbrainsMono, spaceGrotesk, spaceMono, doto } from './fonts'
 import "./globals.css"
 
 export const viewport: Viewport = {
@@ -92,7 +92,7 @@ export default function RootLayout({
           type="image/jpeg"
         />
       </head>
-      <body className={`${plusJakarta.variable} ${jetbrainsMono.variable} ${plusJakarta.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 antialiased`}>
+      <body className={`${plusJakarta.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${spaceMono.variable} ${doto.variable} ${plusJakarta.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 antialiased`}>
         <ThemeProvider>
           {children}
           <Toaster />
