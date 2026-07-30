@@ -7,7 +7,7 @@ import type { HeaderProps } from "@/types/header"
 
 import { HeaderHome } from "./header-home"
 
-export function Header({ showBackButton = false, backButtonHref = "/", showNav = true, isHome = false, title }: HeaderProps) {
+export function Header({ showBackButton = false, backButtonHref = "/", showNav = true, showNavLinks = true, isHome = false, title }: HeaderProps) {
   if (isHome) {
     return <HeaderHome />
   }
@@ -34,7 +34,7 @@ export function Header({ showBackButton = false, backButtonHref = "/", showNav =
         )}
       </div>
       <div className="flex items-center gap-4 flex-shrink-0">
-        {showNav && <HeaderNav />}
+        {showNav && <HeaderNav showLinks={showNavLinks} />}
       </div>
     </header>
   )

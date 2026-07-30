@@ -25,7 +25,7 @@ export function ContentEditor({
       <div className="nd-surface overflow-hidden flex flex-col lg:flex-row">
         <div className="flex-1 flex flex-col min-w-0 h-[300px] lg:h-[600px]">
           <div className="px-4 pt-3 pb-1">
-            <p className="nd-label">MARKDOWN</p>
+            <p className="nd-label">编辑</p>
           </div>
           <textarea
             ref={textareaRef}
@@ -45,7 +45,7 @@ export function ContentEditor({
             "border-t border-[var(--nd-border)] lg:border-t-0 lg:border-l"
           )}
         >
-          <p className="nd-label mb-2">PREVIEW</p>
+          <p className="nd-label mb-2">预览</p>
           <PostPreview content={content} />
         </div>
       </div>
@@ -56,7 +56,7 @@ export function ContentEditor({
     return (
       <div className="nd-surface overflow-hidden">
         <div className="px-4 pt-3 pb-1">
-          <p className="nd-label">MARKDOWN</p>
+          <p className="nd-label">编辑</p>
         </div>
         <textarea
           ref={textareaRef}
@@ -74,7 +74,7 @@ export function ContentEditor({
   return (
     <div className="nd-surface overflow-hidden" style={{ background: "var(--nd-surface-raised)" }}>
       <div ref={previewRef} className="px-4 py-3 min-h-[600px] overflow-y-auto">
-        <p className="nd-label mb-2">PREVIEW</p>
+        <p className="nd-label mb-2">预览</p>
         <PostPreview content={content} />
       </div>
     </div>

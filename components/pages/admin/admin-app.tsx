@@ -386,7 +386,7 @@ export function AdminApp() {
       <Layout>
         <div className="nd-admin">
           <div className="max-w-2xl mx-auto px-4 py-6">
-            <Header showBackButton={true} />
+            <Header showBackButton={true} showNavLinks={false} />
             <AdminUnauthenticatedView
               error={error}
               success={success}
@@ -403,7 +403,7 @@ export function AdminApp() {
     <Layout>
       <div className="nd-admin">
         <div className="max-w-7xl mx-auto px-4 py-6 overflow-x-hidden pb-16">
-          <Header showBackButton={true} />
+          <Header showBackButton={true} showNavLinks={false} />
 
           <AdminHeader
             username={username}
@@ -430,14 +430,14 @@ export function AdminApp() {
               className="nd-status mb-6"
               data-tone={error ? "error" : "success"}
             >
-              {error ? `[ERROR] ${error}` : `[OK] ${success}`}
+              {error ? `[错误] ${error}` : `[成功] ${success}`}
             </p>
           )}
 
           {showList ? (
             <div>
               <p className="nd-label mb-4">
-                {contentType === "post" ? "POST LIST" : "NOTE LIST"}
+                {contentType === "post" ? "文章列表" : "随笔列表"}
               </p>
               <ContentList
                 contentType={contentType}
@@ -485,7 +485,7 @@ export function AdminApp() {
                           onClick={handleNew}
                           className="nd-btn nd-btn-secondary !min-h-[40px] !px-4 !py-2 !text-[11px]"
                         >
-                          CANCEL
+                          取消编辑
                         </button>
                       )}
                       <button
@@ -494,10 +494,10 @@ export function AdminApp() {
                         className="nd-btn nd-btn-primary !min-h-[40px] !px-6 !py-2 !text-[11px]"
                       >
                         {loading
-                          ? "[LOADING]"
+                          ? "提交中..."
                           : editingId
-                            ? "UPDATE POST"
-                            : "PUBLISH POST"}
+                            ? "更新文章"
+                            : "发布文章"}
                       </button>
                     </div>
                   </div>

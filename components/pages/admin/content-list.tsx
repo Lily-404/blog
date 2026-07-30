@@ -76,7 +76,7 @@ export function ContentList({
   if (loading) {
     return (
       <div className="py-16 text-center">
-        <p className="nd-status">[LOADING]</p>
+        <p className="nd-status">[加载中]</p>
       </div>
     )
   }
@@ -84,7 +84,7 @@ export function ContentList({
   if (items.length === 0) {
     return (
       <div className="py-24 text-center">
-        <p className="nd-label mb-2">EMPTY</p>
+        <p className="nd-label mb-2">暂无内容</p>
         <p className="nd-caption">
           暂无{contentType === "post" ? "文章" : "随笔"}
         </p>
@@ -124,14 +124,14 @@ export function ContentList({
                 onClick={() => onEdit(item.id)}
                 className="nd-btn nd-btn-ghost !min-h-[32px] !px-2 !text-[11px]"
               >
-                EDIT
+                编辑
               </button>
               <button
                 type="button"
                 onClick={() => handleDeleteClick(item.id)}
                 className="nd-btn nd-btn-ghost !min-h-[32px] !px-2 !text-[11px] !text-[var(--nd-accent)]"
               >
-                DEL
+                删除
               </button>
             </div>
           </div>
@@ -153,7 +153,7 @@ export function ContentList({
           >
             <div className="flex items-start justify-between mb-6">
               <div>
-                <p className="nd-label mb-2">CONFIRM</p>
+                <p className="nd-label mb-2">确认</p>
                 <h2 className="text-[18px] text-[var(--nd-text-display)]">
                   删除{contentType === "post" ? "文章" : "随笔"}
                 </h2>
@@ -170,7 +170,7 @@ export function ContentList({
                 className="nd-btn nd-btn-ghost !min-h-[32px] !px-2"
                 disabled={deleting}
               >
-                [ X ]
+                关闭
               </button>
             </div>
             <div className="flex justify-end gap-2">
@@ -183,7 +183,7 @@ export function ContentList({
                 disabled={deleting}
                 className="nd-btn nd-btn-secondary !min-h-[40px] !px-4 !py-2 !text-[11px]"
               >
-                CANCEL
+                取消
               </button>
               <button
                 type="button"
@@ -191,7 +191,7 @@ export function ContentList({
                 disabled={deleting}
                 className="nd-btn nd-btn-destructive !min-h-[40px] !px-4 !py-2 !text-[11px]"
               >
-                {deleting ? "[LOADING]" : "DELETE"}
+                {deleting ? "删除中..." : "确认删除"}
               </button>
             </div>
           </div>

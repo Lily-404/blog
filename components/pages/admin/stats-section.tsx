@@ -82,7 +82,7 @@ export function StatsSection({
         <div className="lg:col-span-4 grid grid-cols-2 gap-3">
           <div className="nd-surface p-3">
             <label className="nd-label block mb-1.5" htmlFor="title">
-              TITLE
+              文章标题
             </label>
             <textarea
               id="title"
@@ -101,7 +101,7 @@ export function StatsSection({
             />
           </div>
           <div className="nd-surface p-3">
-            <label className="nd-label block mb-3">DATE</label>
+            <label className="nd-label block mb-3">发布日期</label>
             <NdDatePicker
               value={date}
               onChange={onDateChange}
@@ -112,32 +112,32 @@ export function StatsSection({
 
         {/* Heatmap */}
         <div className="nd-surface lg:col-span-4 p-3">
-          <p className="nd-label mb-2">LAST 30 DAYS</p>
+          <p className="nd-label mb-2">最近 30 天</p>
           <MiniCalendarHeatmap posts={stats.posts} notes={stats.notes} />
         </div>
 
         {/* Compact stats */}
         <div className="lg:col-span-4 grid grid-cols-2 gap-3">
           <div className="nd-surface p-3">
-            <p className="nd-label mb-1">THIS MONTH</p>
+            <p className="nd-label mb-1">本月创作</p>
             <div className="flex items-baseline gap-1.5">
               <span className="nd-display text-[32px] tabular-nums leading-none">
                 {monthTotal}
               </span>
             </div>
             <p className="nd-caption mt-1.5">
-              {stats.stats.thisMonthPosts} POST · {stats.stats.thisMonthNotes} NOTE
+              {stats.stats.thisMonthPosts} 文章 · {stats.stats.thisMonthNotes} 随笔
             </p>
           </div>
           <div className="nd-surface p-3">
-            <p className="nd-label mb-1">TOTAL POSTS</p>
+            <p className="nd-label mb-1">总文章数</p>
             <div className="flex items-baseline gap-1.5">
               <span className="nd-display text-[32px] tabular-nums leading-none">
                 {stats.stats.totalPosts}
               </span>
             </div>
             <p className="nd-caption mt-1.5">
-              NOTES {stats.stats.totalNotes}
+              总随笔数 {stats.stats.totalNotes}
             </p>
           </div>
         </div>
@@ -146,7 +146,7 @@ export function StatsSection({
       {/* Tags */}
       <div className="space-y-2.5">
         <div className="flex items-start gap-3">
-          <span className="nd-label flex-shrink-0 pt-2.5">TAGS</span>
+          <span className="nd-label flex-shrink-0 pt-2.5">标签</span>
           <div className="flex-1 min-w-0">
             <div
               className="nd-tag-field"
@@ -185,7 +185,7 @@ export function StatsSection({
             </div>
             {duplicate && (
               <p className="nd-status mt-1.5" data-tone="error">
-                [ERROR] 标签已存在
+                [错误] 标签已存在
               </p>
             )}
             {selectedTags.length >= 10 && (
@@ -196,7 +196,7 @@ export function StatsSection({
 
         {stats.tags.length > 0 && (
           <div className="flex items-start gap-3">
-            <span className="nd-label flex-shrink-0 pt-1">FREQ</span>
+            <span className="nd-label flex-shrink-0 pt-1">常用</span>
             <div className="flex flex-wrap gap-1.5 flex-1">
               {stats.tags.slice(0, 10).map(({ tag, count }) => {
                 const active = selectedTags.includes(tag)

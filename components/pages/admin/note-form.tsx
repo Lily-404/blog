@@ -43,7 +43,7 @@ export function NoteForm({
   return (
     <div className="space-y-6">
       <div className="nd-surface p-5 md:p-6">
-        <p className="nd-label mb-4">NOTE</p>
+        <p className="nd-label mb-4">随笔</p>
         <textarea
           ref={textareaRef}
           id="content"
@@ -59,7 +59,7 @@ export function NoteForm({
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div className="flex items-end gap-4">
           <div className="min-w-[150px]">
-            <p className="nd-label mb-2">DATE</p>
+            <p className="nd-label mb-2">日期</p>
             <NdDatePicker
               value={date}
               onChange={onDateChange}
@@ -76,7 +76,7 @@ export function NoteForm({
             onClick={() => setShowPreview(!showPreview)}
             className="nd-btn nd-btn-ghost !text-[11px]"
           >
-            {showPreview ? "HIDE" : "PREVIEW"}
+            {showPreview ? "隐藏预览" : "预览"}
           </button>
           {editing && onCancelEdit && (
             <button
@@ -84,7 +84,7 @@ export function NoteForm({
               onClick={onCancelEdit}
               className="nd-btn nd-btn-secondary !min-h-[40px] !px-4 !py-2 !text-[11px]"
             >
-              CANCEL
+              取消编辑
             </button>
           )}
           <button
@@ -93,10 +93,10 @@ export function NoteForm({
             className="nd-btn nd-btn-primary !min-h-[40px] !px-6 !py-2 !text-[11px]"
           >
             {loading
-              ? "[LOADING]"
+              ? "提交中..."
               : editing
-                ? "UPDATE"
-                : "PUBLISH"}
+                ? "更新"
+                : "发布"}
           </button>
         </div>
       </div>
@@ -106,7 +106,7 @@ export function NoteForm({
           className="nd-surface p-5 md:p-6 overflow-y-auto"
           style={{ minHeight: "200px", maxHeight: "400px", background: "var(--nd-surface-raised)" }}
         >
-          <p className="nd-label mb-3">PREVIEW</p>
+          <p className="nd-label mb-3">预览</p>
           <NotePreview content={content} date={date} />
         </div>
       )}

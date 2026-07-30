@@ -28,10 +28,10 @@ export function AdminHeader({
 }: AdminHeaderProps) {
   const greeting = useMemo(() => {
     const hour = new Date().getHours()
-    if (hour >= 5 && hour < 12) return "MORNING"
-    if (hour >= 12 && hour < 18) return "AFTERNOON"
-    if (hour >= 18 && hour < 22) return "EVENING"
-    return "LATE"
+    if (hour >= 5 && hour < 12) return "早上好"
+    if (hour >= 12 && hour < 18) return "下午好"
+    if (hour >= 18 && hour < 22) return "晚上好"
+    return "夜深了"
   }, [])
 
   return (
@@ -43,7 +43,7 @@ export function AdminHeader({
             {username ? ` / ${username}` : ""}
           </p>
           <h1 className="text-[22px] md:text-[24px] font-medium tracking-tight text-[var(--nd-text-display)] leading-tight">
-            {username ? `${username}` : "ADMIN"}
+            {username ? `${username}` : "内容管理"}
           </h1>
           <p className="mt-1 text-[13px] text-[var(--nd-text-secondary)]">
             {contentType === "note" ? "记录这一刻的想法" : "今天想写点什么？"}
@@ -61,7 +61,7 @@ export function AdminHeader({
                   className="nd-segment-item !min-h-[32px] !px-3 !py-1.5"
                   data-active={viewMode === mode}
                 >
-                  {mode === "edit" ? "EDIT" : mode === "split" ? "SPLIT" : "PREVIEW"}
+                  {mode === "edit" ? "编辑" : mode === "split" ? "分栏" : "预览"}
                 </button>
               ))}
             </div>
@@ -76,7 +76,7 @@ export function AdminHeader({
                 className="nd-segment-item !min-h-[32px] !px-3 !py-1.5"
                 data-active={contentType === type}
               >
-                {type === "post" ? "POST" : "NOTE"}
+                {type === "post" ? "文章" : "随笔"}
               </button>
             ))}
           </div>
@@ -86,14 +86,14 @@ export function AdminHeader({
             onClick={onToggleList}
             className="nd-btn nd-btn-secondary !min-h-[32px] !px-3 !py-1.5 !text-[11px]"
           >
-            {showList ? "WRITE" : "LIST"}
+            {showList ? "写作" : "列表"}
           </button>
           <button
             type="button"
             onClick={onLogout}
             className="nd-btn nd-btn-ghost !min-h-[32px] !px-2 !text-[11px]"
           >
-            LOGOUT
+            登出
           </button>
         </div>
       </div>

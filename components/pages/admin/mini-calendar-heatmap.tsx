@@ -81,7 +81,7 @@ export function MiniCalendarHeatmap({ posts, notes }: MiniCalendarHeatmapProps) 
       })()}
 
       <div className="flex items-center gap-2 mt-3">
-        <span className="nd-caption">LOW</span>
+        <span className="nd-caption">较少</span>
         <div className="flex items-center gap-[3px]">
           <div className="w-2.5 h-2.5 rounded-full nd-heat-empty" />
           <div className="w-2.5 h-2.5 rounded-full nd-heat-1" />
@@ -89,7 +89,7 @@ export function MiniCalendarHeatmap({ posts, notes }: MiniCalendarHeatmapProps) 
           <div className="w-2.5 h-2.5 rounded-full nd-heat-3" />
           <div className="w-2.5 h-2.5 rounded-full nd-heat-4" />
         </div>
-        <span className="nd-caption">HIGH</span>
+        <span className="nd-caption">较多</span>
       </div>
     </div>
   )

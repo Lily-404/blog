@@ -21,7 +21,7 @@ export function PostForm({
     <div className="nd-surface p-5 md:p-6 space-y-6">
       <div>
         <label className="nd-label block mb-2" htmlFor="post-title">
-          TITLE
+          文章标题
         </label>
         <input
           id="post-title"
@@ -36,7 +36,7 @@ export function PostForm({
 
       <div>
         <label className="nd-label block mb-2" htmlFor="post-date">
-          DATE
+          发布日期
         </label>
         <input
           id="post-date"
@@ -49,7 +49,7 @@ export function PostForm({
 
       <div>
         <label className="nd-label block mb-2" htmlFor="post-tags">
-          TAGS
+          标签
         </label>
         <input
           id="post-tags"
@@ -64,7 +64,7 @@ export function PostForm({
             )
           }
           className="nd-input"
-          placeholder="tag1, tag2"
+          placeholder="标签1, 标签2"
         />
       </div>
     </div>

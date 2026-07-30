@@ -8,10 +8,10 @@ export function AdminLoadingView() {
     <Layout>
       <div className="nd-admin">
         <div className="max-w-2xl mx-auto px-4 py-6">
-          <Header showBackButton={true} />
+          <Header showBackButton={true} showNavLinks={false} />
           <div className="flex flex-col items-center justify-center py-24 nd-dot-grid rounded-2xl">
-            <p className="nd-status">[LOADING]</p>
-            <p className="nd-label mt-4">AUTH CHECK</p>
+            <p className="nd-status">[加载中]</p>
+            <p className="nd-label mt-4">正在验证身份</p>
           </div>
         </div>
       </div>

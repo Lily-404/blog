@@ -152,7 +152,7 @@ export function NdDatePicker({
               onClick={handleTodayClick}
               className="nd-btn nd-btn-ghost w-full !min-h-[36px] !text-[11px]"
             >
-              TODAY
+              今天
             </button>
           </div>
         )}

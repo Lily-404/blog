@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { cn } from "@/lib/utils"
 
-export function HeaderNav() {
+export function HeaderNav({ showLinks = true }: { showLinks?: boolean }) {
   const pathname = usePathname()
 
   const isActive = (path: string) => pathname === path
@@ -32,27 +32,31 @@ export function HeaderNav() {
 
   return (
     <nav className="flex items-center space-x-4 text-sm">
-      <Link 
-        href="/notes" 
-        className={linkClasses('/notes')}
-      >
-        <Pencil className={iconClasses('/notes')} />
-        <span className="hidden md:inline">随笔</span>
-      </Link>
-      <Link 
-        href="/archive" 
-        className={linkClasses('/archive')}
-      >
-        <Archive className={iconClasses('/archive')} />
-        <span className="hidden md:inline">归档</span>
-      </Link>
-      <Link 
-        href="/about" 
-        className={linkClasses('/about')}
-      >
-        <User className={iconClasses('/about')} />
-        <span className="hidden md:inline">关于</span>
-      </Link>
+      {showLinks && (
+        <>
+          <Link 
+            href="/notes" 
+            className={linkClasses('/notes')}
+          >
+            <Pencil className={iconClasses('/notes')} />
+            <span className="hidden md:inline">随笔</span>
+          </Link>
+          <Link 
+            href="/archive" 
+            className={linkClasses('/archive')}
+          >
+            <Archive className={iconClasses('/archive')} />
+            <span className="hidden md:inline">归档</span>
+          </Link>
+          <Link 
+            href="/about" 
+            className={linkClasses('/about')}
+          >
+            <User className={iconClasses('/about')} />
+            <span className="hidden md:inline">关于</span>
+          </Link>
+        </>
+      )}
       <div className="flex items-center min-w-[1.5rem] h-6">
         <ThemeToggle />
       </div>
