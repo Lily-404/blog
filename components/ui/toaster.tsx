@@ -7,14 +7,22 @@ export function Toaster() {
     <SonnerToaster
       position="top-center"
       richColors={false}
-      closeButton={true}
-      duration={4000}
+      closeButton={false}
+      duration={2800}
       expand={false}
+      gap={8}
+      offset={24}
+      visibleToasts={3}
       toastOptions={{
-        className: "toast-custom",
-        style: {
-          borderRadius: "0.5rem",
-        },
+        className: "toast-nd",
+        unstyled: true,
+      }}
+      icons={{
+        success: null,
+        error: null,
+        info: null,
+        warning: null,
+        loading: null,
       }}
     />
   )

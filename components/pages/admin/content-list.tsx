@@ -56,9 +56,9 @@ export function ContentList({
       await onDelete(deletingId)
       setDeleteDialogOpen(false)
       setDeletingId(null)
-      toast.success(`${contentType === "post" ? "文章" : "随笔"}删除成功`)
+      toast.success(contentType === "post" ? "已删除文章" : "已删除随笔")
     } catch (error) {
-      toast.error(`删除失败: ${error instanceof Error ? error.message : "未知错误"}`)
+      toast.error(error instanceof Error ? error.message : "删除失败")
     } finally {
       setDeleting(false)
     }
