@@ -104,10 +104,12 @@ const config: Config = {
               },
             },
             blockquote: {
-              fontStyle: "italic",
-              borderLeftWidth: "4px",
+              fontStyle: "normal",
+              borderLeftWidth: "2px",
               borderLeftColor: "rgb(212 212 216)",
               paddingLeft: "1rem",
+              color: "rgb(113 113 122)",
+              quotes: "none",
             },
             code: {
               backgroundColor: "rgb(244 244 245)",

@@ -3,7 +3,6 @@ import { format } from "date-fns"
 import { notFound } from "next/navigation"
 import { Footer } from "@/components/ui/footer"
 import { Layout } from "@/components/layout"
-import { Tags } from "@/components/ui/tag"
 import { Header } from "@/components/header"
 import { MarkdownContent } from "@/components/markdown-content"
 import { CalendarHeatmapFloating } from "@/components/calendar-heatmap-floating"
@@ -95,21 +94,40 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
           <Header showBackButton={true} />
 
           <article>
-            <header>
-              <h1 className="text-3xl font-bold leading-tight">{post.title}</h1>
-              <p className="my-3 text-sm text-zinc-400 dark:text-zinc-500">
-                {formattedDate}
+            <header className="mb-4">
+              <h1 className="text-3xl font-bold leading-tight tracking-tight">
+                {post.title}
+              </h1>
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+                <time
+                  dateTime={post.date}
+                  className="font-mono text-[11px] tabular-nums tracking-[0.14em] text-zinc-400 dark:text-zinc-500"
+                >
+                  {formattedDate}
+                </time>
                 {post.tags && post.tags.length > 0 && (
                   <>
-                    {" "}
-                    · {post.tags.join(" · ")}
+                    <span
+                      className="hidden h-3 w-px bg-zinc-200 dark:bg-zinc-700 sm:block"
+                      aria-hidden
+                    />
+                    <ul className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                      {post.tags.map((tag) => (
+                        <li
+                          key={tag}
+                          className="text-[11px] tracking-[0.08em] text-zinc-400 dark:text-zinc-500"
+                        >
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
                   </>
                 )}
-              </p>
+              </div>
             </header>
             <MarkdownContent
               content={post.contentHtml}
-              className="mt-2 [&>*:first-child]:mt-0"
+              className="mt-0 [&>*:first-child]:mt-0"
             />
           </article>
 

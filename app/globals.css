@@ -214,11 +214,19 @@
 }
 
 .prose blockquote {
-  @apply border-l-4 border-zinc-300 dark:border-zinc-700 pl-4 py-0 my-6 text-zinc-700 dark:text-zinc-300 italic;
+  @apply my-6 border-l-2 border-zinc-300 dark:border-zinc-600 pl-4 py-1 text-zinc-500 dark:text-zinc-400 not-italic;
   font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
-  line-height: 1.75;
-  text-align: justify;
-  text-justify: inter-ideograph;
+  font-size: 0.925em;
+  line-height: 1.7;
+  quotes: none;
+}
+
+.prose blockquote p {
+  margin: 0;
+}
+
+.prose blockquote p + p {
+  margin-top: 0.5em;
 }
 
 .prose ul {
@@ -257,17 +265,11 @@
   border-radius: 12px;
   background: #ffffff;
   border: 1px solid rgba(228, 228, 231, 0.9);
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.04),
-    0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .dark .md-code-block {
   background: #18181b;
   border-color: #27272a;
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.2),
-    0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .md-code-header {
