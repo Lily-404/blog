@@ -128,21 +128,6 @@ export function CalendarHeatmap({ posts, notes = [] }: CalendarHeatmapProps) {
         )}
       </div>
 
-      <div className="flex items-center gap-2 mt-3">
-        <span className="font-mono text-[10px] tracking-wider uppercase text-zinc-400 dark:text-zinc-500">
-          少
-        </span>
-        <div className="flex items-center gap-[3px]">
-          <div className="w-2.5 h-2.5 rounded-full bg-zinc-200 dark:bg-zinc-800" />
-          <div className="w-2.5 h-2.5 rounded-full bg-zinc-900/30 dark:bg-zinc-100/30" />
-          <div className="w-2.5 h-2.5 rounded-full bg-zinc-900/55 dark:bg-zinc-100/55" />
-          <div className="w-2.5 h-2.5 rounded-full bg-zinc-900 dark:bg-zinc-100" />
-        </div>
-        <span className="font-mono text-[10px] tracking-wider uppercase text-zinc-400 dark:text-zinc-500">
-          多
-        </span>
-      </div>
-
       <div className="mt-4 pt-3 border-t border-zinc-200 dark:border-zinc-800 w-full flex justify-center gap-5">
         {stats.map((stat) => (
           <div key={stat.label} className="flex items-baseline gap-1.5">
