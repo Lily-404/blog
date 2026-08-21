@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import katex from "katex"
 import "katex/dist/katex.min.css"
+import { withProtectedCodeSegments } from "@/lib/protect-code-segments"
 
 export interface UseMarkdownHtmlOptions {
   trimStart?: boolean
@@ -20,28 +21,30 @@ function processKatex(
   html: string,
   blockClass: string = "katex-block my-4"
 ): string {
-  let out = html
-  out = out.replace(/\$\$\$([\s\S]+?)\$\$\$/g, (_, tex: string) => {
-    try {
-      return `<div class="${blockClass}">${katex.renderToString(tex.trim(), {
-        displayMode: true,
-        throwOnError: false,
-      })}</div>`
-    } catch {
-      return `<div class="${blockClass}">$$${tex}$$</div>`
-    }
+  return withProtectedCodeSegments(html, (protectedHtml) => {
+    let out = protectedHtml
+    out = out.replace(/\$\$\$([\s\S]+?)\$\$\$/g, (_, tex: string) => {
+      try {
+        return `<div class="${blockClass}">${katex.renderToString(tex.trim(), {
+          displayMode: true,
+          throwOnError: false,
+        })}</div>`
+      } catch {
+        return `<div class="${blockClass}">$$${tex}$$</div>`
+      }
+    })
+    out = out.replace(/\$\$([^$<]+?)\$\$/g, (_, tex: string) => {
+      try {
+        return `<span class="katex-inline">${katex.renderToString(tex.trim(), {
+          displayMode: false,
+          throwOnError: false,
+        })}</span>`
+      } catch {
+        return `<span class="katex-inline">$${tex}$</span>`
+      }
+    })
+    return out
   })
-  out = out.replace(/\$\$([^\$]+?)\$\$/g, (_, tex: string) => {
-    try {
-      return `<span class="katex-inline">${katex.renderToString(tex.trim(), {
-        displayMode: false,
-        throwOnError: false,
-      })}</span>`
-    } catch {
-      return `<span class="katex-inline">$${tex}$</span>`
-    }
-  })
-  return out
 }
 
 export function useMarkdownHtml(

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { remark } from "remark"
 import html from "remark-html"
 import remarkGfm from "remark-gfm"
+import { withProtectedCodeSegments } from "@/lib/protect-code-segments"
 
 export async function POST(request: Request) {
   try {
@@ -22,19 +23,22 @@ export async function POST(request: Request) {
       .use(html)
       .process(trimmedContent)
 
-    let htmlContent = processed.toString()
+    // 跳过 <pre>/<code>，避免 $HOME 等 shell 变量被当成公式定界符
+    const htmlContent = withProtectedCodeSegments(
+      processed.toString(),
+      (protectedHtml) => {
+        let result = protectedHtml.replace(
+          /\$\$([\s\S]+?)\$\$/g,
+          '<div class="katex-block my-4">$$$1$$</div>'
+        )
 
-    // 处理数学公式（在客户端处理会更灵活，但这里先简单处理）
-    // 块级公式 $$...$$
-    htmlContent = htmlContent.replace(
-      /\$\$([\s\S]+?)\$\$/g,
-      '<div class="katex-block my-4">$$$1$$</div>'
-    )
+        result = result.replace(
+          /\$([^$<]+?)\$/g,
+          '<span class="katex-inline">$$$1$</span>'
+        )
 
-    // 行内公式 $...$
-    htmlContent = htmlContent.replace(
-      /\$([^\$]+?)\$/g,
-      '<span class="katex-inline">$$$1$</span>'
+        return result
+      }
     )
 
     return NextResponse.json({ html: htmlContent })

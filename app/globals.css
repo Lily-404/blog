@@ -189,7 +189,7 @@
 .prose h1 {
   @apply text-4xl mb-4 mt-12;
   line-height: 1.4;
-  text-align: center;
+  text-align: left;
   position: relative;
   padding-bottom: 0;
 }
