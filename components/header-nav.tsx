@@ -6,60 +6,48 @@ import { usePathname } from "next/navigation"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { cn } from "@/lib/utils"
 
+const NAV_LINKS = [
+  { href: "/notes", label: "随笔", icon: Pencil },
+  { href: "/archive", label: "归档", icon: Archive },
+  { href: "/about", label: "关于", icon: User },
+] as const
+
 export function HeaderNav({ showLinks = true }: { showLinks?: boolean }) {
   const pathname = usePathname()
 
-  const isActive = (path: string) => pathname === path
-  const linkClasses = (path: string) => {
-    const active = isActive(path)
-    return cn(
-      "flex items-center min-w-[1.5rem] h-6 transition-colors",
-      active 
-        ? 'text-zinc-800 dark:text-zinc-300' 
-        : 'text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-300'
-    )
-  }
-
-  const iconClasses = (path: string) => {
-    const active = isActive(path)
-    return cn(
-      "h-4 w-4 md:mr-2 flex-shrink-0 transition-colors",
-      active 
-        ? 'text-zinc-800 dark:text-zinc-300' 
-        : 'text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-300'
-    )
-  }
-
   return (
-    <nav className="flex items-center space-x-4 text-sm">
-      {showLinks && (
-        <>
-          <Link 
-            href="/notes" 
-            className={linkClasses('/notes')}
-          >
-            <Pencil className={iconClasses('/notes')} />
-            <span className="hidden md:inline">随笔</span>
-          </Link>
-          <Link 
-            href="/archive" 
-            className={linkClasses('/archive')}
-          >
-            <Archive className={iconClasses('/archive')} />
-            <span className="hidden md:inline">归档</span>
-          </Link>
-          <Link 
-            href="/about" 
-            className={linkClasses('/about')}
-          >
-            <User className={iconClasses('/about')} />
-            <span className="hidden md:inline">关于</span>
-          </Link>
-        </>
-      )}
-      <div className="flex items-center">
-        <ThemeToggle />
-      </div>
+    <nav aria-label="站点导航" className="flex items-center gap-1 text-sm">
+      {showLinks &&
+        NAV_LINKS.map(({ href, label, icon: Icon }) => {
+          const active = pathname === href
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-label={label}
+              aria-current={active ? "page" : undefined}
+              className={cn(
+                "group flex items-center justify-center gap-2",
+                "min-h-10 min-w-10 px-2 rounded-md",
+                "transition-[color,scale] duration-150 ease-out",
+                "active:scale-[0.96]",
+                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+                "focus-visible:outline-zinc-900 dark:focus-visible:outline-zinc-100",
+                active
+                  ? "text-zinc-800 dark:text-zinc-200"
+                  : "text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-300"
+              )}
+            >
+              <Icon
+                className="h-4 w-4 flex-shrink-0"
+                strokeWidth={active ? 2 : 1.5}
+                aria-hidden
+              />
+              <span className="hidden md:inline">{label}</span>
+            </Link>
+          )
+        })}
+      <ThemeToggle />
     </nav>
   )
 }
