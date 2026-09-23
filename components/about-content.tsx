@@ -77,14 +77,6 @@ export function AboutContent({ initialStats }: AboutContentProps) {
               >
                 GitHub
               </ActionButton>
-              <ActionButton
-                leading="J"
-                href="https://okjk.co/ITgDUG"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                即刻
-              </ActionButton>
               <CopyButton icon={Mail} value="sxy1308075897@gmail.com">
                 邮箱
               </CopyButton>
